@@ -1,0 +1,92 @@
+.navbar-right{
+    width: 30%;
+}
+
+.navbar-left{
+    width: 70%;
+}
+
+.navbar {
+    background: transparent;
+    height: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.2rem;
+    position: sticky;
+    
+    top: 0;
+    z-index: 999;
+    color: black !important;
+  
+    position: -webkit-sticky;
+  }
+
+  
+  .navbar.active {
+    background: black;
+  }
+  
+  .navbarFont {
+    color: black !important;
+    text-decoration: none;
+  }
+  
+  .navbarFont.active {
+    color: white !important;
+  }
+  
+  .navTitle {
+    text-decoration: none;
+  }
+
+
+  .left-side {
+      width: 30%;
+  }
+
+  .right-side {
+      width:70%;
+  }
+
+  .app {
+    display: flex;
+    flex-direction: row;
+    min-height: 100vh;
+    width: 90%;
+    margin: auto;
+    margin-top: 30px;
+  }
+
+  .upload-area:hover {
+    box-shadow: inset 0 100px 100px 100px rgba(0, 0, 0, 0.1);
+}
+
+.home-img{
+    margin-top: -70px;
+    width: 100%;
+    margin-left: 50;
+}
+
+html, body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+.projects-index{
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.projects-title{
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  margin-top: 2%;
+  margin-bottom: 2%;
+}
+
+.create-project:hover {
+  box-shadow: inset 0 0 100px 100px rgba(255, 255, 255, 0.1);
+}
+
