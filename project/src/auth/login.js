@@ -16,7 +16,7 @@ export default function LoginForm(props) {
     console.log(form);
 
     axios
-      .post("https://localhost:3000/api/user/login", {
+      .post("http://localhost:3000/api/user/login", {
         // name: form.name,
         email: form.email,
         password: form.password,

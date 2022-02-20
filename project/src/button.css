@@ -1,22 +1,20 @@
-/* From cssbtns.io by @westitan */
-.btn {
+/* From cssbuttons.io by @westitan */
+button {
     position: relative;
     padding: 19px 36px;
-    display: flex;
-    width: 60%;
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 10%;
+    display: block;
     text-decoration: none;
     text-transform: uppercase;
     overflow: hidden;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 40px;
+
     border-radius: 40px;
     border: none;
-    justify-content: center;
-    text-align: center;
    }
    
-   .btn span {
+   button span {
     position: relative;
     color: #fff;
     font-family: Arial;
@@ -24,7 +22,7 @@
     z-index: 1;
    }
    
-   .btn .liquid {
+   button .liquid {
     position: absolute;
     top: -80px;
     left: 0;
@@ -35,8 +33,8 @@
     transition: .5s;
    }
    
-   .btn .liquid::after,
-   .btn .liquid::before {
+   button .liquid::after,
+   button .liquid::before {
     content: '';
     width: 200%;
     height: 200%;
@@ -47,19 +45,19 @@
     background: #fff;
    }
    
-   .btn .liquid::before {
+   button .liquid::before {
     border-radius: 45%;
     background: rgba(20, 20, 20, 1);
     animation: animate 5s linear infinite;
    }
    
-   .btn .liquid::after {
+   button .liquid::after {
     border-radius: 40%;
     background: rgba(20, 20, 20, .5);
     animation: animate 10s linear infinite;
    }
    
-   .btn:hover .liquid {
+   button:hover .liquid {
     top: -120px;
    }
    
@@ -67,8 +65,8 @@
     0% {
      transform: translate(-50%, -75%) rotate(0deg);
     }
+   
     100% {
-        transform: translate(-50%, -75%) rotate(360deg);
-       }
-      
-}
+     transform: translate(-50%, -75%) rotate(360deg);
+    }
+   }

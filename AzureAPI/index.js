@@ -3,7 +3,7 @@ const app = express();
 const dotenv = require('dotenv');
 const mongoose = require('mongoose');
 const postRoute = require('./routes/posts');
-
+const cors = require('cors');
 
 
 
@@ -17,7 +17,11 @@ dotenv.config();
 
 //connect to db 
 mongoose.connect(process.env.DB_CONNECT, { useNewUrlParser: true}, 
-() => console.log('Connected to DB!'));
+() => console.log('Connected to DB!'))
+
+
+// cors
+app.use(cors());
 
 //middleware
 app.use(express.json());

@@ -1,3 +1,4 @@
+import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AppBar } from "@mui/material";
 import { Box } from "@mui/system";
@@ -28,7 +29,7 @@ import "@fontsource/roboto/700.css";
 
 const useStyles = makeStyles((theme) => ({
   drawerPaper: { width: "inherit" },
-  navList: {float:"left", textDecoration: "none", color: theme.palette.text.primary},
+  navList: {float:"right", textDecoration: "none", color: theme.palette.text.primary},
   link: { textDecoration: "none", color: theme.palette.text.primary },
 }));
 
@@ -42,7 +43,7 @@ const Navbar = (props) => {
   // }
 
   const changeBackground = () => {
-    if (window.scrollY >= 80) {
+    if (window.scrollY >= 60) {
       setNavbar(true);
     } else {
       setNavbar(false);
@@ -64,6 +65,20 @@ const Navbar = (props) => {
           </Typography>
           </div>
           <div className="navbar-right">
+          <Link to="/projects" className={classes.navList}>
+            <ListItem button>
+              <Typography variant="h6" component="p" className={navbar ? "navbarFont active" : "navbarFont"}>
+                Projects
+              </Typography>
+            </ListItem>
+          </Link>
+          <Link to="/dashboard" className={classes.navList}>
+            <ListItem button>
+              <Typography variant="h6" component="p" className={navbar ? "navbarFont active" : "navbarFont"}>
+                Dashboard
+              </Typography>
+            </ListItem>
+          </Link>
           <Link to="/" className={classes.navList}>
             <ListItem button>
               <Typography variant="h6" component="p" className={navbar ? "navbarFont active" : "navbarFont"}>
@@ -72,21 +87,9 @@ const Navbar = (props) => {
             </ListItem>
           </Link>
 
-          <Link to="/dashboard" className={classes.navList}>
-            <ListItem button>
-              <Typography variant="h6" component="p" className={navbar ? "navbarFont active" : "navbarFont"}>
-                Dashboard
-              </Typography>
-            </ListItem>
-          </Link>
+          
 
-          <Link to="/projects" className={classes.navList}>
-            <ListItem button>
-              <Typography variant="h6" component="p" className={navbar ? "navbarFont active" : "navbarFont"}>
-                Projects
-              </Typography>
-            </ListItem>
-          </Link>
+          
           </div>
         
         </Grid>

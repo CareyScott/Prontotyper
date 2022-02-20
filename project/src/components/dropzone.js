@@ -34,33 +34,18 @@ function Dropzone(props) {
   const status = document.getElementById("status");
   const fileList = document.getElementById("file-list");
 
-  const reportStatus = (message) => {
-    status.innerHTML += `${message}<br/>`;
-    status.scrollTop = status.scrollHeight;
-  };
+  // const reportStatus = (message) => {
+  //   status.innerHTML += `${message}<br/>`;
+  //   status.scrollTop = status.scrollHeight;
+  // };
 
-  const uploadFiles = async () => {
-    try {
-      // reportStatus("Uploading files...");
-      const promises = [];
-      for (const file of files) {
-        const blockBlobClient = containerClient.getBlockBlobClient(file.name);
-        promises.push(blockBlobClient.uploadBrowserData(file));
-      }
-      await Promise.all(promises);
-      // reportStatus("Done.");
-      // listFiles();
-    } catch (error) {
-      // reportStatus(error.message);
-      console.log("comething went wrong uploading the file");
-    }
-  };
+  
 
   // selectButton.addEventListener("click", () => fileInput.click());
   // fileInput.addEventListener("change", uploadFiles);
 
   // Update <placeholder> with your Blob service SAS URL string
-  const blobSasUrl = "https://sketch2codestoresc.blob.core.windows.net/?sv=2020-08-04&ss=bfqt&srt=sco&sp=rwdlacupitfx&se=2022-02-17T18:51:06Z&st=2022-02-17T10:51:06Z&spr=https&sig=qRpQbKPwW2s13z%2Bm61PkSAj02R20Aikvi0RNUnA6DLc%3D";
+  const blobSasUrl = "https://sketch2codestoresc.blob.core.windows.net/?sv=2020-08-04&ss=bfqt&srt=sco&sp=rwdlacupitfx&se=2022-02-18T20:49:00Z&st=2022-02-18T12:49:00Z&spr=https&sig=ev6PFs9GCWbO5ISYRk4E%2B3Z2e67e%2BbW4hZaEDwdrJBk%3D";
   // Create a new BlobServiceClient
   const blobServiceClient = new BlobServiceClient(blobSasUrl);
 
@@ -71,10 +56,33 @@ function Dropzone(props) {
   // Get a container client from the BlobServiceClient
   const containerClient = blobServiceClient.getContainerClient(containerName);
 
+  const uploadFiles = async () => {
+    try {
+      // reportStatus("Uploading files...");
+      const promises = [];
+      acceptedFiles.forEach(file => {
+        console.log(file);
+
+       //  get component name here
+       // let filename = componentName + projectID + file.ext;
+        const blockBlobClient = containerClient.getBlockBlobClient(file.name);
+        promises.push(blockBlobClient.uploadData(file));
+      })
+
+      await Promise.all(promises);
+      // reportStatus("Done.");
+      // listFiles();
+    } catch (error) {
+      // reportStatus(error.message);
+      console.log("comething went wrong uploading the file");
+    }
+  };
+
   const handleUpload = () => {
     uploadFiles();
     console.log("done");
   };
+
 
   return (
     <div className="container">
@@ -105,10 +113,10 @@ function Dropzone(props) {
         <p>Drag 'n' drop some files above</p>
         {/* <button type="button" onClick={open}> */}
         <label htmlFor="contained-button-file">
-          <btn className="btn" onClick={open}>
+          <button className="btn" onClick={open}>
             <span>Upload</span>
             <div className="liquid"></div>
-          </btn>
+          </button>
         </label>
         {/* </button> */}
       </div>
