@@ -1,31 +1,27 @@
-const { Schema, model } = require("mongoose")
-const projectSchema = new Schema({
-    project_name:{
-        type: String,
-         required: [true, 'Name field is required']
+const { Schema, model } = require("mongoose");
+const projectSchema = new Schema(
+  {
+    user_id: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      required: [true, "userID are required"],
     },
-    project_framework:{
-        type: String,
-         required: [true, 'framework field is required']
+    project_name: {
+      type: String,
+      required: [true, "Name field is required"],
     },
-    
-    components:{
-        type: String,
-         required: [true, 'Component field is required']
+    project_framework: {
+      type: String,
+      required: [true, "framework field is required"],
     },
-    // description:{
-    //     type: String,
-    //      required: [true, 'Description field is required']
-    // },
-    // user_id:{
-    //     type: String,
-    //      required: [true, 'User ID field is required']
-    // },
-    date:{
-        type: Date,
-        default: Date.now 
-    }
-
-}
-)
+    components: {
+      type: [Schema.Types.ObjectId],
+      ref: "Component",
+      required: [true, "components are required"],
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
 module.exports = model("Project", projectSchema);

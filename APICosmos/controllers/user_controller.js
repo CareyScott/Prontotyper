@@ -47,48 +47,50 @@ const login = (req, res) => {
     });
 };
 
-
-const loginRequired = (req, res, next) => { 
-  if(req.user) {
-    next()
-  }
-  else{
+const loginRequired = (req, res, next) => {
+  if (req.user) {
+    next();
+  } else {
     return res.status(401).json({
-      message: 'unauthorized'
-    })
+      message: "unauthorized",
+    });
   }
-}
-// const getAllUsers = (req, res) => {
-//   User.find()
-//     .then((data) => {
-//       if (data) {
-//         res.status(200).json(data);
-//       } else {
-//         res.status(404).json("No users not found");
-//       }
-//     })
-//     .catch((err) => {
-//       console.error(err);
-//       res.status(500).json(err);
-//     });
-// };
-// const getSingleUser = (req, res) => {
-//   User.findById(req.params.id)
-//     .then((data) => {
-//       if (data) {
-//         res.status(200).json(data);
-//       } else {
-//         res.status(404).json(`User with id: ${req.params.id} not found`);
-//       }
-//     })
-//     .catch((err) => {
-//       console.error(err);
-//       res.status(500).json(err);
-//     });
-// };
+};
+const getAllUsers = (req, res) => {
+  User.find()
+    .populate("projects")
+    .then((data) => {
+      if (data) {
+        res.status(200).json(data);
+      } else {
+        res.status(404).json("No users not found");
+      }
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).json(err);
+    });
+};
+const getSingleUser = (req, res) => {
+  User.findById(req.params.id)
+    .populate("projects")
+    .then((data) => {
+      if (data) {
+        res.status(200).json(data);
+      } else {
+        res.status(404).json(`User with id: ${req.params.id} not found`);
+      }
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).json(err);
+    });
+};
 
 module.exports = {
   register,
   loginRequired,
-  login
+  login,
+  getSingleUser,
+  getAllUsers,
 };

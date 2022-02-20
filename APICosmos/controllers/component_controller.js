@@ -1,14 +1,14 @@
 const res = require("express/lib/response");
+const Component = require("../models/component_schema");
 const Project = require("../models/project_schema");
-const User = require("../models/user_schema");
 
-const getAllProjects = (req, res) => {
-  Project.find()
+const getAllComponents = (req, res) => {
+  Component.find()
     .then((data) => {
       if (data) {
         res.status(200).json(data);
       } else {
-        res.status(404).json("No projects not found");
+        res.status(404).json("No components not found");
       }
     })
     .catch((err) => {
@@ -16,14 +16,13 @@ const getAllProjects = (req, res) => {
       res.status(500).json(err);
     });
 };
-const getSingleProject = (req, res) => {
-  Project.findById(req.params.id)
-    .populate("components")
+const getSingleComponent = (req, res) => {
+  Component.findById(req.params.id)
     .then((data) => {
       if (data) {
         res.status(200).json(data);
       } else {
-        res.status(404).json(`Project with id: ${req.params.id} not found`);
+        res.status(404).json(`component with id: ${req.params.id} not found`);
       }
     })
     .catch((err) => {
@@ -32,17 +31,17 @@ const getSingleProject = (req, res) => {
     });
 };
 
-const addProject = (req, res) => {
-  let projectData = req.body;
-  Project.create(projectData)
+const addComponent = (req, res) => {
+  let componentData = req.body;
+  Component.create(componentData)
     .then((data) => {
       if (data) {
-        User.findByIdAndUpdate(
+        Project.findByIdAndUpdate(
           {
-            _id: data.user_id,
+            _id: data.project,
           },
           {
-            $push: { projects: data._id },
+            $push: { components: data._id },
           },
           (error, success) => {
             if (error) {
@@ -63,9 +62,9 @@ const addProject = (req, res) => {
     });
 };
 
-const editProject = (req, res) => {
-  let projectData = req.body;
-  Project.findByIdAndUpdate(req.params.id, projectData, {
+const editComponent = (req, res) => {
+  let componentData = req.body;
+  Component.findByIdAndUpdate(req.params.id, componentData, {
     new: true,
   })
     .then((data) => {
@@ -83,19 +82,18 @@ const editProject = (req, res) => {
     });
 };
 
-const deleteProject = (req, res) => {
-  let projectData = req.body;
-  Project.findByIdAndDelete(req.params.id, {
+const deleteComponent = (req, res) => {
+  Component.findByIdAndDelete(req.params.id, {
     new: true,
   })
     .then((data) => {
       if (data) {
-        res.status(201).json("project deleted");
+        res.status(201).json("deleted");
       } else {
         res
           .status(404)
           .json(
-            `Project with id: ${req.params.id} not found & does not exist or must already be deleted`
+            `Component with id: ${req.params.id} not found & does not exist or must already be deleted`
           );
       }
     })
@@ -109,9 +107,9 @@ const deleteProject = (req, res) => {
     });
 };
 module.exports = {
-  getAllProjects,
-  getSingleProject,
-  addProject,
-  editProject,
-  deleteProject,
+  getAllComponents,
+  getSingleComponent,
+  addComponent,
+  editComponent,
+  deleteComponent,
 };
