@@ -29,7 +29,27 @@ const getSingleProject = (req, res) => {
     });
 };
 
+const addProject = (req, res) => {
+  let projectData = req.body
+  Project.create(projectData)
+    .then ( (data) => {
+      if(data){
+        res.status(201).json(data)
+      }
+    })
+     .catch((err) =>{
+      if(err.name === "ValidationError"){
+        res.status(422).json(err)
+      }
+      else{
+        console.error(err)
+        res.status(500).json(err)
+      }
+    })
+
+  }
 module.exports = {
   getAllProjects,
   getSingleProject,
+  addProject
 };
