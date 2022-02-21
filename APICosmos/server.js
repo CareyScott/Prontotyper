@@ -59,7 +59,7 @@ app.use((req, res, next) => {
 });
 
 // users
-app.get("/register", register);
+app.post("/register", register);
 app.post("/login", login);
 // app.post('/editUser', editUser)
 

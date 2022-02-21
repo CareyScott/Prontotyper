@@ -14,7 +14,17 @@ const register = (req, res) => {
       });
     } else {
       user.password = undefined;
-      return res.json(user);
+      return res.json({
+        token: jwt.sign(
+          {
+            email: user.email,
+            full_name: user.full_name,
+            _id: user._id,
+          },
+
+          process.env.DECRYPT_STRING
+        ),
+      });
     }
   });
 };
@@ -37,7 +47,8 @@ const login = (req, res) => {
             full_name: user.full_name,
             _id: user._id,
           },
-          "azure_jwt_api"
+
+          process.env.DECRYPT_STRING
         ),
       });
     })
