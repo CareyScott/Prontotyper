@@ -16,8 +16,8 @@ export default function LoginForm(props) {
     console.log(form);
 
     axios
-      .post("http://localhost:3030/login", {
-        // name: form.name,
+      .post("http://localhost:3030/register", {
+        full_name: form.full_name,
         email: form.email,
         password: form.password,
       })
@@ -33,17 +33,17 @@ export default function LoginForm(props) {
     <>
       <Grid container component="main" sx={{ height: "91.2vh" }}>
         <Box component="form" noValidate sx={{ mt: 1 }}>
-          {/* <TextField
+          <TextField
             onChange={handleForm}
             margin="normal"
             required
             fullWidth
-            id="email"
-            label="Name"
-            name="name"
-            autoComplete="name"
+            id="full_name"
+            label="full_name"
+            name="full_name"
+            autoComplete="full_name"
             autoFocus
-          /> */}
+          />
           <TextField
             onChange={handleForm}
             margin="normal"
@@ -66,14 +66,15 @@ export default function LoginForm(props) {
             autoComplete="password"
             autoFocus
           />
- <Button
-                fullWidth
-                variant="contained"
-                sx={{ mt: 3, mb: 2 }}
-                onClick={submitForm}
-              >
-                Sign In
-              </Button>        </Box>
+          <Button
+            fullWidth
+            variant="contained"
+            sx={{ mt: 3, mb: 2 }}
+            onClick={submitForm}
+          >
+            Sign In
+          </Button>{" "}
+        </Box>
       </Grid>
     </>
   );

@@ -79,7 +79,7 @@ const createContainer = async () => {
 // deleteButton.addEventListener("click", deleteFiles);
 
 const darkTheme = createTheme({ palette: { mode: "dark" } });
-const Projects = (props) => {
+const ProjectsIndex = (props) => {
   let numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
   return (
     <>
@@ -133,4 +133,4 @@ const Projects = (props) => {
   );
 };
 
-export default Projects;
+export default ProjectsIndex;
