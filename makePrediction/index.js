@@ -7,7 +7,7 @@ const msRest = require("@azure/ms-rest-js");
 const trainingKey = "de15aea8800e4aacb1695ef40ab9d87a";
 const trainingEndpoint = "https://westus2.api.cognitive.microsoft.com/";
 const predictionKey = "de15aea8800e4aacb1695ef40ab9d87a";
-const predictionResourceId = "/subscriptions/c9e00d87-1435-44d3-9a46-48489b2abcd7/resourceGroups/sketch2code-vision-SC/providers/Microsoft.CognitiveServices/accounts/sketch2code-vision-sc";
+// const predictionResourceId = "/subscriptions/c9e00d87-1435-44d3-9a46-48489b2abcd7/resourceGroups/sketch2code-vision-SC/providers/Microsoft.CognitiveServices/accounts/sketch2code-vision-sc";
 const predictionEndpoint = "https://westus2.api.cognitive.microsoft.com/";
 
 
@@ -39,19 +39,30 @@ const predictor = new PredictionApi.PredictionAPIClient(predictor_credentials, p
     // console.log("Creating project...");
     const domains = await trainer.getDomains()
     const objDetectDomain = domains.find(domain => domain.type === "ObjectDetection");
-    const sampleProject = await trainer.getProject("1bc291a0-6fa9-49fb-9337-c2b3a05977d2", { domainId: objDetectDomain.id });
+    const sampleProject = await trainer.getProject("1eab146a-0e50-449a-b2d2-d14c7664008c", { domainId: objDetectDomain.id });
     // </snippet_create>
 
     const sampleDataRoot = "Images";
 	
     // <snippet_test>
-    const testFile = fs.readFileSync(`${sampleDataRoot}/sample_2.png`);
+    const testFile = fs.readFileSync(`${sampleDataRoot}/small.jpg`);
     const results = await predictor.detectImage(sampleProject.id, publishIterationName, testFile)
 
     // Show results
     console.log("Results:");
+    let probabilityThreshold;
     results.predictions.forEach(predictedResult => {
-        console.log(`\t ${predictedResult.tagName}: ${(predictedResult.probability * 100.0).toFixed(2)}% ${predictedResult.boundingBox.left},${predictedResult.boundingBox.top},${predictedResult.boundingBox.width},${predictedResult.boundingBox.height}`);
+        // console.log(`\t ${predictedResult.tagName}: ${(predictedResult.probability * 100.0).toFixed(2)}% ${predictedResult.boundingBox.left},${predictedResult.boundingBox.top},${predictedResult.boundingBox.width},${predictedResult.boundingBox.height}`);
+        // console.log(`\t ${predictedResult.tagName}: ${(predictedResult.probability * 100.0).toFixed(2)}% `);
+        probabilityThreshold = predictedResult.probability > 0.80;
+        // console.log(probabilityThreshold)
+        if (probabilityThreshold === true){
+        // console.log(`\t ${predictedResult.tagName}: ${(predictedResult.probability * 100.0).toFixed(2)}%  `);
+        // predictedResult = json response object
+        console.log(predictedResult);
+    }
+            
+
     });
     // </snippet_test>
 
