@@ -31,6 +31,10 @@ const {
   editUser,
 } = require("./controllers/user_controller");
 
+const {
+  predict
+} = require("./controllers/prediction_controller");
+
 const port = process.env.PORT;
 
 const app = express();
@@ -81,6 +85,8 @@ app.delete("/components/:id", deleteComponent);
 app.get("/users/", getAllUsers);
 app.get("/users/:id", getSingleUser);
 
+//prediction
+app.get("/predict/", predict)
 app.listen(port, () => {
   console.log(`Listening on port${port}`);
 });
