@@ -26,6 +26,10 @@ import ComponentsEdit from "./pages/Components/Edit";
 import Login from "./auth/Login";
 import Register from "./auth/Register";
 
+
+import Testing from "./pages/Testing";
+
+
 // StyleSheets
 import "./styles.css";
 import "./button.css";
@@ -110,6 +114,8 @@ const App = () => {
           <Route path="/register" element={<Register />} />
 
           <Route path="*" element={<PageNotFound />} />
+          <Route path="/testing" element={<Testing />} />
+
         </Routes>
       </div>
     </Router>
