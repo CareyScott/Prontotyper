@@ -26,12 +26,12 @@ const predict = async (req, res) => {
 
     const sampleDataRoot = "Images";
 	
-    const testFile = fs.readFileSync(`${sampleDataRoot}/small.jpg`);
+    const testFile = fs.readFileSync(`${sampleDataRoot}/alltest.jpg`);
     const results = await predictor.detectImage(sampleProject.id, publishIterationName, testFile)
     
     .then((data) => {
         if (data) {
-          res.status(200).json(data.predictions);
+          res.status(200).json(data);
         } else {
           res.status(404).json("No prediction can be made");
         }

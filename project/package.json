@@ -28,6 +28,7 @@
     "react-moment": "^1.1.1",
     "react-router-dom": "^6.2.1",
     "react-scripts": "5.0.0",
+    "tag-b": "^1.0.4",
     "util": "^0.12.4",
     "web-vitals": "^2.1.4"
   },
@@ -54,5 +55,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "grunt-html-amend": "^1.0.0"
   }
 }

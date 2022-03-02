@@ -62,13 +62,13 @@ const App = () => {
   if (authenticated) {
     protectedPages = (
       <>
-        <Route path="/projects/create" element={<ProjectsCreate />} />
-        <Route path="/projects/:id/edit" element={<ProjectsEdit />} />
+        {/* <Route path="/projects/create" element={<ProjectsCreate />} /> */}
+        {/* <Route path="/projects/:id/edit" element={<ProjectsEdit />} />
         <Route path="/projects/:id" element={<ProjectsShow />} />
 
         <Route path="/components/create" element={<ComponentsCreate />} />
         <Route path="/components/:id/edit" element={<ComponentsEdit />} />
-        <Route path="/components/:id" element={<ComponentsShow />} />
+        <Route path="/components/:id" element={<ComponentsShow />} /> */}
       </>
     );
   }
