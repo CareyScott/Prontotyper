@@ -1,20 +1,16 @@
 .parent {
   display: grid;
-  grid-template-columns: repeat(10);
-  grid-template-rows: repeat(10, 1fr);
-  grid-column-gap: 05px;
-  grid-row-gap: 05px;
-}
-.component1 {
-  grid-area: 1 / 1 / 1 / 1;
-}
-.component2 {
-    grid-area: 2 / 2 / 2 / 2;
+  grid-template-columns: repeat(6, 1fr);
+  grid-template-rows: repeat(6, 1fr);
+  grid-column-gap: 0px;
+  grid-row-gap: 0px;
   }
-  .component3{
-    grid-area: 3 / 3 / 3 / 3;
-  }
-
-  .component4 {
-    grid-area: 4 / 4 / 4 / 4;
-  }
+  
+  .div1 { grid-area: 3 / 6 / 4 / 7; }
+  .div2 { grid-area: 1 / 1 / 2 / 2; }
+  .div3 { grid-area: 4 / 2 / 5 / 3; }
+  .div4 { grid-area: 3 / 3 / 4 / 4; }
+  .div5 { grid-area: 2 / 4 / 3 / 5; }
+  .div6 { grid-area: 2 / 5 / 3 / 6; }
+  .div7 { grid-area: 3 / 4 / 4 / 5; }
+  .div8 { grid-area: 4 / 3 / 5 / 4; }

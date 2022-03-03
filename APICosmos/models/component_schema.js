@@ -13,6 +13,9 @@ const componentSchema = new Schema(
       type: String,
       //  required: [true, 'Code Url field is required']
     },
+    prediction: {
+      type: Object,
+    },
     project: {
       type: Schema.Types.ObjectId,
       ref: "Project",

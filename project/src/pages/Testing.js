@@ -8,7 +8,7 @@ import Hello from '../components/prediction_results';
 
 function Positioning(prediction) {
 
-    const [leftPosition, setLeftPosition] = useState('');
+    // const [leftPosition, setLeftPosition] = useState('');
     // let leftPositionString = leftPosition.toString();
   
   
@@ -98,15 +98,15 @@ const Testing = (props, leftPosition) => {
   
 // console.log(leftPosition);
   if (isLoading) {
-    return <div className="App">Loading...</div>;
+    return <div className="">Loading...</div>;
   }
 
   
   return (
     <>
-      <div container className="parent">
-        <div><Hello importFrom={prediction}/></div>
-      </div>
+    <div className="parent">
+        <Hello importFrom={prediction}/>
+        </div>
     </>
   );
 };

@@ -30,7 +30,19 @@ const predict = async (req, res) => {
     const results = await predictor.detectImage(sampleProject.id, publishIterationName, testFile)
     
     .then((data) => {
+      
         if (data) {
+          data.predictions = data.predictions.filter(
+            (prediction) => prediction.probability >= 0.9
+          );
+
+          ///////////////////
+
+
+
+          //////////////////
+
+          console.log(data);
           res.status(200).json(data);
         } else {
           res.status(404).json("No prediction can be made");
