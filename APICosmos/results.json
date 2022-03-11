@@ -1,0 +1,176 @@
+{
+	"id": "fe9d2084-4c7b-429b-9529-cb2a70ed4149",
+	"project": "1eab146a-0e50-449a-b2d2-d14c7664008c",
+	"iteration": "34e78b48-4aa8-471f-b9ec-c89dd6300373",
+	"created": "2022-03-03T14:16:38.032Z",
+	"predictions": [
+		{
+			"probability": 0.9148592,
+			"tagId": "80f3d163-417a-4b33-b0d3-25159804f041",
+			"tagName": "Button",
+			"boundingBox": {
+				"left": "left",
+				"top": "center",
+				"width": 0.26186836,
+				"height": 0.06003049
+			},
+			"tagType": "Regular"
+		},
+		{
+			"probability": 0.98727405,
+			"tagId": "ac9acad9-00bd-487e-8afd-5953fe6346ac",
+			"tagName": "Checkbox",
+			"boundingBox": {
+				"left": "left",
+				"top": "center",
+				"width": 0.5222634,
+				"height": 0.056361645
+			},
+			"tagType": "Regular"
+		},
+		{
+			"probability": 0.975109,
+			"tagId": "ff8d01cd-2516-4eba-a934-0a3a967301c6",
+			"tagName": "Header",
+			"boundingBox": {
+				"left": "left",
+				"top": "center",
+				"width": 0.23558187,
+				"height": 0.05449444
+			},
+			"tagType": "Regular"
+		},
+		{
+			"probability": 0.94913685,
+			"tagId": "ff8d01cd-2516-4eba-a934-0a3a967301c6",
+			"tagName": "Header",
+			"boundingBox": {
+				"left": "left",
+				"top": "top",
+				"width": 0.45191175,
+				"height": 0.042712938
+			},
+			"tagType": "Regular"
+		},
+		{
+			"probability": 0.9998267,
+			"tagId": "24000f22-940b-435c-8314-ff70431f766a",
+			"tagName": "Image",
+			"boundingBox": {
+				"left": "right",
+				"top": "bottom",
+				"width": 0.26239288,
+				"height": 0.15662211
+			},
+			"tagType": "Regular"
+		},
+		{
+			"probability": 0.99967635,
+			"tagId": "24000f22-940b-435c-8314-ff70431f766a",
+			"tagName": "Image",
+			"boundingBox": {
+				"left": "right",
+				"top": "center",
+				"width": 0.27182066,
+				"height": 0.11940926
+			},
+			"tagType": "Regular"
+		},
+		{
+			"probability": 0.99639386,
+			"tagId": "d61c0104-3a62-411b-a367-4e35580e354d",
+			"tagName": "Label",
+			"boundingBox": {
+				"left": "left",
+				"top": "top",
+				"width": 0.14252454,
+				"height": 0.031090304
+			},
+			"tagType": "Regular"
+		},
+		{
+			"probability": 0.9808874,
+			"tagId": "d61c0104-3a62-411b-a367-4e35580e354d",
+			"tagName": "Label",
+			"boundingBox": {
+				"left": "center",
+				"top": "top",
+				"width": 0.25881648,
+				"height": 0.041204967
+			},
+			"tagType": "Regular"
+		},
+		{
+			"probability": 0.9583834,
+			"tagId": "d61c0104-3a62-411b-a367-4e35580e354d",
+			"tagName": "Label",
+			"boundingBox": {
+				"left": "left",
+				"top": "center",
+				"width": 0.24861485,
+				"height": 0.036913097
+			},
+			"tagType": "Regular"
+		},
+		{
+			"probability": 0.9399085,
+			"tagId": "42abb817-18db-4672-b3a2-8e85230511a0",
+			"tagName": "Link",
+			"boundingBox": {
+				"left": "left",
+				"top": "top",
+				"width": 0.3216787,
+				"height": 0.02869846
+			},
+			"tagType": "Regular"
+		},
+		{
+			"probability": 0.9982344,
+			"tagId": "57705500-6bd2-4945-afb1-7427b5d7a394",
+			"tagName": "Paragraph",
+			"boundingBox": {
+				"left": "center",
+				"top": "bottom",
+				"width": 0.26359975,
+				"height": 0.18419611
+			},
+			"tagType": "Regular"
+		},
+		{
+			"probability": 0.9981014,
+			"tagId": "57705500-6bd2-4945-afb1-7427b5d7a394",
+			"tagName": "Paragraph",
+			"boundingBox": {
+				"left": "left",
+				"top": "bottom",
+				"width": 0.31666702,
+				"height": 0.14693016
+			},
+			"tagType": "Regular"
+		},
+		{
+			"probability": 0.99795914,
+			"tagId": "57705500-6bd2-4945-afb1-7427b5d7a394",
+			"tagName": "Paragraph",
+			"boundingBox": {
+				"left": "left",
+				"top": "bottom",
+				"width": 0.29358083,
+				"height": 0.10643226
+			},
+			"tagType": "Regular"
+		},
+		{
+			"probability": 0.99760336,
+			"tagId": "432f2a14-f2db-4482-8780-8594da625e5c",
+			"tagName": "TextBox",
+			"boundingBox": {
+				"left": "left",
+				"top": "top",
+				"width": 0.23734307,
+				"height": 0.040535763
+			},
+			"tagType": "Regular"
+		}
+	]
+}

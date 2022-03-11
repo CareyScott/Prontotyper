@@ -23,7 +23,7 @@ import ComponentsShow from "./pages/Components/Show";
 import ComponentsEdit from "./pages/Components/Edit";
 
 // Auth Pages
-import Login from "./auth/Login";
+import Login from "./auth/login";
 import Register from "./auth/Register";
 
 

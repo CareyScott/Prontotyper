@@ -49,7 +49,7 @@
   }
 
   .app {
-    /* display: flex; */
+    display: flex;
     flex-direction: row;
     min-height: 100vh;
     width: 90%;
