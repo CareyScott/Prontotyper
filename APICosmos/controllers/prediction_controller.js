@@ -4,6 +4,7 @@ const res = require("express/lib/response");
 const TrainingApi = require("@azure/cognitiveservices-customvision-training");
 const PredictionApi = require("@azure/cognitiveservices-customvision-prediction");
 const msRest = require("@azure/ms-rest-js");
+const { find } = require("../models/project_schema");
 
 const trainingKey = "de15aea8800e4aacb1695ef40ab9d87a";
 const trainingEndpoint = "https://westus2.api.cognitive.microsoft.com/";
@@ -28,13 +29,109 @@ const predictor = new PredictionApi.PredictionAPIClient(
 );
 
 function findTopPosition(data) {
-  var predictionArray = [];
+  // var predictionArray = [];
 
-  for (var i = 0; i < data.predictions.length; i++) {
-    var arrayItem = data.predictions[i];
-    predictionArray.push(arrayItem);
-  }
-  console.log(predictionArray.sort());
+  // for (var i = 0; i < data.predictions.length; i++) {
+  //   var arrayItem = data.predictions[i];
+  //   predictionArray.push(arrayItem);
+  // }
+  // console.log(predictionArray.sort());
+
+  let sortedTop = data.predictions.sort((prev, current) => {
+    // console.log(prev.boundingBox.top)
+    // console.log(current.boundingBox.top)
+    return prev.boundingBox.top - current.boundingBox.top;
+  });
+  console.log("sortedTop: ")
+  // console.log(sortedTop)
+
+  // sortedTop.filter(() => {});
+
+  // console.log("sorting top");
+
+  let topElements = [];
+
+  sortedTop.forEach((element, index) => {
+    let topElement = element.boundingBox.top;
+    console.log(topElement)
+    topElements.push(element);
+  });
+  // console.log(topElements)
+
+  let sortedLeft = data.predictions.sort((prev, current) => {
+    return prev.boundingBox.left - current.boundingBox.left;
+  });
+
+  let leftElements = [];
+  console.log('sorting left')
+  sortedLeft.forEach((element, index) => {
+    let leftElement = element.boundingBox.left;
+    console.log(leftElement)
+    leftElements.push(element);
+  });
+  // console.log(leftElements)
+
+
+
+
+
+topElements.forEach((elementTop, index) => {
+    let i = leftElements.findIndex((elementLeft) => {
+      // console.log(elementTop.boundingBox.top)
+      // console.log(elementLeft.boundingBox.top)
+      return elementLeft.boundingBox.top === elementTop.boundingBox.top
+    });
+
+    // let top = sortedLeft.map(elementLeft => elementLeft.boundingBox.top);
+
+    // let i = top.indexOf(elementTop.boundingBox.top);
+
+    console.log(`Top: ${index} Left: ${i}`)
+
+  });
+
+  // leftElements.forEach((element, index) => {
+  //   let i = topElements[element];
+  //   let findTop = topElements.find(
+  //     (value) => value.boundingBox === element.boundingBox
+  //   );
+  //   // console.log(element.tagName);
+  //   // console.log(`${element.boundingBox.left}`);
+  //   // console.log(findTop.boundingBox.top);
+  //   // console.log("");
+  //   // console.log("");
+  // });
+
+  // console.log('sorting left')
+  // sortedLeft.forEach((element, index) => {
+  //   console.log(element.boundingBox.left)
+  // })
+
+  // console.log("sortedLeft: ")
+  // console.log(sortedLeft)
+
+  // sortedTop.forEach((elementTop, index) => {
+  //   let i = sortedLeft.findIndex((elementLeft) => {
+  //     // console.log(elementTop.boundingBox.top)
+  //     // console.log(elementLeft.boundingBox.top)
+  //     return elementLeft.boundingBox.top === elementTop.boundingBox.top
+  //   });
+
+  //   // let top = sortedLeft.map(elementLeft => elementLeft.boundingBox.top);
+
+  //   // let i = top.indexOf(elementTop.boundingBox.top);
+
+  //   console.log(`Top: ${index} Left: ${i}`)
+
+  // });
+
+  // sortedTop.forEach((elementTop, index) => {
+  //   let i = sortedLeft.indexOf({
+  //     boundingBox: elementTop.boundingBox
+  //   })
+  //   console.log(`Top: ${index} Left: ${i}`)
+  // });
+
   // var array = [];
   // predictionArray.forEach( function(key, value) {
   //   // console.log(value);
@@ -102,25 +199,25 @@ function positioningAlgorithm(data) {
 
     // console.log(prediction);
 
-    // if (left < 0.3) {
-    //   // console.log("Set in grid left- 1/1");
-    //   prediction.boundingBox.left = "left-left";
-    // } else if (left > 0.3 && left < 0.6) {
-    //   // prediction.boundingBox["position"] = 'center';
-    //   prediction.boundingBox.left = "left-center";
-    // } else if (left > 0.6 && left < 1) {
-    //   prediction.boundingBox.left = "left-right";
-    //   // prediction.boundingBox["position"] = 'right';
-    // }
+    if (left < 0.3) {
+      // console.log("Set in grid left- 1/1");
+      // prediction.boundingBox.left = "left-left";
+    } else if (left > 0.3 && left < 0.6) {
+      // prediction.boundingBox["position"] = 'center';
+      // prediction.boundingBox.left = "left-center";
+    } else if (left > 0.6 && left < 1) {
+      // prediction.boundingBox.left = "left-right";
+      // prediction.boundingBox["position"] = 'right';
+    }
 
     if (top < 0.3) {
       // console.log("Set in grid left- 1/1");
-      prediction.boundingBox.top = "top-top";
+      // prediction.boundingBox.top = "top-top";
     } else if (top > 0.3 && top < 0.6) {
       // prediction.boundingBox["position"] = 'center';
-      prediction.boundingBox.top = "top-center";
+      // prediction.boundingBox.top = "top-center";
     } else if (top > 0.6 && top < 1) {
-      prediction.boundingBox.top = "top-bottom";
+      // prediction.boundingBox.top = "top-bottom";
       // prediction.boundingBox["position"] = 'right';
     }
   });

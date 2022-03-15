@@ -45,7 +45,7 @@ function Dropzone(props) {
   // fileInput.addEventListener("change", uploadFiles);
 
   // Update <placeholder> with your Blob service SAS URL string
-  const blobSasUrl = "https://sketch2codestoresc.blob.core.windows.net/?sv=2020-08-04&ss=bfqt&srt=sco&sp=rwdlacupitfx&se=2022-02-18T20:49:00Z&st=2022-02-18T12:49:00Z&spr=https&sig=ev6PFs9GCWbO5ISYRk4E%2B3Z2e67e%2BbW4hZaEDwdrJBk%3D";
+  const blobSasUrl = "https://sketch2codestoresc.blob.core.windows.net/?sv=2020-08-04&ss=bfqt&srt=sco&sp=rwdlacupitfx&se=2022-03-15T23:59:33Z&st=2022-03-15T15:59:33Z&spr=https&sig=US5S1CeRfcV0rk9QJ6yZu4l%2BE3oqTj0pgFD6hA%2BLEx4%3D";
   // Create a new BlobServiceClient
   const blobServiceClient = new BlobServiceClient(blobSasUrl);
 

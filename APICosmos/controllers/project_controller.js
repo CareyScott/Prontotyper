@@ -30,7 +30,7 @@ const getSingleProject = (req, res) => {
       console.error(err);
       res.status(500).json(err);
     });
-};
+  };
 
 const addProject = (req, res) => {
   let projectData = req.body;
