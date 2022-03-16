@@ -42,7 +42,7 @@ function findTopPosition(data) {
     // console.log(current.boundingBox.top)
     return prev.boundingBox.top - current.boundingBox.top;
   });
-  console.log("sortedTop: ")
+  // console.log("sortedTop: ")
   // console.log(sortedTop)
 
   // sortedTop.filter(() => {});
@@ -53,7 +53,7 @@ function findTopPosition(data) {
 
   sortedTop.forEach((element, index) => {
     let topElement = element.boundingBox.top;
-    console.log(topElement)
+    // console.log(element.boundingBox.left *100)
     topElements.push(element);
   });
   // console.log(topElements)
@@ -63,32 +63,114 @@ function findTopPosition(data) {
   });
 
   let leftElements = [];
-  console.log('sorting left')
+  // console.log('sorting left')
   sortedLeft.forEach((element, index) => {
     let leftElement = element.boundingBox.left;
-    console.log(leftElement)
+    // console.log(leftElement)#
+
     leftElements.push(element);
   });
   // console.log(leftElements)
 
-
-
-
-
-topElements.forEach((elementTop, index) => {
+  topElements.forEach((elementTop, index) => {
     let i = leftElements.findIndex((elementLeft) => {
       // console.log(elementTop.boundingBox.top)
       // console.log(elementLeft.boundingBox.top)
-      return elementLeft.boundingBox.top === elementTop.boundingBox.top
+      return elementLeft.boundingBox.top === elementTop.boundingBox.top;
     });
 
+    elementTop.boundingBox['elementLeft'] = i;
+
+    // console.log(elementTop)
     // let top = sortedLeft.map(elementLeft => elementLeft.boundingBox.top);
 
     // let i = top.indexOf(elementTop.boundingBox.top);
 
-    console.log(`Top: ${index} Left: ${i}`)
-
+    // console.log(`Top: ${index} Left: ${i}`)
   });
+
+  for (let i = 0; i < topElements.length; i++) {
+    let rangeTop;
+    if (i === 0) {
+      rangeTop = topElements[i].boundingBox.top;
+    } else {
+      rangeTop =
+        topElements[i].boundingBox.top - topElements[i - 1].boundingBox.top;
+    }
+
+    console.log(
+      `Range Top: for index ${i} with a difference of ${rangeTop} for ${topElements[i].tagName}`
+    );
+
+    // determining rows
+
+    if (rangeTop > 0.03) {
+      topElements[i].boundingBox["range"] = "nextRow";
+    } else {
+      // topElements[i].boundingBox["position"] = ;
+      topElements[i].boundingBox["range"] = "sameRow";
+    }
+
+    if (i === 0){
+      topElements[0].boundingBox["range"] = "firstElement";
+    }
+  
+
+// determining columns
+
+if (topElements[i].boundingBox.width >  0 &&  topElements[i].boundingBox.width < 0.0833333333333333) {
+  topElements[i].boundingBox["column"] = "col-1";
+} else if (topElements[i].boundingBox.width >  0.0833333333333333 &&  topElements[i].boundingBox.width < 0.1666666666666666){
+  // topElements[i].boundingBox["position"] = ;
+  topElements[i].boundingBox["column"] = "col-2";
+}else if (topElements[i].boundingBox.width >  0.1666666666666666 &&  topElements[i].boundingBox.width < 0.2499999999999999){
+  // topElements[i].boundingBox["position"] = ;
+  topElements[i].boundingBox["column"] = "col-3";
+}else if (topElements[i].boundingBox.width >  0.2499999999999999 &&  topElements[i].boundingBox.width < 0.3333333333333332 ){
+  // topElements[i].boundingBox["position"] = ;
+  topElements[i].boundingBox["column"] = "col-4";
+}else if (topElements[i].boundingBox.width >  0.3333333333333332 &&  topElements[i].boundingBox.width < 0.4166666666666665 ){
+  // topElements[i].boundingBox["position"] = ;
+  topElements[i].boundingBox["column"] = "col-5";
+}else if (topElements[i].boundingBox.width >  0.4166666666666665 &&  topElements[i].boundingBox.width < 0.4999999999999998){
+  // topElements[i].boundingBox["position"] = ;
+  topElements[i].boundingBox["column"] = "col-6";
+}else if (topElements[i].boundingBox.width >  0.4999999999999998 &&  topElements[i].boundingBox.width < 0.5833333333333331){
+  // topElements[i].boundingBox["position"] = ;
+  topElements[i].boundingBox["column"] = "col-7";
+}else if (topElements[i].boundingBox.width >  0.5833333333333331 &&  topElements[i].boundingBox.width < 0.6666666666666664){
+  // topElements[i].boundingBox["position"] = ;
+  topElements[i].boundingBox["column"] = "col-8";
+}else if (topElements[i].boundingBox.width >  0.6666666666666664 &&  topElements[i].boundingBox.width < 0.7499999999999997 ){
+  // topElements[i].boundingBox["position"] = ;
+  topElements[i].boundingBox["column"] = "col-9";
+}else if (topElements[i].boundingBox.width >  0.7499999999999997 &&  topElements[i].boundingBox.width < 0.833333333333333){
+  // topElements[i].boundingBox["position"] = ;
+  topElements[i].boundingBox["column"] = "col-10";
+}else if (topElements[i].boundingBox.width >  0.833333333333333 &&  topElements[i].boundingBox.width < 0.9166666666666663 ){
+  // topElements[i].boundingBox["position"] = ;
+  topElements[i].boundingBox["column"] = "col-11";
+}else if (topElements[i].boundingBox.width >  0.9166666666666663 &&  topElements[i].boundingBox.width < 1){
+  // topElements[i].boundingBox["position"] = ;
+  topElements[i].boundingBox["column"] = "col-12";
+}
+
+if (i === 0){
+  topElements[0].boundingBox["range"] = "firstElement";
+}
+  }
+
+  // console.log(topElements);
+
+
+  data.predictions = topElements;
+
+  // console.log(data.predictions)
+
+  // for (let i = 1; i < leftElements.length; i++) {
+  //   let rangeLeft = leftElements[i].boundingBox.top - leftElements[i - 1].boundingBox.top
+  //   console.log(`Range Left: for index ${i} with a difference of ${rangeLeft} for ${leftElements[i].tagName}`)
+  // }
 
   // leftElements.forEach((element, index) => {
   //   let i = topElements[element];
@@ -246,7 +328,7 @@ const predict = async (req, res) => {
 
         // let left = data.prediction.boundingBox.left;
         findTopPosition(data);
-        positioningAlgorithm(data);
+        // positioningAlgorithm(data);
 
         ///////////////////
 
