@@ -79,14 +79,14 @@ function findTopPosition(data) {
       return elementLeft.boundingBox.top === elementTop.boundingBox.top;
     });
 
-    elementTop.boundingBox['elementLeft'] = i;
+    elementTop.boundingBox["elementLeft"] = i;
 
     // console.log(elementTop)
     // let top = sortedLeft.map(elementLeft => elementLeft.boundingBox.top);
 
     // let i = top.indexOf(elementTop.boundingBox.top);
 
-    // console.log(`Top: ${index} Left: ${i}`)
+    console.log(`Top: ${index} Left: ${i}`)
   });
 
   for (let i = 0; i < topElements.length; i++) {
@@ -111,58 +111,253 @@ function findTopPosition(data) {
       topElements[i].boundingBox["range"] = "sameRow";
     }
 
-    if (i === 0){
+    if (i === 0) {
       topElements[0].boundingBox["range"] = "firstElement";
     }
-  
 
-// determining columns
+    // determining columns
 
-if (topElements[i].boundingBox.width >  0 &&  topElements[i].boundingBox.width < 0.0833333333333333) {
-  topElements[i].boundingBox["column"] = "col-1";
-} else if (topElements[i].boundingBox.width >  0.0833333333333333 &&  topElements[i].boundingBox.width < 0.1666666666666666){
-  // topElements[i].boundingBox["position"] = ;
-  topElements[i].boundingBox["column"] = "col-2";
-}else if (topElements[i].boundingBox.width >  0.1666666666666666 &&  topElements[i].boundingBox.width < 0.2499999999999999){
-  // topElements[i].boundingBox["position"] = ;
-  topElements[i].boundingBox["column"] = "col-3";
-}else if (topElements[i].boundingBox.width >  0.2499999999999999 &&  topElements[i].boundingBox.width < 0.3333333333333332 ){
-  // topElements[i].boundingBox["position"] = ;
-  topElements[i].boundingBox["column"] = "col-4";
-}else if (topElements[i].boundingBox.width >  0.3333333333333332 &&  topElements[i].boundingBox.width < 0.4166666666666665 ){
-  // topElements[i].boundingBox["position"] = ;
-  topElements[i].boundingBox["column"] = "col-5";
-}else if (topElements[i].boundingBox.width >  0.4166666666666665 &&  topElements[i].boundingBox.width < 0.4999999999999998){
-  // topElements[i].boundingBox["position"] = ;
-  topElements[i].boundingBox["column"] = "col-6";
-}else if (topElements[i].boundingBox.width >  0.4999999999999998 &&  topElements[i].boundingBox.width < 0.5833333333333331){
-  // topElements[i].boundingBox["position"] = ;
-  topElements[i].boundingBox["column"] = "col-7";
-}else if (topElements[i].boundingBox.width >  0.5833333333333331 &&  topElements[i].boundingBox.width < 0.6666666666666664){
-  // topElements[i].boundingBox["position"] = ;
-  topElements[i].boundingBox["column"] = "col-8";
-}else if (topElements[i].boundingBox.width >  0.6666666666666664 &&  topElements[i].boundingBox.width < 0.7499999999999997 ){
-  // topElements[i].boundingBox["position"] = ;
-  topElements[i].boundingBox["column"] = "col-9";
-}else if (topElements[i].boundingBox.width >  0.7499999999999997 &&  topElements[i].boundingBox.width < 0.833333333333333){
-  // topElements[i].boundingBox["position"] = ;
-  topElements[i].boundingBox["column"] = "col-10";
-}else if (topElements[i].boundingBox.width >  0.833333333333333 &&  topElements[i].boundingBox.width < 0.9166666666666663 ){
-  // topElements[i].boundingBox["position"] = ;
-  topElements[i].boundingBox["column"] = "col-11";
-}else if (topElements[i].boundingBox.width >  0.9166666666666663 &&  topElements[i].boundingBox.width < 1){
-  // topElements[i].boundingBox["position"] = ;
-  topElements[i].boundingBox["column"] = "col-12";
-}
+    if (
+      topElements[i].boundingBox.width > 0 &&
+      topElements[i].boundingBox.width < 0.0833333333333333
+    ) {
+      topElements[i].boundingBox["width"] = "width-1";
+    } else if (
+      topElements[i].boundingBox.width > 0.0833333333333333 &&
+      topElements[i].boundingBox.width < 0.1666666666666666
+    ) {
+      // topElements[i].boundingBox["position"] = ;
+      topElements[i].boundingBox["width"] = "width-2";
+    } else if (
+      topElements[i].boundingBox.width > 0.1666666666666666 &&
+      topElements[i].boundingBox.width < 0.2499999999999999
+    ) {
+      // topElements[i].boundingBox["position"] = ;
+      topElements[i].boundingBox["width"] = "width-3";
+    } else if (
+      topElements[i].boundingBox.width > 0.2499999999999999 &&
+      topElements[i].boundingBox.width < 0.3333333333333332
+    ) {
+      // topElements[i].boundingBox["position"] = ;
+      topElements[i].boundingBox["width"] = "width-4";
+    } else if (
+      topElements[i].boundingBox.width > 0.3333333333333332 &&
+      topElements[i].boundingBox.width < 0.4166666666666665
+    ) {
+      // topElements[i].boundingBox["position"] = ;
+      topElements[i].boundingBox["width"] = "width-5";
+    } else if (
+      topElements[i].boundingBox.width > 0.4166666666666665 &&
+      topElements[i].boundingBox.width < 0.4999999999999998
+    ) {
+      // topElements[i].boundingBox["position"] = ;
+      topElements[i].boundingBox["width"] = "width-6";
+    } else if (
+      topElements[i].boundingBox.width > 0.4999999999999998 &&
+      topElements[i].boundingBox.width < 0.5833333333333331
+    ) {
+      // topElements[i].boundingBox["position"] = ;
+      topElements[i].boundingBox["width"] = "width-7";
+    } else if (
+      topElements[i].boundingBox.width > 0.5833333333333331 &&
+      topElements[i].boundingBox.width < 0.6666666666666664
+    ) {
+      // topElements[i].boundingBox["position"] = ;
+      topElements[i].boundingBox["width"] = "width-8";
+    } else if (
+      topElements[i].boundingBox.width > 0.6666666666666664 &&
+      topElements[i].boundingBox.width < 0.7499999999999997
+    ) {
+      // topElements[i].boundingBox["position"] = ;
+      topElements[i].boundingBox["width"] = "width-9";
+    } else if (
+      topElements[i].boundingBox.width > 0.7499999999999997 &&
+      topElements[i].boundingBox.width < 0.833333333333333
+    ) {
+      // topElements[i].boundingBox["position"] = ;
+      topElements[i].boundingBox["width"] = "width-10";
+    } else if (
+      topElements[i].boundingBox.width > 0.833333333333333 &&
+      topElements[i].boundingBox.width < 0.9166666666666663
+    ) {
+      // topElements[i].boundingBox["position"] = ;
+      topElements[i].boundingBox["width"] = "width-11";
+    } else if (
+      topElements[i].boundingBox.width > 0.9166666666666663 &&
+      topElements[i].boundingBox.width < 1
+    ) {
+      // topElements[i].boundingBox["position"] = ;
+      topElements[i].boundingBox["width"] = "width-12";
+    }
 
-if (i === 0){
-  topElements[0].boundingBox["range"] = "firstElement";
-}
+    if (i === 0) {
+      topElements[0].boundingBox["range"] = "firstElement";
+    }
+
+    // CHECKING IF FIRST ELEMENT THEN PUSH TO LEFT
+
+    if (topElements[i].boundingBox.range === "firstElement"  ){
+      if (
+        topElements[i].boundingBox.left > 0 &&
+        topElements[i].boundingBox.left < 0.0833333333333333
+      ) {
+        topElements[i].boundingBox["pushLeft"] = "left-1";
+      } else if (
+        topElements[i].boundingBox.left > 0.0833333333333333 &&
+        topElements[i].boundingBox.left < 0.1666666666666666
+      ) {
+        // topElements[i].boundingBox["position"] = ;
+        topElements[i].boundingBox["lepushLeftft"] = "left-2";
+      } else if (
+        topElements[i].boundingBox.left > 0.1666666666666666 &&
+        topElements[i].boundingBox.left < 0.2499999999999999
+      ) {
+        // topElements[i].boundingBox["position"] = ;
+        topElements[i].boundingBox["pushLeft"] = "left-3";
+      } else if (
+        topElements[i].boundingBox.left > 0.2499999999999999 &&
+        topElements[i].boundingBox.left < 0.3333333333333332
+      ) {
+        // topElements[i].boundingBox["position"] = ;
+        topElements[i].boundingBox["pushLeft"] = "left-4";
+      } else if (
+        topElements[i].boundingBox.left > 0.3333333333333332 &&
+        topElements[i].boundingBox.left < 0.4166666666666665
+      ) {
+        // topElements[i].boundingBox["position"] = ;
+        topElements[i].boundingBox["pushLeft"] = "left-5";
+      } else if (
+        topElements[i].boundingBox.left > 0.4166666666666665 &&
+        topElements[i].boundingBox.left < 0.4999999999999998
+      ) {
+        // topElements[i].boundingBox["position"] = ;
+        topElements[i].boundingBox["pushLeft"] = "left-6";
+      } else if (
+        topElements[i].boundingBox.left > 0.4999999999999998 &&
+        topElements[i].boundingBox.left < 0.5833333333333331
+      ) {
+        // topElements[i].boundingBox["position"] = ;
+        topElements[i].boundingBox["pushLeft"] = "left-7";
+      } else if (
+        topElements[i].boundingBox.left > 0.5833333333333331 &&
+        topElements[i].boundingBox.left < 0.6666666666666664
+      ) {
+        // topElements[i].boundingBox["position"] = ;
+        topElements[i].boundingBox["pushLeft"] = "left-8";
+      } else if (
+        topElements[i].boundingBox.left > 0.6666666666666664 &&
+        topElements[i].boundingBox.left < 0.7499999999999997
+      ) {
+        // topElements[i].boundingBox["position"] = ;
+        topElements[i].boundingBox["pushLeft"] = "left-9";
+      } else if (
+        topElements[i].boundingBox.left > 0.7499999999999997 &&
+        topElements[i].boundingBox.left < 0.833333333333333
+      ) {
+        // topElements[i].boundingBox["position"] = ;
+        topElements[i].boundingBox["pushLeft"] = "left-10";
+      } else if (
+        topElements[i].boundingBox.left > 0.833333333333333 &&
+        topElements[i].boundingBox.left < 0.9166666666666663
+      ) {
+        // topElements[i].boundingBox["position"] = ;
+        topElements[i].boundingBox["pushLeft"] = "left-11";
+      } else if (
+        topElements[i].boundingBox.left > 0.9166666666666663 &&
+        topElements[i].boundingBox.left < 1
+      ) {
+        // topElements[i].boundingBox["position"] = ;
+        topElements[i].boundingBox["pushLeft"] = "left-12";
+      }
+    }
+
+
+    if (topElements[i].boundingBox.range === "nextRow"  ){
+      if (
+        topElements[i].boundingBox.left > 0 &&
+        topElements[i].boundingBox.left < 0.0833333333333333
+      ) {
+        topElements[i].boundingBox["pushLeft"] = "left-1";
+      } else if (
+        topElements[i].boundingBox.left > 0.0833333333333333 &&
+        topElements[i].boundingBox.left < 0.1666666666666666
+      ) {
+        // topElements[i].boundingBox["position"] = ;
+        topElements[i].boundingBox["pushLeft"] = "left-2";
+      } else if (
+        topElements[i].boundingBox.left > 0.1666666666666666 &&
+        topElements[i].boundingBox.left < 0.2499999999999999
+      ) {
+        // topElements[i].boundingBox["position"] = ;
+        topElements[i].boundingBox["pushLeft"] = "left-3";
+      } else if (
+        topElements[i].boundingBox.left > 0.2499999999999999 &&
+        topElements[i].boundingBox.left < 0.3333333333333332
+      ) {
+        // topElements[i].boundingBox["position"] = ;
+        topElements[i].boundingBox["pushLeft"] = "left-4";
+      } else if (
+        topElements[i].boundingBox.left > 0.3333333333333332 &&
+        topElements[i].boundingBox.left < 0.4166666666666665
+      ) {
+        // topElements[i].boundingBox["position"] = ;
+        topElements[i].boundingBox["pushLeft"] = "left-5";
+      } else if (
+        topElements[i].boundingBox.left > 0.4166666666666665 &&
+        topElements[i].boundingBox.left < 0.4999999999999998
+      ) {
+        // topElements[i].boundingBox["position"] = ;
+        topElements[i].boundingBox["pushLeft"] = "left-6";
+      } else if (
+        topElements[i].boundingBox.left > 0.4999999999999998 &&
+        topElements[i].boundingBox.left < 0.5833333333333331
+      ) {
+        // topElements[i].boundingBox["position"] = ;
+        topElements[i].boundingBox["pushLeft"] = "left-7";
+      } else if (
+        topElements[i].boundingBox.left > 0.5833333333333331 &&
+        topElements[i].boundingBox.left < 0.6666666666666664
+      ) {
+        // topElements[i].boundingBox["position"] = ;
+        topElements[i].boundingBox["pushLeft"] = "left-8";
+      } else if (
+        topElements[i].boundingBox.left > 0.6666666666666664 &&
+        topElements[i].boundingBox.left < 0.7499999999999997
+      ) {
+        // topElements[i].boundingBox["position"] = ;
+        topElements[i].boundingBox["pushLeft"] = "left-9";
+      } else if (
+        topElements[i].boundingBox.left > 0.7499999999999997 &&
+        topElements[i].boundingBox.left < 0.833333333333333
+      ) {
+        // topElements[i].boundingBox["position"] = ;
+        topElements[i].boundingBox["pushLeft"] = "left-10";
+      } else if (
+        topElements[i].boundingBox.left > 0.833333333333333 &&
+        topElements[i].boundingBox.left < 0.9166666666666663
+      ) {
+        // topElements[i].boundingBox["position"] = ;
+        topElements[i].boundingBox["pushLeft"] = "left-11";
+      } else if (
+        topElements[i].boundingBox.left > 0.9166666666666663 &&
+        topElements[i].boundingBox.left < 1
+      ) {
+        // topElements[i].boundingBox["position"] = ;
+        topElements[i].boundingBox["pushLeft"] = "left-12";
+      }
+    }
+
+
+    // if (topElements[i].boundingBox.range === "sameRow"  ){
+    //   topElements[i].boundingBox["left"] = "";
+    // }
+    // if (topElements[i].boundingBox.range === "firstElement") {
+    //   topElements[i].boundingBox["push"] = topElements[i].boundingBox.column;
+    // }
+    // console.log(topElements);
   }
 
-  // console.log(topElements);
-
-
+  
   data.predictions = topElements;
 
   // console.log(data.predictions)

@@ -104,7 +104,7 @@ const Testing = (props, leftPosition) => {
   
   return (
     <>
-    <div className="parent">
+    <div className="container">
         <Hello importFrom={prediction}/>
         </div>
     </>

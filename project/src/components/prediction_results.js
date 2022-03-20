@@ -1,5 +1,5 @@
 import { Prediction } from "@azure/cognitiveservices-customvision-prediction/esm/models/mappers";
-import classNames from 'classnames'
+import classNames from "classnames";
 
 import {
   Table,
@@ -13,12 +13,9 @@ import { ConstructionOutlined } from "@mui/icons-material";
 import React from "react";
 import "../positions.css";
 
-
 import { useState, useEffect } from "react";
 
 const PredictionResults = (props, importFrom) => {
-
-
   // console.log(props.importFrom.predictions + 'index');
 
   // const [predictions, setPredictions] = useState([]);
@@ -29,6 +26,7 @@ const PredictionResults = (props, importFrom) => {
   //   (prediction) => prediction.probability >= 0.9
   // );
 
+  function positioning(predictions) {}
   console.log(props.importFrom.predictions);
   // props.importFrom.predictions.forEach(prediction => {
 
@@ -64,12 +62,20 @@ const PredictionResults = (props, importFrom) => {
   //       console.log("grid left 9/9");
   //       prediction.boundingBox["position"] = 'component9';
   //     }
-  
+
   //   });
   // .filter(filteredPredictions[0].probability <= 0.1)
+
+  function positioning(props) {
+    if (isLoggedIn) {
+      return <UserGreeting />;
+    }
+    return <GuestGreeting />;
+  }
+
   return (
     <>
-    {/* <TableContainer >
+      {/* <TableContainer >
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
         <TableHead>
           <TableRow>
@@ -95,16 +101,75 @@ const PredictionResults = (props, importFrom) => {
               <TableCell align="right">{prediction.boundingBox.left}</TableCell>
               <TableCell align="right">{prediction.boundingBox.top}</TableCell>
               <TableCell align="right">{prediction.probability}</TableCell>
-
             </TableRow>
           ))}
         </TableBody>
       </Table>
     </TableContainer> */}
 
-      {props.importFrom.predictions.map((prediction, i) => (
-        <div className={`${prediction.boundingBox.left} ${prediction.boundingBox.top}`}>His</div>
-      ))}
+      {props.importFrom.predictions.map((prediction, i) => {
+        //   return (prediction.boundingBox.range = "nextRow") ?
+        //   (<>
+        //   <div key={`spacing-${i}`} className={`${prediction.boundingBox.pushLeft}  flex flexWidth`}>&nbsp;</div>
+
+        //   <div key={`object-${i}`} className={`${prediction.boundingBox.width} flex flexWidth`}>
+        //   Object
+        // </div>
+        // <br />
+        // </>
+        // ) :
+
+        // (<div key={`solo-object-${i}`} className={`${prediction.boundingBox.width} flex flexWidth`}>
+        //    Object
+        //  </div>)
+
+        {
+          if (prediction.boundingBox.range === "nextRow") {
+            return (
+              <>
+                <div className="break flex"></div>
+                <div
+                  key={`spacing-${i}`}
+                  className={`${prediction.boundingBox.pushLeft}  flex flexWidth`}
+                >
+              
+
+                  {i}
+                </div>
+                <div
+                  key={`object-${i}`}
+                  className={`${prediction.boundingBox.width} flex flexWidth`}
+                >
+                  Object {i}
+                </div>
+              </>
+            );
+          } else if (prediction.boundingBox.range === "firstElement") {
+            return (
+              <>
+                <div
+                  key={`spacing-${i}`}
+                  className={`${prediction.boundingBox.pushLeft}  flex flexWidth`}
+                >
+               {i}
+                </div>
+                <div key={`spacing-${i}`}>First {i}</div>
+              </>
+            );
+          } else {
+            return (
+              <>
+                <div
+                  key={`spacing-${i}`}
+                  className={`flex  ${prediction.boundingBox.width}`}
+                >
+                  Same {i}
+                </div>
+              </>
+            );
+          }
+        }
+      })}
     </>
   );
 };
