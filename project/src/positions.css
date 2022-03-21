@@ -27,14 +27,6 @@ grid-row-gap: 0px;
     grid-row: auto;
 }
 
-.nestedHalf {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    grid-column-gap: 1.5em;
-    grid-row-gap: 1em;
-    height: fit-content;
-}
-
 .nested {
     display: grid;
     grid-template-columns: repeat(12, 1fr);
@@ -43,12 +35,6 @@ grid-row-gap: 0px;
     height: fit-content;
 }
 
-.nestedQuarter {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    grid-column-gap: 1.5em;
-    grid-row-gap: 1em;
-}
 
 .width-1 {
     grid-column: span 1;

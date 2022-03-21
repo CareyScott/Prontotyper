@@ -132,7 +132,7 @@ const PredictionResults = (props, importFrom) => {
                   key={`spacing-${i}`}
                   className={`${prediction.boundingBox.pushLeft}  flex flexWidth`}
                 >
-              
+               {prediction.code}
 
                   {i}
                 </div>
