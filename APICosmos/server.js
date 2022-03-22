@@ -7,12 +7,29 @@ require("./db")();
 
 // importing the controllers
 const {
+  // getAllCode,
+  // getSingleCode,
+  addCode,
+  editCode,
+  deleteCode,
+} = require("./controllers/code_controller");
+
+const {
+  // getAllCode,
+  // getSingleCode,
+  addPrediction,
+ 
+} = require("./controllers/prediction_controller");
+
+const {
   getAllProjects,
   getSingleProject,
   addProject,
   editProject,
   deleteProject,
 } = require("./controllers/project_controller");
+
+
 const {
   register,
   login,
@@ -34,6 +51,11 @@ const {
 const {
   predict
 } = require("./controllers/prediction_controller");
+
+const {
+  getCode
+} = require("./controllers/project_controller");
+
 
 const port = process.env.PORT;
 
@@ -73,6 +95,13 @@ app.get("/projects/:id", loginRequired, getSingleProject);
 app.post("/projects", addProject);
 app.put("/projects/:id", editProject);
 app.delete("/projects/:id", deleteProject);
+
+// code
+// app.get("/projects", loginRequired, getAllProjects);
+// app.get("/projects/:id", loginRequired, getSingleProject);
+app.post("/code", addCode);
+app.put("/code/:id", editCode);
+app.delete("/code/:id", deleteCode);
 
 // components
 app.get("/components", getAllComponents);

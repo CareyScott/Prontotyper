@@ -5,6 +5,8 @@ const TrainingApi = require("@azure/cognitiveservices-customvision-training");
 const PredictionApi = require("@azure/cognitiveservices-customvision-prediction");
 const msRest = require("@azure/ms-rest-js");
 const { find } = require("../models/project_schema");
+const Code = require("../models/code_schema");
+const PredictionSchema = require("../models/prediction_schema");
 
 const trainingKey = "de15aea8800e4aacb1695ef40ab9d87a";
 const trainingEndpoint = "https://westus2.api.cognitive.microsoft.com/";
@@ -30,21 +32,20 @@ const predictor = new PredictionApi.PredictionAPIClient(
 
 const COLS = 12;
 const COL_WIDTH = 0.0833333333333333;
+const COL_LEFT = 0.0833333333333333;
 
-function inRange(width, index) {
-  if (width > (COL_WIDTH * index) && width < (COL_WIDTH * (index + 1))){
+function inRangeWidth(width, index) {
+  if (width > COL_WIDTH * index && width < COL_WIDTH * (index + 1)) {
     return index + 1;
   }
   return false;
 }
 
-function getCode(tagName, tagId = false){
-
-  Code.findOne({tagName})
-    .then((tag) => {
-      console.log(tag);
-      return tag.code;
-    })
+function inRangeLeft(left, index) {
+  if (left > COL_LEFT * index && left < COL_LEFT * (index + 1)) {
+    return index + 1;
+  }
+  return false;
 }
 
 function findTopPosition(data) {
@@ -105,12 +106,16 @@ function findTopPosition(data) {
 
     // let i = top.indexOf(elementTop.boundingBox.top);
 
-    console.log(`Top: ${index} Left: ${i}`)
+    console.log(`Top: ${index} Left: ${i}`);
   });
 
-  let width = '';
-  let className = 'width-'
+  let width = "";
+  let left = "";
+  let classNameWidth = "width-";
+  let classNameLeft = "left-";
   let rowWidth = 0;
+
+  let rowLeft = 0;
 
   for (let i = 0; i < topElements.length; i++) {
     let rangeTop;
@@ -118,13 +123,12 @@ function findTopPosition(data) {
       rangeTop = topElements[i].boundingBox.top;
     } else {
       rangeTop =
-        topElements[i].boundingBox.top - topElements[i-1].boundingBox.top;
+        topElements[i].boundingBox.top - topElements[i - 1].boundingBox.top;
     }
 
     console.log(
       `Range Top: for index ${i} with a difference of ${rangeTop} for ${topElements[i].tagName}`
     );
-
 
     // if (topElements[i].boundingBox.left < topElements[i+1].boundingBox.left){
     //   i --;
@@ -146,20 +150,37 @@ function findTopPosition(data) {
 
     // determining columns
 
-    result = inRange(topElements[i].boundingBox.width, 0) ||
-    inRange(topElements[i].boundingBox.width, 1) ||
-    inRange(topElements[i].boundingBox.width, 2) ||
-    inRange(topElements[i].boundingBox.width, 3) ||
-    inRange(topElements[i].boundingBox.width, 4) ||
-    inRange(topElements[i].boundingBox.width, 5) ||
-    inRange(topElements[i].boundingBox.width, 6) ||
-    inRange(topElements[i].boundingBox.width, 7) ||
-    inRange(topElements[i].boundingBox.width, 8) ||
-    inRange(topElements[i].boundingBox.width, 9) ||
-    inRange(topElements[i].boundingBox.width, 10) ||
-    inRange(topElements[i].boundingBox.width, 11)
+    resultWidth =
+      inRangeWidth(topElements[i].boundingBox.width, 0) ||
+      inRangeWidth(topElements[i].boundingBox.width, 1) ||
+      inRangeWidth(topElements[i].boundingBox.width, 2) ||
+      inRangeWidth(topElements[i].boundingBox.width, 3) ||
+      inRangeWidth(topElements[i].boundingBox.width, 4) ||
+      inRangeWidth(topElements[i].boundingBox.width, 5) ||
+      inRangeWidth(topElements[i].boundingBox.width, 6) ||
+      inRangeWidth(topElements[i].boundingBox.width, 7) ||
+      inRangeWidth(topElements[i].boundingBox.width, 8) ||
+      inRangeWidth(topElements[i].boundingBox.width, 9) ||
+      inRangeWidth(topElements[i].boundingBox.width, 10) ||
+      inRangeWidth(topElements[i].boundingBox.width, 11);
 
-    rowWidth += result;
+    rowWidth += resultWidth;
+
+    resultLeft =
+      inRangeLeft(topElements[i].boundingBox.left, 0) ||
+      inRangeLeft(topElements[i].boundingBox.left, 1) ||
+      inRangeLeft(topElements[i].boundingBox.left, 2) ||
+      inRangeLeft(topElements[i].boundingBox.left, 3) ||
+      inRangeLeft(topElements[i].boundingBox.left, 4) ||
+      inRangeLeft(topElements[i].boundingBox.left, 5) ||
+      inRangeLeft(topElements[i].boundingBox.left, 6) ||
+      inRangeLeft(topElements[i].boundingBox.left, 7) ||
+      inRangeLeft(topElements[i].boundingBox.left, 8) ||
+      inRangeLeft(topElements[i].boundingBox.left, 9) ||
+      inRangeLeft(topElements[i].boundingBox.left, 10) ||
+      inRangeLeft(topElements[i].boundingBox.left, 11);
+
+    rowLeft += resultLeft;
 
     // if(inRange(width, 0)){
     //   className += '1';
@@ -173,260 +194,33 @@ function findTopPosition(data) {
 
     // }
 
-    topElements[i].boundingBox["width"] = className + result
+    topElements[i].boundingBox["width"] = classNameWidth + resultWidth;
 
-    // if (
-    //   topElements[i].boundingBox.width > 0 &&
-    //   topElements[i].boundingBox.width < COL_WIDTH
-
-    // ) {
-    //   topElements[i].boundingBox["width"] = "width-1";
-    // } else if (
-    //   topElements[i].boundingBox.width > COL_WIDTH &&
-    //   topElements[i].boundingBox.width < COL_WIDTH * 2
-    // ) {
-    //   // topElements[i].boundingBox["position"] = ;
-    //   topElements[i].boundingBox["width"] = "width-2";
-    // } else if (
-    //   topElements[i].boundingBox.width > COL_WIDTH * 2 &&
-    //   topElements[i].boundingBox.width < COL_WIDTH * 3
-    // ) {
-    //   // topElements[i].boundingBox["position"] = ;
-    //   topElements[i].boundingBox["width"] = "width-3";
-    // } else if (
-    //   topElements[i].boundingBox.width > COL_WIDTH * 3 &&
-    //   topElements[i].boundingBox.width < COL_WIDTH * 4
-    // ) {
-    //   // topElements[i].boundingBox["position"] = ;
-    //   topElements[i].boundingBox["width"] = "width-4";
-    // } else if (
-    //   topElements[i].boundingBox.width > COL_WIDTH * 4 &&
-    //   topElements[i].boundingBox.width < COL_WIDTH * 5
-    // ) {
-    //   // topElements[i].boundingBox["position"] = ;
-    //   topElements[i].boundingBox["width"] = "width-5";
-    // } else if (
-    //   topElements[i].boundingBox.width > COL_WIDTH * 5 &&
-    //   topElements[i].boundingBox.width < COL_WIDTH * 6
-    // ) {
-    //   // topElements[i].boundingBox["position"] = ;
-    //   topElements[i].boundingBox["width"] = "width-6";
-    // } else if (
-    //   topElements[i].boundingBox.width > COL_WIDTH * 6 &&
-    //   topElements[i].boundingBox.width < COL_WIDTH * 7
-    // ) {
-    //   // topElements[i].boundingBox["position"] = ;
-    //   topElements[i].boundingBox["width"] = "width-7";
-    // } else if (
-    //   topElements[i].boundingBox.width > COL_WIDTH * 7 &&
-    //   topElements[i].boundingBox.width < COL_WIDTH * 8
-    // ) {
-    //   // topElements[i].boundingBox["position"] = ;
-    //   topElements[i].boundingBox["width"] = "width-8";
-    // } else if (
-    //   topElements[i].boundingBox.width > COL_WIDTH * 8 &&
-    //   topElements[i].boundingBox.width < COL_WIDTH * 9
-    // ) {
-    //   // topElements[i].boundingBox["position"] = ;
-    //   topElements[i].boundingBox["width"] = "width-9";
-    // } else if (
-    //   topElements[i].boundingBox.width > COL_WIDTH * 9 &&
-    //   topElements[i].boundingBox.width < COL_WIDTH *  10
-    // ) {
-    //   // topElements[i].boundingBox["position"] = ;
-    //   topElements[i].boundingBox["width"] = "width-10";
-    // } else if (
-    //   topElements[i].boundingBox.width > COL_WIDTH *  10 &&
-    //   topElements[i].boundingBox.width < COL_WIDTH * 11
-    // ) {
-    //   // topElements[i].boundingBox["position"] = ;
-    //   topElements[i].boundingBox["width"] = "width-11";
-    // } else if (
-    //   topElements[i].boundingBox.width > COL_WIDTH * 11 &&
-    //   topElements[i].boundingBox.width < 1
-    // ) {
-    //   // topElements[i].boundingBox["position"] = ;
-    //   topElements[i].boundingBox["width"] = "width-12";
-    // }
+    topElements[i].boundingBox["pushLeft"] = classNameLeft + resultLeft;
 
     if (i === 0) {
       topElements[0].boundingBox["range"] = "firstElement";
     }
 
-    // CHECKING IF FIRST ELEMENT THEN PUSH TO LEFT
-
-    if (topElements[i].boundingBox.range === "firstElement"  ){
-      if (
-        topElements[i].boundingBox.left > 0 &&
-        topElements[i].boundingBox.left < COL_WIDTH
-      ) {
-        topElements[i].boundingBox["pushLeft"] = "left-1";
-      } else if (
-        topElements[i].boundingBox.left > COL_WIDTH &&
-        topElements[i].boundingBox.left < 0.1666666666666666
-      ) {
-        // topElements[i].boundingBox["position"] = ;
-        topElements[i].boundingBox["pushLeft"] = "left-2";
-      } else if (
-        topElements[i].boundingBox.left > 0.1666666666666666 &&
-        topElements[i].boundingBox.left < 0.2499999999999999
-      ) {
-        // topElements[i].boundingBox["position"] = ;
-        topElements[i].boundingBox["pushLeft"] = "left-3";
-      } else if (
-        topElements[i].boundingBox.left > 0.2499999999999999 &&
-        topElements[i].boundingBox.left < 0.3333333333333332
-      ) {
-        // topElements[i].boundingBox["position"] = ;
-        topElements[i].boundingBox["pushLeft"] = "left-4";
-      } else if (
-        topElements[i].boundingBox.left > 0.3333333333333332 &&
-        topElements[i].boundingBox.left < 0.4166666666666665
-      ) {
-        // topElements[i].boundingBox["position"] = ;
-        topElements[i].boundingBox["pushLeft"] = "left-5";
-      } else if (
-        topElements[i].boundingBox.left > 0.4166666666666665 &&
-        topElements[i].boundingBox.left < 0.4999999999999998
-      ) {
-        // topElements[i].boundingBox["position"] = ;
-        topElements[i].boundingBox["pushLeft"] = "left-6";
-      } else if (
-        topElements[i].boundingBox.left > 0.4999999999999998 &&
-        topElements[i].boundingBox.left < 0.5833333333333331
-      ) {
-        // topElements[i].boundingBox["position"] = ;
-        topElements[i].boundingBox["pushLeft"] = "left-7";
-      } else if (
-        topElements[i].boundingBox.left > 0.5833333333333331 &&
-        topElements[i].boundingBox.left < 0.6666666666666664
-      ) {
-        // topElements[i].boundingBox["position"] = ;
-        topElements[i].boundingBox["pushLeft"] = "left-8";
-      } else if (
-        topElements[i].boundingBox.left > 0.6666666666666664 &&
-        topElements[i].boundingBox.left < 0.7499999999999997
-      ) {
-        // topElements[i].boundingBox["position"] = ;
-        topElements[i].boundingBox["pushLeft"] = "left-9";
-      } else if (
-        topElements[i].boundingBox.left > 0.7499999999999997 &&
-        topElements[i].boundingBox.left < 0.833333333333333
-      ) {
-        // topElements[i].boundingBox["position"] = ;
-        topElements[i].boundingBox["pushLeft"] = "left-10";
-      } else if (
-        topElements[i].boundingBox.left > 0.833333333333333 &&
-        topElements[i].boundingBox.left < 0.9166666666666663
-      ) {
-        // topElements[i].boundingBox["position"] = ;
-        topElements[i].boundingBox["pushLeft"] = "left-11";
-      } else if (
-        topElements[i].boundingBox.left > 0.9166666666666663 &&
-        topElements[i].boundingBox.left < 1
-      ) {
-        // topElements[i].boundingBox["position"] = ;
-        topElements[i].boundingBox["pushLeft"] = "left-12";
-      }
-    }
-
-
-    if (topElements[i].boundingBox.range === "nextRow"  ){
-      if (
-        topElements[i].boundingBox.left > 0 &&
-        topElements[i].boundingBox.left < COL_WIDTH
-      ) {
-        topElements[i].boundingBox["pushLeft"] = "left-1";
-      } else if (
-        topElements[i].boundingBox.left > COL_WIDTH &&
-        topElements[i].boundingBox.left < 0.1666666666666666
-      ) {
-        // topElements[i].boundingBox["position"] = ;
-        topElements[i].boundingBox["pushLeft"] = "left-2";
-      } else if (
-        topElements[i].boundingBox.left > 0.1666666666666666 &&
-        topElements[i].boundingBox.left < 0.2499999999999999
-      ) {
-        // topElements[i].boundingBox["position"] = ;
-        topElements[i].boundingBox["pushLeft"] = "left-3";
-      } else if (
-        topElements[i].boundingBox.left > 0.2499999999999999 &&
-        topElements[i].boundingBox.left < 0.3333333333333332
-      ) {
-        // topElements[i].boundingBox["position"] = ;
-        topElements[i].boundingBox["pushLeft"] = "left-4";
-      } else if (
-        topElements[i].boundingBox.left > 0.3333333333333332 &&
-        topElements[i].boundingBox.left < 0.4166666666666665
-      ) {
-        // topElements[i].boundingBox["position"] = ;
-        topElements[i].boundingBox["pushLeft"] = "left-5";
-      } else if (
-        topElements[i].boundingBox.left > 0.4166666666666665 &&
-        topElements[i].boundingBox.left < 0.4999999999999998
-      ) {
-        // topElements[i].boundingBox["position"] = ;
-        topElements[i].boundingBox["pushLeft"] = "left-6";
-      } else if (
-        topElements[i].boundingBox.left > 0.4999999999999998 &&
-        topElements[i].boundingBox.left < 0.5833333333333331
-      ) {
-        // topElements[i].boundingBox["position"] = ;
-        topElements[i].boundingBox["pushLeft"] = "left-7";
-      } else if (
-        topElements[i].boundingBox.left > 0.5833333333333331 &&
-        topElements[i].boundingBox.left < 0.6666666666666664
-      ) {
-        // topElements[i].boundingBox["position"] = ;
-        topElements[i].boundingBox["pushLeft"] = "left-8";
-      } else if (
-        topElements[i].boundingBox.left > 0.6666666666666664 &&
-        topElements[i].boundingBox.left < 0.7499999999999997
-      ) {
-        // topElements[i].boundingBox["position"] = ;
-        topElements[i].boundingBox["pushLeft"] = "left-9";
-      } else if (
-        topElements[i].boundingBox.left > 0.7499999999999997 &&
-        topElements[i].boundingBox.left < 0.833333333333333
-      ) {
-        // topElements[i].boundingBox["position"] = ;
-        topElements[i].boundingBox["pushLeft"] = "left-10";
-      } else if (
-        topElements[i].boundingBox.left > 0.833333333333333 &&
-        topElements[i].boundingBox.left < 0.9166666666666663
-      ) {
-        // topElements[i].boundingBox["position"] = ;
-        topElements[i].boundingBox["pushLeft"] = "left-11";
-      } else if (
-        topElements[i].boundingBox.left > 0.9166666666666663 &&
-        topElements[i].boundingBox.left < 1
-      ) {
-        // topElements[i].boundingBox["position"] = ;
-        topElements[i].boundingBox["pushLeft"] = "left-12";
-      }
-    }
-
-
-    if (topElements[i].boundingBox.range === "sameRow"){
-      let s = topElements[i].boundingBox.width
-      let nextS = topElements[i - 1].boundingBox.pushLeft
-      s = s.substring(s.indexOf('-')+1);
-      nextS = nextS.substring(nextS.indexOf('-')+1);
+    if (topElements[i].boundingBox.range === "sameRow") {
+      let s = topElements[i].boundingBox.width;
+      let nextS = topElements[i - 1].boundingBox.pushLeft;
+      s = s.substring(s.indexOf("-") + 1);
+      nextS = nextS.substring(nextS.indexOf("-") + 1);
 
       let sumOfS = nextS - s;
 
       console.log(`ROW Width with S: ${rowWidth + sumOfS}`);
 
-      if(rowWidth + sumOfS > COLS){
-        let dif = (rowWidth + sumOfS) - COLS;
+      if (rowWidth + sumOfS > COLS) {
+        let dif = rowWidth + sumOfS - COLS;
         sumOfS -= dif;
       }
 
-
-      topElements[i -1].boundingBox.pushLeft = `left-${sumOfS}` 
+      topElements[i - 1].boundingBox.pushLeft = `left-${sumOfS}`;
     }
 
-    console.log(rowWidth);
+    // console.log(rowWidth);
 
     // if (topElements[i].boundingBox.range === "sameRow"  ){
     //   topElements[i].boundingBox["left"] = "";
@@ -436,8 +230,7 @@ function findTopPosition(data) {
     // }
     // console.log(topElements);
 
-    topElements.code = getCode(topElements[i].tagName, topElements[i].tagId);
-
+    // console.log(topElements.code)
   }
 
   // topElements.forEach((topElement, i) => {
@@ -448,7 +241,14 @@ function findTopPosition(data) {
   //     // topElements[i - 1].boundingBox.
   //   }
   // })
+
+  topElements.forEach((element) => {
+    element["code"] = "";
+  });
+  // topElements[i]['code'] = code
   data.predictions = topElements;
+
+  // console.log(codeArray)
 
   // console.log(data.predictions)
 
@@ -559,36 +359,7 @@ function findTopPosition(data) {
 
   // });
 }
-function positioningAlgorithm(data) {
-  data.predictions.forEach((prediction) => {
-    let left = prediction.boundingBox.left;
-    let top = prediction.boundingBox.top;
 
-    // console.log(prediction);
-
-    if (left < 0.3) {
-      // console.log("Set in grid left- 1/1");
-      // prediction.boundingBox.left = "left-left";
-    } else if (left > 0.3 && left < 0.6) {
-      // prediction.boundingBox["position"] = 'center';
-      // prediction.boundingBox.left = "left-center";
-    } else if (left > 0.6 && left < 1) {
-      // prediction.boundingBox.left = "left-right";
-      // prediction.boundingBox["position"] = 'right';
-    }
-
-    if (top < 0.3) {
-      // console.log("Set in grid left- 1/1");
-      // prediction.boundingBox.top = "top-top";
-    } else if (top > 0.3 && top < 0.6) {
-      // prediction.boundingBox["position"] = 'center';
-      // prediction.boundingBox.top = "top-center";
-    } else if (top > 0.6 && top < 1) {
-      // prediction.boundingBox.top = "top-bottom";
-      // prediction.boundingBox["position"] = 'right';
-    }
-  });
-}
 const predict = async (req, res) => {
   const domains = await trainer.getDomains();
   const objDetectDomain = domains.find(
@@ -598,6 +369,63 @@ const predict = async (req, res) => {
     "1eab146a-0e50-449a-b2d2-d14c7664008c",
     { domainId: objDetectDomain.id }
   );
+
+  const addPrediction = async (data) => {
+    let predictionData = data;
+    PredictionSchema.create(predictionData).then((data) => {
+      // sortedTop.forEach((elementTop, index) => {
+
+      predictionArray = [];
+
+      data.predictions.forEach((element, index) => {
+
+        let tagId = element.tagId
+        if (element) {
+         await Code.findOne({tagId},
+            
+            
+            (error, success) => {
+              if (error) {
+                res.status(500).json(err);
+                console.error;
+              }
+            }
+          ).then((success) => {console.log(success.code)})
+          // res.status(201).json(data);
+          // return element
+          // console.log(element);
+          var arrayItem = element;
+          predictionArray.push(arrayItem);
+        }
+        // function (err, docs) {
+        // console.log(`${docs.code} at index ${index}`);
+
+        // return docs
+        // }
+      });
+
+      // console.log(predictionArray);
+      return predictionArray;
+    });
+
+    // .catch((err) => {
+    //   if (err.name === "ValidationError") {
+    //     res.status(422).json(err);
+    //   } else {
+    //     console.error(err);
+    //     res.status(500).json(err);
+    //   }
+    // });
+  };
+
+  // function getCode(tagName) {
+  //   Code.findOne({ tagName }).then((tag) => {
+  //     // let arrayItem = tag;
+  //     // tagsArray.push(arrayItem);
+  //     console.log(tag)
+  //       return tag;
+  //   });
+  // }
 
   const sampleDataRoot = "Images";
 
@@ -612,6 +440,36 @@ const predict = async (req, res) => {
         );
 
         findTopPosition(data);
+
+        console.log(data);
+
+        let savedPrediction = addPrediction(data);
+
+        console.log(data);
+
+        // console.log(savedPrediction);
+
+        // const getCode = async(tagName, index) => {
+
+        //   codeArray = [];
+        //   try{
+        //     const code = await Code.findOne(({ tagName }), function (err, docs) {});
+        //     return code;
+        //   }catch (err) {
+        //     return 'error occured';
+        //   }
+        // }
+
+        // let arrayCode = [];
+
+        // data.predictions.forEach((prediction, index) => {
+        //   let code = getCode(prediction.tagName);
+        //   prediction['code'] = code;
+
+        //       var arrayItem = prediction;
+        // arrayCode.push(arrayItem);
+        //   console.log(arrayItem)
+        //   })
 
         res.status(200).json(data);
       } else {
@@ -641,4 +499,5 @@ const predict = async (req, res) => {
 
 module.exports = {
   predict,
+  // getCode
 };
