@@ -8,7 +8,7 @@ require("./db")();
 // importing the controllers
 const {
   // getAllCode,
-  // getSingleCode,
+  getSingleCode,
   addCode,
   editCode,
   deleteCode,
@@ -97,10 +97,10 @@ app.put("/projects/:id", editProject);
 app.delete("/projects/:id", deleteProject);
 
 // code
-// app.get("/projects", loginRequired, getAllProjects);
+app.get("/code/:framework", getSingleCode);
 // app.get("/projects/:id", loginRequired, getSingleProject);
 app.post("/code", addCode);
-app.put("/code/:id", editCode);
+// app.put("/code/:id", editCode);
 app.delete("/code/:id", deleteCode);
 
 // components

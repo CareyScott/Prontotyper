@@ -15,6 +15,7 @@ const predictionEndpoint = "https://westus2.api.cognitive.microsoft.com/";
 
 const publishIterationName = "Iteration1";
 
+var c = console.log.bind(console);
 const credentials = new msRest.ApiKeyCredentials({
   inHeader: { "Training-key": trainingKey },
 });
@@ -55,58 +56,58 @@ function findTopPosition(data) {
   //   var arrayItem = data.predictions[i];
   //   predictionArray.push(arrayItem);
   // }
-  // console.log(predictionArray.sort());
+  // c(predictionArray.sort());
 
   let sortedTop = data.predictions.sort((prev, current) => {
-    // console.log(prev.boundingBox.top)
-    // console.log(current.boundingBox.top)
+    // c(prev.boundingBox.top)
+    // c(current.boundingBox.top)
     return prev.boundingBox.top - current.boundingBox.top;
   });
-  // console.log("sortedTop: ")
-  // console.log(sortedTop)
+  // c("sortedTop: ")
+  // c(sortedTop)
 
   // sortedTop.filter(() => {});
 
-  // console.log("sorting top");
+  // c("sorting top");
 
   let topElements = [];
 
   sortedTop.forEach((element, index) => {
     let topElement = element.boundingBox.top;
-    // console.log(element.boundingBox.left *100)
+    // c(element.boundingBox.left *100)
     topElements.push(element);
   });
-  // console.log(topElements)
+  // c(topElements)
 
   let sortedLeft = data.predictions.sort((prev, current) => {
     return prev.boundingBox.left - current.boundingBox.left;
   });
 
   let leftElements = [];
-  // console.log('sorting left')
+  // c('sorting left')
   sortedLeft.forEach((element, index) => {
     let leftElement = element.boundingBox.left;
-    // console.log(leftElement)#
+    // c(leftElement)#
 
     leftElements.push(element);
   });
-  // console.log(leftElements)
+  // c(leftElements)
 
   topElements.forEach((elementTop, index) => {
     let i = leftElements.findIndex((elementLeft) => {
-      // console.log(elementTop.boundingBox.top)
-      // console.log(elementLeft.boundingBox.top)
+      // c(elementTop.boundingBox.top)
+      // c(elementLeft.boundingBox.top)
       return elementLeft.boundingBox.top === elementTop.boundingBox.top;
     });
 
     elementTop.boundingBox["elementLeft"] = i;
 
-    // console.log(elementTop)
+    // c(elementTop)
     // let top = sortedLeft.map(elementLeft => elementLeft.boundingBox.top);
 
     // let i = top.indexOf(elementTop.boundingBox.top);
 
-    console.log(`Top: ${index} Left: ${i}`);
+    c(`Top: ${index} Left: ${i}`);
   });
 
   let width = "";
@@ -126,7 +127,7 @@ function findTopPosition(data) {
         topElements[i].boundingBox.top - topElements[i - 1].boundingBox.top;
     }
 
-    console.log(
+    c(
       `Range Top: for index ${i} with a difference of ${rangeTop} for ${topElements[i].tagName}`
     );
 
@@ -210,7 +211,7 @@ function findTopPosition(data) {
 
       let sumOfS = nextS - s;
 
-      console.log(`ROW Width with S: ${rowWidth + sumOfS}`);
+      c(`ROW Width with S: ${rowWidth + sumOfS}`);
 
       if (rowWidth + sumOfS > COLS) {
         let dif = rowWidth + sumOfS - COLS;
@@ -220,7 +221,7 @@ function findTopPosition(data) {
       topElements[i - 1].boundingBox.pushLeft = `left-${sumOfS}`;
     }
 
-    // console.log(rowWidth);
+    // c(rowWidth);
 
     // if (topElements[i].boundingBox.range === "sameRow"  ){
     //   topElements[i].boundingBox["left"] = "";
@@ -228,16 +229,16 @@ function findTopPosition(data) {
     // if (topElements[i].boundingBox.range === "firstElement") {
     //   topElements[i].boundingBox["push"] = topElements[i].boundingBox.column;
     // }
-    // console.log(topElements);
+    // c(topElements);
 
-    // console.log(topElements.code)
+    // c(topElements.code)
   }
 
   // topElements.forEach((topElement, i) => {
   //   if (topElement.boundingBox.range === "sameRow"){
   //     let s = topElement.boundingBox.width
   //     s = s.substring(s.indexOf('-')+1);
-  //     console.log(s)
+  //     c(s)
   //     // topElements[i - 1].boundingBox.
   //   }
   // })
@@ -248,13 +249,13 @@ function findTopPosition(data) {
   // topElements[i]['code'] = code
   data.predictions = topElements;
 
-  // console.log(codeArray)
+  // c(codeArray)
 
-  // console.log(data.predictions)
+  // c(data.predictions)
 
   // for (let i = 1; i < leftElements.length; i++) {
   //   let rangeLeft = leftElements[i].boundingBox.top - leftElements[i - 1].boundingBox.top
-  //   console.log(`Range Left: for index ${i} with a difference of ${rangeLeft} for ${leftElements[i].tagName}`)
+  //   c(`Range Left: for index ${i} with a difference of ${rangeLeft} for ${leftElements[i].tagName}`)
   // }
 
   // leftElements.forEach((element, index) => {
@@ -262,25 +263,25 @@ function findTopPosition(data) {
   //   let findTop = topElements.find(
   //     (value) => value.boundingBox === element.boundingBox
   //   );
-  //   // console.log(element.tagName);
-  //   // console.log(`${element.boundingBox.left}`);
-  //   // console.log(findTop.boundingBox.top);
-  //   // console.log("");
-  //   // console.log("");
+  //   // c(element.tagName);
+  //   // c(`${element.boundingBox.left}`);
+  //   // c(findTop.boundingBox.top);
+  //   // c("");
+  //   // c("");
   // });
 
-  // console.log('sorting left')
+  // c('sorting left')
   // sortedLeft.forEach((element, index) => {
-  //   console.log(element.boundingBox.left)
+  //   c(element.boundingBox.left)
   // })
 
-  // console.log("sortedLeft: ")
-  // console.log(sortedLeft)
+  // c("sortedLeft: ")
+  // c(sortedLeft)
 
   // sortedTop.forEach((elementTop, index) => {
   //   let i = sortedLeft.findIndex((elementLeft) => {
-  //     // console.log(elementTop.boundingBox.top)
-  //     // console.log(elementLeft.boundingBox.top)
+  //     // c(elementTop.boundingBox.top)
+  //     // c(elementLeft.boundingBox.top)
   //     return elementLeft.boundingBox.top === elementTop.boundingBox.top
   //   });
 
@@ -288,7 +289,7 @@ function findTopPosition(data) {
 
   //   // let i = top.indexOf(elementTop.boundingBox.top);
 
-  //   console.log(`Top: ${index} Left: ${i}`)
+  //   c(`Top: ${index} Left: ${i}`)
 
   // });
 
@@ -296,16 +297,16 @@ function findTopPosition(data) {
   //   let i = sortedLeft.indexOf({
   //     boundingBox: elementTop.boundingBox
   //   })
-  //   console.log(`Top: ${index} Left: ${i}`)
+  //   c(`Top: ${index} Left: ${i}`)
   // });
 
   // var array = [];
   // predictionArray.forEach( function(key, value) {
-  //   // console.log(value);
+  //   // c(value);
   //     array.push(value);
   // });
   // array.sort(function(a, b) {
-  //   // console.log(a , b);
+  //   // c(a , b);
   //     return a.boundingBox.top - b.boundingBox.top;
   // });
 
@@ -322,7 +323,7 @@ function findTopPosition(data) {
 
   //     // sort descending
   //     clone.sort(function(x, y) {
-  //       // console.log(x);
+  //       // c(x);
 
   //         if (x.boundingBox.prop == y.boundingBox.prop) return 0;
   //         else if (parseInt(x.boundingBox.prop) > parseInt(y.boundingBox.prop)) return 1;
@@ -336,7 +337,7 @@ function findTopPosition(data) {
 
   // var topScorers = getTopN(arr,  "left", 2);
   // topScorers.forEach(function(item, index) {
-  //     console.log("#" + (index+1) + ": " + item.boundingBox.left + "  -  " + item.tagName);
+  //     c("#" + (index+1) + ": " + item.boundingBox.left + "  -  " + item.tagName);
   // });
 
   // function sortByProperty(property){
@@ -351,7 +352,7 @@ function findTopPosition(data) {
 
   // }
 
-  // console.log(data.predictions);
+  // c(data.predictions);
   // data.predictions.forEach(prediction => {
 
   // var topPositions = [];
@@ -380,31 +381,49 @@ const predict = async (req, res) => {
       data.predictions.forEach((element, index) => {
 
         let tagId = element.tagId
-        if (element) {
-         await Code.findOne({tagId},
+        // const q = () => Code.findOne();
+
+       const gettingCode = ((element) =>  {  if (element) {
+           Code.findOne({tagId},
             
             
-            (error, success) => {
-              if (error) {
-                res.status(500).json(err);
-                console.error;
-              }
-            }
-          ).then((success) => {console.log(success.code)})
+            // (error, success) => {
+            //   if (error) {
+            //     res.status(500).json(err);
+            //     console.error;
+            //   }
+            // }
+          ).clone().then((data) => {
+            c(data)
+            element.code = data.code
+            var arrayItem = data.code;
+            predictionArray.push(arrayItem);
+
+          })
+
+        // await q.clone()
+
+       
+
           // res.status(201).json(data);
           // return element
-          // console.log(element);
-          var arrayItem = element;
-          predictionArray.push(arrayItem);
+          // c(element);
+          
         }
+        // return q;
+
+        
+
+      })
+        
+        gettingCode(element)
         // function (err, docs) {
-        // console.log(`${docs.code} at index ${index}`);
+        // c(`${docs.code} at index ${index}`);
 
         // return docs
         // }
       });
-
-      // console.log(predictionArray);
+      c(predictionArray)
       return predictionArray;
     });
 
@@ -422,7 +441,7 @@ const predict = async (req, res) => {
   //   Code.findOne({ tagName }).then((tag) => {
   //     // let arrayItem = tag;
   //     // tagsArray.push(arrayItem);
-  //     console.log(tag)
+  //     c(tag)
   //       return tag;
   //   });
   // }
@@ -441,13 +460,13 @@ const predict = async (req, res) => {
 
         findTopPosition(data);
 
-        console.log(data);
+        c(data);
 
         let savedPrediction = addPrediction(data);
 
-        console.log(data);
+        c(data);
 
-        // console.log(savedPrediction);
+        // c(savedPrediction);
 
         // const getCode = async(tagName, index) => {
 
@@ -468,7 +487,7 @@ const predict = async (req, res) => {
 
         //       var arrayItem = prediction;
         // arrayCode.push(arrayItem);
-        //   console.log(arrayItem)
+        //   c(arrayItem)
         //   })
 
         res.status(200).json(data);
@@ -482,16 +501,16 @@ const predict = async (req, res) => {
     });
 
   // Show results
-  // console.log("Results:");
+  // c("Results:");
   // let probabilityThreshold;
   // results.predictions.forEach(predictedResult => {
-  // console.log(`\t ${predictedResult.tagName}: ${(predictedResult.probability * 100.0).toFixed(2)}% ${predictedResult.boundingBox.left},${predictedResult.boundingBox.top},${predictedResult.boundingBox.width},${predictedResult.boundingBox.height}`);
-  // console.log(`\t ${predictedResult.tagName}: ${(predictedResult.probability * 100.0).toFixed(2)}% `);
+  // c(`\t ${predictedResult.tagName}: ${(predictedResult.probability * 100.0).toFixed(2)}% ${predictedResult.boundingBox.left},${predictedResult.boundingBox.top},${predictedResult.boundingBox.width},${predictedResult.boundingBox.height}`);
+  // c(`\t ${predictedResult.tagName}: ${(predictedResult.probability * 100.0).toFixed(2)}% `);
   // probabilityThreshold = predictedResult.probability > 0.80;
-  // console.log(probabilityThreshold)
+  // c(probabilityThreshold)
   //     if (probabilityThreshold === true){
-  //     // console.log(`\t ${predictedResult.tagName}: ${(predictedResult.probability * 100.0).toFixed(2)}%  `);
-  //     // console.log(predictedResult);
+  //     // c(`\t ${predictedResult.tagName}: ${(predictedResult.probability * 100.0).toFixed(2)}%  `);
+  //     // c(predictedResult);
   // }
   // res.status(201).json(results.predictions);
   // })

@@ -1,6 +1,9 @@
 const { Schema, model } = require("mongoose");
 const codeSchema = new Schema(
   {
+    framework: {
+      type: String,
+    },
     tagName: {
       type: String,
     },
