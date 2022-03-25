@@ -11,8 +11,20 @@ const Testing = (props, leftPosition) => {
   const [prediction, setPrediction] = useState({});
   const [code, setCode] = useState({});
   const [isLoading, setLoading] = useState(true);
+  const [framework, setFramework] = useState("bootstrap");
 
   let token = localStorage.getItem("token");
+
+  let frameworkScript;
+
+  let BootStrapScript = "<link rel=\"stylesheet\" href=\"https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css\" integrity=\"sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u\" crossorigin=\"anonymous\">"
+
+
+  if (framework == "bootstrap") {
+    frameworkScript = BootStrapScript
+  }else {
+    frameworkScript = ""
+  }
 
   useEffect(() => {
     axios
@@ -38,7 +50,7 @@ const Testing = (props, leftPosition) => {
 
   useEffect(() => {
         axios
-      .get(`http://localhost:3030/code/react`, {
+      .get(`http://localhost:3030/code/${framework}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -70,7 +82,7 @@ const Testing = (props, leftPosition) => {
   return (
     <>
     <div className="container">
-        <Hello importFrom={prediction} code={code}/>
+        <Hello importFrom={prediction} frameworkScript={frameworkScript} code={code}/>
         </div>
     </>
   );

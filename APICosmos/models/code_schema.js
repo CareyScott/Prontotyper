@@ -1,9 +1,7 @@
 const { Schema, model } = require("mongoose");
 const codeSchema = new Schema(
   {
-    framework: {
-      type: String,
-    },
+    
     tagName: {
       type: String,
     },
@@ -13,7 +11,11 @@ const codeSchema = new Schema(
     ,
     tagId: {
       type: String,
+    },
+    framework: {
+      type: String,
     }
+    
   },
 );
 module.exports = model("Code", codeSchema);

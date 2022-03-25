@@ -13,20 +13,31 @@ import { Code, ConstructionOutlined } from "@mui/icons-material";
 import React from "react";
 import "../positions.css";
 import parse from "html-react-parser";
+import { stateToHTML } from "draft-js-export-html";
 
 import { useState, useEffect } from "react";
+import Helmet from "react-helmet";
 
 const PredictionResults = (props, importFrom) => {
   console.log(props.importFrom.predictions);
   console.log(props.code);
   console.log(props);
 
-  function positioning(props) {
-    if (isLoggedIn) {
-      return <UserGreeting />;
-    }
-    return <GuestGreeting />;
-  }
+  // function positioning(props) {
+  //   if (isLoggedIn) {
+  //     return <UserGreeting />;
+  //   }
+  //   return <GuestGreeting />;
+  // }
+
+  // function downloadCode() {
+  //   // let html = stateToHTML(contentState);
+  //   return (
+  //     <a href={html} download="code.html">
+  //       Download Code
+  //     </a>
+  //   );
+  // }
 
   function checkTagName(prediction, props) {
     let value;
@@ -41,6 +52,8 @@ const PredictionResults = (props, importFrom) => {
 
   return (
     <>
+      <Helmet>{parse(props.frameworkScript)}</Helmet>
+
       {props.importFrom.predictions.map((prediction, i) => {
         // document.getElementById("element").innerHTML = codeResponse();
 
@@ -105,6 +118,8 @@ const PredictionResults = (props, importFrom) => {
           }
         }
       })}
+
+      {/* {downloadCode()} */}
     </>
   );
 };

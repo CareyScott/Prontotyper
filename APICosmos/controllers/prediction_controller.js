@@ -140,6 +140,11 @@ function findTopPosition(data) {
     if (rangeTop > 0.03) {
       topElements[i].boundingBox["range"] = "nextRow";
       rowWidth = 0;
+      if(topElements[i].tagName === "Label"  && topElements[i + 1].tagName === "TextBox"){
+        console.log("same")
+        topElements.splice(i+1, 1); 
+        topElements[i].tagName= "textBoxWithLabel"
+      }
     } else {
       // topElements[i].boundingBox["position"] = ;
       topElements[i].boundingBox["range"] = "sameRow";
