@@ -12,6 +12,7 @@ const {
   addCode,
   editCode,
   deleteCode,
+  downloadCode,
 } = require("./controllers/code_controller");
 
 const {
@@ -97,6 +98,8 @@ app.put("/projects/:id", editProject);
 app.delete("/projects/:id", deleteProject);
 
 // code
+app.get("/code/:id/frameworks/:framework", downloadCode);
+
 app.get("/code/:framework", getSingleCode);
 // app.get("/projects/:id", loginRequired, getSingleProject);
 app.post("/code", addCode);

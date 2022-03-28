@@ -1,6 +1,19 @@
+const FileSaver = require('file-saver');
+const Blob = require('node-blob');
+
+
 const res = require("express/lib/response");
 const Code = require("../models/code_schema");
 const User = require("../models/user_schema");
+const Prediction = require("../models/prediction_schema");
+
+const { BlobServiceClient } = require("@azure/storage-blob");
+
+const blobSasUrl =
+  "https://sketch2codestoresc.blob.core.windows.net/?sv=2020-08-04&ss=bfqt&srt=sco&sp=rwdlacupitfx&se=2022-03-28T19:07:26Z&st=2022-03-28T11:07:26Z&spr=https&sig=JqMKzkesXCjckyf63hP659XYg6lv1GeZYFfHkoY4l%2Fg%3D";
+const blobServiceClient = new BlobServiceClient(blobSasUrl);
+const containerName = "567567";
+const containerClient = blobServiceClient.getContainerClient(containerName);
 
 // const getAllCode = (req, res) => {
 //   Code.find()
@@ -19,7 +32,7 @@ const User = require("../models/user_schema");
 
 const checkTagName = (prediction, code) => {
   let value;
-  console.log(prediction);
+  // console.log(prediction);
   code.forEach((element, index) => {
     if (element.tagName === prediction.tagName) {
       value = element;
@@ -56,10 +69,10 @@ const generateFile = (prediction, code) => {
             {/* {i} */}
           </div>
           <div
-            key={'same-${i}'}
+            key={'same-${i}'} 
             className={'flex  ${prediction.boundingBox.width}'}
           >
-            ${checkTagName(prediction, props).code}
+            ${checkTagName(prediction, code).code}
           </div>
       `;
     } else {
@@ -68,30 +81,81 @@ const generateFile = (prediction, code) => {
             key={'same-${i}'}
             className={'flex  ${prediction.boundingBox.width}'}
           >
-            ${checkTagName(prediction, props).code}
+            ${checkTagName(prediction).code}
           </div>
-          `;
+          `
     }
+
+ 
   });
+
+ 
+
+  
   // save file in container as componentName.js
+  const addContainer = async () => {
+ 
+
+    // console.log(containerClient)
+    const createContainerResponse = await containerClient.create();
+    console.log(
+      "Container was created successfully. requestId: ",
+      createContainerResponse.requestId
+    );
+  };
+  addContainer();
+
+  
+
+  const saveCodeToContainer = async (html) => {
+
+    if (html){
+      let code = new Blob([html], {type: "text/html"});
+      html === code
+      return html 
+    }
+   FileSaver.saveAs(html, "code.html");
+    
+   try {
+    // reportStatus("Uploading files...");
+    const promises = [];
+    html.forEach(file => {
+      console.log(file);
+
+     //  get component name here
+     // let filename = componentName + projectID + file.ext;
+      const blockBlobClient = containerClient.getBlockBlobClient(file.name);
+      promises.push(blockBlobClient.uploadData(file));
+    })
+
+    await Promise.all(promises);
+    // reportStatus("Done.");
+    // listFiles();
+  } catch (error) {
+    // reportStatus(error.message);
+    console.log("comething went wrong uploading the file");
+  }
+  };
+
+  saveCodeToContainer(html);
 };
 
 const downloadCode = (req, res) => {
   let framework = req.params.framework;
-
   let code;
   let prediction;
-
   let file;
 
   // step 1, mongoose get prediction by component id
   // step 2, get the code by framework
-  //
 
-  Prediction.find({})
+  let id = req.params.id;
+
+  Prediction.findOne({ id })
     .then((data) => {
       if (data) {
-        prediction = data;
+        prediction = data.predictions;
+        // console.log(prediction)
       } else {
         res.status(404).json("No Code not found");
       }
@@ -216,6 +280,8 @@ const deleteCode = (req, res) => {
 };
 module.exports = {
   //   getAllCode,
+  generateFile,
+
   downloadCode,
   getSingleCode,
   addCode,
