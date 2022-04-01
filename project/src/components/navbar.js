@@ -1,46 +1,35 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { AppBar } from "@mui/material";
-import { Box } from "@mui/system";
 import { useState, useEffect } from "react";
 import { Button } from "@mui/material";
 import { Typography, Grid } from "@mui/material";
 import { makeStyles } from "@material-ui/core/styles";
-import {
-  Drawer,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-} from "@material-ui/core";
+import { ListItem } from "@material-ui/core";
 import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
+import logo from "../Images/Prontotyper.png";
 
-
-
-<link
-  rel="stylesheet"
-  href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
-/>;
-
-
+import "./../App.css";
+import "./../grid.css";
 
 const useStyles = makeStyles((theme) => ({
   drawerPaper: { width: "inherit" },
-  navList: {float:"right", textDecoration: "none", color: theme.palette.text.primary},
+  navList: {
+    float: "right",
+    textDecoration: "none",
+    color: theme.palette.text.primary,
+  },
+  navListButton: {
+    float: "right",
+    textDecoration: "none",
+  },
   link: { textDecoration: "none", color: theme.palette.text.primary },
 }));
 
 const Navbar = (props) => {
   const [navbar, setNavbar] = useState(false);
-
-  // if (props.authenticated) {
-  //   <>
-  //     <Button sx={{ my: 2, color: "white", display: "block" }}>Logout</Button>
-  //   </>;
-  // }
 
   const changeBackground = () => {
     if (window.scrollY >= 60) {
@@ -55,44 +44,65 @@ const Navbar = (props) => {
   const classes = useStyles();
   return (
     <>
-      <nav className={navbar ? "navbar active" : "navbar"}>
-      <Grid
-          sx={{ flexGrow: 2, display: { xs: "flex", md: "flex", lg: "flex" } }}
-        >
-          <div className="navbar-left">
-          <Typography variant="h3" component="h4" sx={{ml: 2}} className={navbar ? "navbarFont active" : "navbarFont"}>
-            Logo
-          </Typography>
+      <nav>
+        <div className="container-main">
+          <div className="col-8">
+            <Link to="/">
+              <img src={logo} alt="Logo" className="logo-nav" />
+            </Link>
           </div>
-          <div className="navbar-right">
-          <Link to="/projects" className={classes.navList}>
-            <ListItem button>
-              <Typography variant="h6" component="p" className={navbar ? "navbarFont active" : "navbarFont"}>
-                Projects
-              </Typography>
-            </ListItem>
-          </Link>
-          <Link to="/dashboard" className={classes.navList}>
-            <ListItem button>
-              <Typography variant="h6" component="p" className={navbar ? "navbarFont active" : "navbarFont"}>
-                Dashboard
-              </Typography>
-            </ListItem>
-          </Link>
-          <Link to="/" className={classes.navList}>
-            <ListItem button>
-              <Typography variant="h6" component="p" className={navbar ? "navbarFont active" : "navbarFont"}>
-                Home
-              </Typography>
-            </ListItem>
-          </Link>
+          {/* </div> */}
 
-          
-
-          
+          <div className="col-1">
+            <Link to="/dashboard">
+              <ListItem>
+                <Button sx={{ color: "#000000" }}>
+                  <Typography
+                    variant="h6"
+                    component="p"
+                    className={classes.navList}
+                  >
+                    Dashboard
+                  </Typography>
+                </Button>
+              </ListItem>
+            </Link>
           </div>
-        
-        </Grid>
+          <div className="col-1">
+            <Link to="/">
+              <ListItem>
+                <Button sx={{ color: "#000000" }}>
+                  <Typography
+                    variant="h6"
+                    component="p"
+                    className={classes.navList}
+                  >
+                    Home
+                  </Typography>
+                </Button>
+              </ListItem>
+            </Link>
+          </div>
+          <div className="col-1">
+            <Link to="/login">
+              <ListItem>
+                <Button
+                  variant="contained"
+                  xs={6}
+                  sx={{ backgroundColor: "#790FFF", width: 200 }}
+                >
+                  <Typography
+                    variant="h6"
+                    component="p"
+                    className={classes.navListButton}
+                  >
+                    Login
+                  </Typography>
+                </Button>
+              </ListItem>
+            </Link>
+          </div>
+        </div>
       </nav>
     </>
   );

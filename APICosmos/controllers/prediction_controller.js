@@ -50,13 +50,7 @@ function inRangeLeft(left, index) {
 }
 
 function findTopPosition(data) {
-  // var predictionArray = [];
-
-  // for (var i = 0; i < data.predictions.length; i++) {
-  //   var arrayItem = data.predictions[i];
-  //   predictionArray.push(arrayItem);
-  // }
-  // c(predictionArray.sort());
+ 
 
   let sortedTop = data.predictions.sort((prev, current) => {
     // c(prev.boundingBox.top)

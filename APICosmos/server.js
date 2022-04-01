@@ -98,7 +98,7 @@ app.put("/projects/:id", editProject);
 app.delete("/projects/:id", deleteProject);
 
 // code
-app.get("/code/:id/frameworks/:framework", downloadCode);
+app.get("/code/:id/frameworks/:framework/projects/:container", downloadCode);
 
 app.get("/code/:framework", getSingleCode);
 // app.get("/projects/:id", loginRequired, getSingleProject);

@@ -17,20 +17,20 @@ const Dashboard = (props) => {
   function preventDefault(event) {
     event.preventDefault();
   }
-  const [predictions, setPredictions] = useState({});
+  // const [predictions, setPredictions] = useState({});
 
   let token = localStorage.getItem("token");
 
   useEffect(() => {
     axios
-      .get(`http://localhost:3030/predict`, {
+      .get(`http://localhost:3030/projects`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       })
       .then((response) => {
         console.log(response.data);
-        setPredictions(response.data);
+        // setPredictions(response.data);
         // console.log(setPredictions);
       })
       .catch((err) => {
@@ -38,7 +38,7 @@ const Dashboard = (props) => {
       });
   }, [token]);
 
-  if (!predictions) return null;
+  // if (!predictions) return null;
 
 //   let probabilityThreshold;
 //   predictions.forEach(predictedResult => {
@@ -57,43 +57,7 @@ const Dashboard = (props) => {
 
   return (
     <>
-      <div className="app">
-        <div className="left-side"></div>
-        <div className="right-side">
-          {predictions.map((prediction, i) =>  prediction.probability)}
-          <Table sx={{ minWidth: 650 }} aria-label="simple table">
-        <TableHead>
-          <TableRow>
-
-          <TableCell>Probability</TableCell>
-          <TableCell>Top</TableCell>
-          <TableCell>Left</TableCell>
-            
-
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {predictions.map((prediction, i) => (
-            <TableRow
-              key={i}
-              sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-            >
-              <TableCell component="th" scope="row">
-                {prediction.probability}
-              </TableCell>
-              <TableCell component="th" scope="row">
-                {prediction.boundingBox.top}
-              </TableCell>
-              <TableCell component="th" scope="row">
-                {prediction.boundingBox.left}
-              </TableCell>
-              
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-        </div>
-      </div>
+     
     </>
   );
 };

@@ -4,10 +4,28 @@ import axios from "axios";
 import { TextField, Box, Grid, Button, Paper, Link } from "@mui/material";
 import "./../grid.css";
 import "./../styles.css";
-import logo from "../Images/Prontotyper.png";
+import { makeStyles } from "@material-ui/core/styles";
 
-export default function Register(props) {
+import logo from "../Images/Prontotyper.png";
+import { Typography } from "@material-ui/core";
+
+const useStyles = makeStyles((theme) => ({
+  drawerPaper: { width: "inherit" },
+  navList: {
+    // float: "right",
+    textDecoration: "none",
+    // color: theme.palette.text.primary,
+  },
+  navListButton: {
+    // float: "right",
+    textDecoration: "none",
+  },
+  link: { textDecoration: "none", color: theme.palette.text.primary },
+}));
+
+const Login = (props) => {
   const [form, setForm] = useState({});
+  const classes = useStyles();
 
   const handleForm = (e) => {
     setForm((prevState) => ({
@@ -19,8 +37,8 @@ export default function Register(props) {
     console.log(form);
 
     axios
-      .post("http://localhost:3030/register", {
-        full_name: form.full_name,
+      .post("http://localhost:3030/login", {
+        // name: form.name,
         email: form.email,
         password: form.password,
       })
@@ -34,52 +52,6 @@ export default function Register(props) {
 
   return (
     <>
-      {/* <Grid container component="main" sx={{ height: "91.2vh" }}>
-        <Box component="form" noValidate sx={{ mt: 1 }}>
-          <TextField
-            onChange={handleForm}
-            margin="normal"
-            required
-            fullWidth
-            id="full_name"
-            label="full_name"
-            name="full_name"
-            autoComplete="full_name"
-            autoFocus
-          />
-          <TextField
-            onChange={handleForm}
-            margin="normal"
-            required
-            fullWidth
-            id="email"
-            label="Email Address"
-            name="email"
-            autoComplete="email"
-            autoFocus
-          />
-          <TextField
-            onChange={handleForm}
-            margin="normal"
-            required
-            fullWidth
-            id="password"
-            label="Password"
-            name="password"
-            autoComplete="password"
-            autoFocus
-          />
-          <Button
-            fullWidth
-            variant="contained"
-            sx={{ mt: 3, mb: 2 }}
-            onClick={submitForm}
-          >
-            Sign In
-          </Button>{" "}
-        </Box>
-      </Grid> */}
-
       <div className="container-main">
         <div className="col-4"></div>
         <Box
@@ -95,7 +67,7 @@ export default function Register(props) {
           <div>
             <p className="purple-text-login">Welcome!</p>
             <p className="primary-text-login">
-              Enter your credentials to get started.
+              Enter your credentials to continue
             </p>
           </div>
 
@@ -107,24 +79,12 @@ export default function Register(props) {
               margin="normal"
               required
               fullWidth
-              id="full_name"
-              label="Full Name"
-              name="full_name"
-              autoComplete="full_name"
-              autoFocus
-            />
-            <div className="col-2"></div>
-            <div className="col-2"></div>
-
-            <TextField
-              onChange={handleForm}
-              margin="normal"
-              className="col-8"
-              required
-              fullWidth
+              // sx={{ m: 1 }}
               id="email"
+              // margin="dense"
               label="Email Address"
               name="email"
+              variant="outlined"
               autoComplete="email"
               autoFocus
             />
@@ -134,16 +94,18 @@ export default function Register(props) {
             <TextField
               onChange={handleForm}
               margin="normal"
-              required
               className="col-8"
+              // margin="dense"
+              required
               fullWidth
               id="password"
+              variant="outlined"
+              // sx={{ width: 50 }}
               label="Password"
               name="password"
               autoComplete="password"
-              autoFocus
+              // autoFocus
             />
-
             <div className="col-12"></div>
             <div className="col-12"></div>
             <div className="col-12"></div>
@@ -156,7 +118,7 @@ export default function Register(props) {
               sx={{ width: 200, height: 50 }}
               onClick={submitForm}
             >
-              Sign Up
+              Sign In
             </Button>
 
             <Link to="/">
@@ -176,8 +138,7 @@ export default function Register(props) {
             <hr />
 
             <p className="purple-text-login-small">
-              Already registered? Click&nbsp;<a href="/login">here</a>&nbsp;to sign
-              in!
+              Not registered? Click&nbsp;<a href="/register">here</a>&nbsp;to sign up!
             </p>
           </div>
           {/* </Box> */}
@@ -186,4 +147,6 @@ export default function Register(props) {
       </div>
     </>
   );
-}
+};
+
+export default Login;

@@ -23,7 +23,7 @@ import ComponentsShow from "./pages/Components/Show";
 import ComponentsEdit from "./pages/Components/Edit";
 
 // Auth Pages
-import Login from "./auth/Login";
+import Login from "./pages/Login";
 import Register from "./auth/Register";
 
 
@@ -32,7 +32,9 @@ import Testing from "./pages/Testing";
 
 // StyleSheets
 import "./styles.css";
-import "./button.css";
+// import "./button.css";
+import "./grid.css"
+
 
 const useStyles = makeStyles((theme) => ({
   drawerPaper: { width: "inherit" },
@@ -111,7 +113,7 @@ const App = () => {
               />
             }
           />
-          <Route path="/register" element={<Register />} />
+          {/* <Route path="/register" element={<Register />} /> */}
 
           <Route path="*" element={<PageNotFound />} />
           <Route path="/testing" element={<Testing />} />
