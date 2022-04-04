@@ -26,15 +26,12 @@ import ComponentsEdit from "./pages/Components/Edit";
 import Login from "./pages/Login";
 import Register from "./auth/Register";
 
-
 import Testing from "./pages/Testing";
-
 
 // StyleSheets
 import "./styles.css";
 // import "./button.css";
-import "./grid.css"
-
+import "./grid.css";
 
 const useStyles = makeStyles((theme) => ({
   drawerPaper: { width: "inherit" },
@@ -91,7 +88,9 @@ const App = () => {
               />
             }
           />
-          <Route exact path="/projects" element={<ProjectsIndex />} /> 
+          <Route exact path="/projects" element={<ProjectsIndex />} />
+          <Route exact path="/projects/:id" element={<ProjectsShow />} />
+
           <Route exact path="/components" element={<ComponentsIndex />} />
           {protectedPages}
           <Route exact path="/dashboard" element={<Dashboard />} />
@@ -117,7 +116,6 @@ const App = () => {
 
           <Route path="*" element={<PageNotFound />} />
           <Route path="/testing" element={<Testing />} />
-
         </Routes>
       </div>
     </Router>

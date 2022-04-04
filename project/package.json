@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "react-spring": "^8.x",
     "@azure/cognitiveservices-customvision-prediction": "^5.1.2",
     "@azure/cognitiveservices-customvision-training": "^5.2.0",
     "@azure/storage-blob": "^12.8.0",
@@ -13,6 +14,8 @@
     "@material-ui/icons": "^4.11.2",
     "@mui/icons-material": "^5.4.2",
     "@mui/material": "^5.4.1",
+    "@mui/x-data-grid": "^5.7.0",
+    "@react-spring/web": "^9.4.4",
     "@testing-library/jest-dom": "^5.16.2",
     "@testing-library/react": "^12.1.2",
     "@testing-library/user-event": "^13.5.0",
@@ -31,12 +34,14 @@
     "react-dropzone": "^12.0.4",
     "react-helmet": "^6.1.0",
     "react-moment": "^1.1.1",
+    "react-multi-form": "^1.0.5",
     "react-router-dom": "^6.2.1",
     "react-scripts": "5.0.0",
     "tag-b": "^1.0.4",
     "util": "^0.12.4",
     "web-vitals": "^2.1.4"
   },
+  
   "scripts": {
     "start": "set port=8080 && react-scripts start",
     "build": "react-scripts build",

@@ -1,10 +1,14 @@
-import { Box, Grid, Input, Paper, Typography } from "@material-ui/core";
+import { Button, Grid, Paper, Typography, Box } from "@mui/material";
 import React from "react";
 import { useDropzone } from "react-dropzone";
-import { styled } from "@mui/material/styles";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import "./../App.css";
+import "./../grid.css";
+import "./../button.css";
+
 function Dropzone(props) {
+  
+  
   const { getRootProps, getInputProps, open, acceptedFiles } = useDropzone({
     // Disable click and keydown behavior
     noClick: true,
@@ -16,6 +20,8 @@ function Dropzone(props) {
       {file.path} - {file.size} bytes
     </li>
   ));
+
+  console.log(props);
 
   // index.js
   const { BlobServiceClient } = require("@azure/storage-blob");
@@ -34,99 +40,134 @@ function Dropzone(props) {
   const status = document.getElementById("status");
   const fileList = document.getElementById("file-list");
 
+  // console.log(props.submitFiles);
+
   // const reportStatus = (message) => {
   //   status.innerHTML += `${message}<br/>`;
   //   status.scrollTop = status.scrollHeight;
   // };
 
-  
-
   // selectButton.addEventListener("click", () => fileInput.click());
   // fileInput.addEventListener("change", uploadFiles);
 
   // Update <placeholder> with your Blob service SAS URL string
-  const blobSasUrl = "https://sketch2codestoresc.blob.core.windows.net/?sv=2020-08-04&ss=bfqt&srt=sco&sp=rwdlacupitfx&se=2022-03-15T23:59:33Z&st=2022-03-15T15:59:33Z&spr=https&sig=US5S1CeRfcV0rk9QJ6yZu4l%2BE3oqTj0pgFD6hA%2BLEx4%3D";
+  const blobSasUrl =
+    "https://sketch2codestoresc.blob.core.windows.net/?sv=2020-08-04&ss=bfqt&srt=sco&sp=rwdlacupitfx&se=2022-04-15T16:16:40Z&st=2022-03-31T08:16:40Z&spr=https&sig=UQvWQe5%2BbCMWl4vf5%2FJl5aOWH96O0lri0lwNBD7CkIs%3D";
   // Create a new BlobServiceClient
   const blobServiceClient = new BlobServiceClient(blobSasUrl);
 
   // Create a unique name for the container by
   // appending the current time to the file name
-  const containerName = "newboi1645026222612";
+  const containerName = props.containerName;
 
   // Get a container client from the BlobServiceClient
   const containerClient = blobServiceClient.getContainerClient(containerName);
 
   const uploadFiles = async () => {
+    await containerClient.createIfNotExists();
     try {
-      // reportStatus("Uploading files...");
+      console.log("Uploading files...");
       const promises = [];
-      acceptedFiles.forEach(file => {
+      // blobName = "upload.html"
+
+      acceptedFiles.forEach((file) => {
         console.log(file);
+        let blobName = props.blobName.toString();
+        const blobOptions = {
+          blobHTTPHeaders: {
+            blobContentType: "text/html",
+            contentLength: file.length,
+          },
+        };
 
-       //  get component name here
-       // let filename = componentName + projectID + file.ext;
-        const blockBlobClient = containerClient.getBlockBlobClient(file.name);
-        promises.push(blockBlobClient.uploadData(file));
-      })
-
+        const blockBlobClient = containerClient.getBlockBlobClient(props.blobName.blobName);
+        const uploadBlobResponse = blockBlobClient.upload(
+          file,
+          file.size,
+          blobOptions
+        );
+        console.log(
+          `Upload block blob ${file.name} successfully`,
+          uploadBlobResponse.requestId
+        );
+      });
       await Promise.all(promises);
-      // reportStatus("Done.");
+      console.log("Done.");
+      // downloadCodeFromAzure();
+
       // listFiles();
     } catch (error) {
-      // reportStatus(error.message);
-      console.log("comething went wrong uploading the file");
+      console.log(error.message);
     }
   };
 
-  const handleUpload = () => {
+  // const handleUpload = () => {
+  //   uploadFiles();
+  //   console.log("done");
+  // };
+
+  if (props.submitFile === true) {
     uploadFiles();
-    console.log("done");
-  };
-
-
+  }
+  
   return (
-    <div className="container">
-      <div {...getRootProps({ className: "dropzone" })}>
-        <Box
-          sx={{
-            mt: 2,
-            justifyContent: "center",
-            display: "flex",
-            flexWrap: "wrap",
-            "& > :not(style)": {
-              m: 1,
-              width: "90%",
-              height: 300,
-            },
-          }}
-        >
-          <Paper elevation={3} className="upload-area">
-            <Grid sx={{ mt: 2 }}>
-              <FileUploadIcon sx={{ fontSize: 60, mt: 12 }} />
-              <Typography variant="h6" sx={{ mt: 6 }}>
-                Upload
-              </Typography>
-            </Grid>
-          </Paper>
-        </Box>
-        <input {...getInputProps()} />
-        <p>Drag 'n' drop some files above</p>
-        {/* <button type="button" onClick={open}> */}
-        <label htmlFor="contained-button-file">
-          <button className="btn" onClick={open}>
-            <span>Upload</span>
-            <div className="liquid"></div>
-          </button>
-        </label>
-        {/* </button> */}
-      </div>
-      <aside>
-        <h4>Files</h4>
-        <ul>{files}</ul>
-      </aside>
-      <CheckCircleIcon button onClick={handleUpload} />
-    </div>
+    <>
+      <Grid container spacing={2}>
+        <Grid item xs={12}>
+          <Box
+            sx={{
+              justifyContent: "center",
+              display: "flex",
+              flexWrap: "wrap",
+              "& > :not(style)": {
+                m: 1,
+                height: 150,
+                width: 200,
+              },
+            }}
+          >
+            <Paper elevation={3} sx={{ textAlign: "center" }}>
+              <FileUploadIcon sx={{ fontSize: 60, mt: "10%" }} />
+              <p>Upload</p>
+            </Paper>
+          </Box>
+        </Grid>
+        <Grid item xs={12}>
+          <div {...getRootProps({ className: "dropzone" })}>
+            <div className="centered">
+              <input {...getInputProps()} />
+              <p>Drag 'n' drop some files here</p>
+            </div>
+          </div>
+        </Grid>
+        <Grid item xs={3}></Grid>
+        <Grid item xs={6}>
+          {/* <div className="centered" type="button" onClick={open}> */}
+          <label htmlFor="contained-button-file">
+            <div className="upload-button" onClick={open}>
+              <span>Choose</span>
+              <div className="liquid"></div>
+            </div>
+          </label>
+          {/* </div> */}
+        </Grid>
+        <Grid item xs={4}></Grid>
+        <Grid item xs={6} sx={{ ml: 2 }}>
+          {/* <Button  onClick={handleUpload}>
+              Save
+            </Button> */}
+        </Grid>
+      </Grid>
+
+      {/* </div> */}
+      {/* <aside> */}
+      {/* <h4>Files</h4> */}
+      {/* <ul>{files}</ul> */}
+      {/* </aside> */}
+      {/* <CheckCircleIcon button onClick={handleUpload} /> */}
+    </>
   );
 }
 
 export default Dropzone;
+

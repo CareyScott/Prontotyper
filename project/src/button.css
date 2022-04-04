@@ -2,13 +2,12 @@
 .upload-button {
     position: relative;
     padding: 19px 36px;
-    display: block;
+    display:flex;
     text-decoration: none;
     text-transform: uppercase;
     overflow: hidden;
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 40px;
+    margin-left: 0 auto;
+    /* margin-top: 40px; */
 
     border-radius: 40px;
     border: none;
@@ -28,7 +27,7 @@
     left: 0;
     width: 100%;
     height: 200px;
-    background: #4973ff;
+    background: #790FFF;
     box-shadow: inset 0 0 50px rgba(0, 0, 0, .5);
     transition: .5s;
    }
@@ -43,7 +42,10 @@
     left: 50%;
     transform: translate(-50%, -75%);
     background: #fff;
+   
    }
+
+   
    
    .upload-button .liquid::before {
     border-radius: 45%;

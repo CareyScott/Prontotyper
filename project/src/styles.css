@@ -386,6 +386,31 @@ body {
 
   color: #000000;
 }
+.centered-content{
+  justify-content: center;
+}
+
+
+.project-title{
+  font-family: 'IBM Plex Sans';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 26px;
+  display: flex;
+  text-align: center;
+  
+}
+.dashboard-title{
+  font-family: 'IBM Plex Sans';
+font-style: normal;
+font-weight: 500;
+font-size: 20px;
+line-height: 26px;
+display: flex;
+align-items: flex-end;
+
+}
 hr {
   margin: 30px;
 }
