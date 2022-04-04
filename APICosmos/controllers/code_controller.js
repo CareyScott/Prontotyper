@@ -118,8 +118,6 @@ const generateFile = async (prediction, code) => {
     }
   });
 
-
-
   // uploadFiles(html);
 };
 
@@ -129,7 +127,7 @@ const createContainer = async (containerClient) => {
     console.log(`Creating container "${containerName}"...`);
     await containerClient.createIfNotExists();
     // reportStatus(`Done.`);
-    console.log("Created container ");
+    console.log("Created container");
   } catch (error) {
     console.log(error.message);
   }
@@ -181,8 +179,8 @@ const downloadCode = async (req, res) => {
             root: path.join("./"),
           };
 
-          console.log(path.join("./"))
-          console.log(__basedir)
+          console.log(path.join("./"));
+          console.log(__basedir);
 
           let fileName = blobName + ".html";
           res.download(path.join("./") + fileName, fileName, (err) => {
