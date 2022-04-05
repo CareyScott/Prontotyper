@@ -5,17 +5,21 @@ const componentSchema = new Schema(
       type: String,
       required: [true, "name field is required"],
     },
-    file_url: {
+    // file_url: {
+    //   type: String,
+    //   required: [true, "file Url field is required"],
+    // },
+    description: {
       type: String,
-      required: [true, "file Url field is required"],
+      required: [true, "file description field is required"],
     },
-    code_output_url: {
-      type: String,
-      //  required: [true, 'Code Url field is required']
-    },
-    prediction: {
-      type: Object,
-    },
+    // code_output_url: {
+    //   type: String,
+    //   //  required: [true, 'Code Url field is required']
+    // },
+    // prediction: {
+    //   type: Object,
+    // },
     project: {
       type: Schema.Types.ObjectId,
       ref: "Project",

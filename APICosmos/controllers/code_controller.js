@@ -18,13 +18,14 @@ const Code = require("../models/code_schema");
 // const User = require("../models/user_schema");
 const Prediction = require("../models/prediction_schema");
 // const { append } = require("express/lib/response");
-const blobName = "codeforContainer4";
+const blobName = "newBoc";
 const blobSasUrl =
-  "https://sketch2codestoresc.blob.core.windows.net/?sv=2020-08-04&ss=bfqt&srt=sco&sp=rwdlacupitfx&se=2022-04-15T16:16:40Z&st=2022-03-31T08:16:40Z&spr=https&sig=UQvWQe5%2BbCMWl4vf5%2FJl5aOWH96O0lri0lwNBD7CkIs%3D";
-const blobServiceClient = new BlobServiceClient(blobSasUrl);
+"https://sketch2codestoresc.blob.core.windows.net/?sv=2020-08-04&ss=bfqt&srt=sco&sp=rwdlacupitfx&se=2022-04-15T16:16:40Z&st=2022-03-31T08:16:40Z&spr=https&sig=UQvWQe5%2BbCMWl4vf5%2FJl5aOWH96O0lri0lwNBD7CkIs%3D";
+// Create a new BlobServiceClient
+  const blobServiceClient = new BlobServiceClient(blobSasUrl);
 // const containerName = "yurt";
 let fileSaved = false;
-let containerName = "";
+let containerName = "new";
 let downloadedFile;
 const instance = new express();
 
@@ -85,8 +86,8 @@ const generateFile = async (prediction, code) => {
      >
      </div>
      <div
-       key="object-${i}"
-       className='${prediction.boundingBox.width} flex flexWidth'
+       key={"object-${i}"}
+       className={'${prediction.boundingBox.width} flex flexWidth'}
      >
        
      ${checkTagName(prediction, code).code}
@@ -118,7 +119,7 @@ const generateFile = async (prediction, code) => {
     }
   });
 
-  // uploadFiles(html);
+ await uploadFiles(html);
 };
 
 // save file in container as componentName.js
@@ -140,9 +141,9 @@ const downloadCode = async (req, res) => {
   let file;
   containerName = req.params.container;
 
-  const containerClient = blobServiceClient.getContainerClient(containerName);
+  // const containerClient = blobServiceClient.getContainerClient(containerName);
 
-  createContainer(containerClient);
+  // createContainer(containerClient);
 
   // step 1, mongoose get prediction by component id
   // step 2, get the code by framework
@@ -169,27 +170,28 @@ const downloadCode = async (req, res) => {
         })
         .then(async () => {
           file = await generateFile(prediction, code);
-          await uploadFiles();
+          // await uploadFiles()
+          // console.log("generated file")
+          // // await uploadFiles();
+          // console.log("upload")
 
-          await downloadCodeFromAzure();
+         
+          // console.log("download")
+
           // if (fileSaved = true){
           //   // res.download(downloadedFile);
           // }
-          let options = {
-            root: path.join("./"),
-          };
+          // let options = {
+          //   root: path.join("./"),
+          // };
 
-          console.log(path.join("./"));
-          console.log(__basedir);
+          // console.log(path.join("./"));
+          
 
           let fileName = blobName + ".html";
-          res.download(path.join("./") + fileName, fileName, (err) => {
-            if (err) {
-              console.log(err);
-            } else {
-              console.log("Sent:", fileName);
-            }
-          });
+          // res.download(path.join("./") + fileName, fileName, (err) => {
+
+            res.status(200).json("done");            
         })
 
         .catch((err) => {
@@ -207,28 +209,31 @@ const downloadCode = async (req, res) => {
 
 async function downloadCodeFromAzure() {
   const containerClient = blobServiceClient.getContainerClient(containerName);
+  console.log("download")
   const blobClient = containerClient.getBlobClient(blobName);
-
+  console.log("fghfgh")
   // Get blob content from position 0 to the end
   // In Node.js, get downloaded data by accessing downloadBlockBlobResponse.readableStreamBody
   const downloadBlockBlobResponse = await blobClient.download();
   const downloaded = (
     await streamToBuffer(downloadBlockBlobResponse.readableStreamBody)
-  ).toString();
+  )
   console.log("Downloaded blob content");
 
   // console.log("Downloaded blob content:", downloaded);
 
-  fs.writeFile(`${blobName}.html`, downloaded, function (err) {
-    if (err) {
-      return console.error(err);
-    }
-    console.log("File saved successfully!");
-    fileSaved = true;
-    downloadedFile = downloaded;
+  // console.log("download")
+  // fs.writeFile(`${blobName}.html`, downloaded, function (err) {
+  //   console.log("gffghgjk")
+  //   if (err) {
+  //     return console.error(err);
+  //   }
+  //   console.log("File saved successfully!");
+  //   fileSaved = true;
+  //   downloadedFile = downloaded;
 
-    // return downloadedFile;
-  });
+  //   // return downloadedFile;
+  // });
 
   // [Node.js only] A helper method used to read a Node.js readable stream into a Buffer
   async function streamToBuffer(readableStream) {
@@ -243,6 +248,8 @@ async function downloadCodeFromAzure() {
       readableStream.on("error", reject);
     });
   }
+
+  return downloaded
 }
 
 const getSingleCode = (req, res) => {
@@ -342,7 +349,6 @@ const deleteCode = (req, res) => {
 module.exports = {
   //   getAllCode,
   generateFile,
-
   downloadCode,
   getSingleCode,
   addCode,

@@ -8,7 +8,6 @@ import "./../button.css";
 
 function Dropzone(props) {
   
-  
   const { getRootProps, getInputProps, open, acceptedFiles } = useDropzone({
     // Disable click and keydown behavior
     noClick: true,
@@ -21,7 +20,7 @@ function Dropzone(props) {
     </li>
   ));
 
-  console.log(props);
+  // console.log(props);
 
   // index.js
   const { BlobServiceClient } = require("@azure/storage-blob");
@@ -71,8 +70,7 @@ function Dropzone(props) {
       // blobName = "upload.html"
 
       acceptedFiles.forEach((file) => {
-        console.log(file);
-        let blobName = props.blobName.toString();
+        // console.log(file);
         const blobOptions = {
           blobHTTPHeaders: {
             blobContentType: "text/html",
@@ -88,7 +86,7 @@ function Dropzone(props) {
         );
         console.log(
           `Upload block blob ${file.name} successfully`,
-          uploadBlobResponse.requestId
+          uploadBlobResponse
         );
       });
       await Promise.all(promises);

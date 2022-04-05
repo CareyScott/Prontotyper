@@ -91,9 +91,10 @@ const ShowProject = (props) => {
   const columns = [
     { field: '_id', headerName: 'ID', width: 150 },
     { field: 'project', headerName: 'Project ID', width: 150 },
+    { field: 'component_name', headerName: 'component_name', width: 150 },
     { field: 'createdAt', headerName: 'Created At', width: 150 },
     { field: 'updatedAt', headerName: 'Last Updated', width: 150 },
-    { field: 'file_url', headerName: 'File Location', width: 150 },
+    // { field: 'file_url', headerName: 'File Location', width: 150 },
     
    
   ];
@@ -157,7 +158,8 @@ const ShowProject = (props) => {
       >
         <Fade in={open}>
           <Box sx={style}>
-          <CreateProject containerName={project.project_name}/>
+          <CreateProject containerName={project.project_name} projectID={project._id}  onAuthenticated={props.onAuthenticated}
+                authenticated={props.authenticated}/>
           </Box>
         </Fade>
       </Modal>

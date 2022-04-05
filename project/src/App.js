@@ -88,8 +88,26 @@ const App = () => {
               />
             }
           />
-          <Route exact path="/projects" element={<ProjectsIndex />} />
-          <Route exact path="/projects/:id" element={<ProjectsShow />} />
+          <Route
+            exact
+            path="/projects"
+            element={
+              <ProjectsIndex
+                onAuthenticated={onAuthenticated}
+                authenticated={authenticated}
+              />
+            }
+          />
+          <Route
+            exact
+            path="/projects/:id"
+            element={
+              <ProjectsShow
+                onAuthenticated={onAuthenticated}
+                authenticated={authenticated}
+              />
+            }
+          />
 
           <Route exact path="/components" element={<ComponentsIndex />} />
           {protectedPages}

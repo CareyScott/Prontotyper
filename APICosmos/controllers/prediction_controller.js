@@ -7,14 +7,18 @@ const msRest = require("@azure/ms-rest-js");
 const { find } = require("../models/project_schema");
 const Code = require("../models/code_schema");
 const PredictionSchema = require("../models/prediction_schema");
+const { BlobServiceClient } = require("@azure/storage-blob");
 
 const trainingKey = "de15aea8800e4aacb1695ef40ab9d87a";
 const trainingEndpoint = "https://westus2.api.cognitive.microsoft.com/";
 const predictionKey = "de15aea8800e4aacb1695ef40ab9d87a";
 const predictionEndpoint = "https://westus2.api.cognitive.microsoft.com/";
 
-const publishIterationName = "Iteration1";
+const blobSasUrl =
+  "https://sketch2codestoresc.blob.core.windows.net/?sv=2020-08-04&ss=bfqt&srt=sco&sp=rwdlacupitfx&se=2022-04-15T16:16:40Z&st=2022-03-31T08:16:40Z&spr=https&sig=UQvWQe5%2BbCMWl4vf5%2FJl5aOWH96O0lri0lwNBD7CkIs%3D";
+const blobServiceClient = new BlobServiceClient(blobSasUrl);
 
+const publishIterationName = "Iteration1";
 var c = console.log.bind(console);
 const credentials = new msRest.ApiKeyCredentials({
   inHeader: { "Training-key": trainingKey },
@@ -50,8 +54,6 @@ function inRangeLeft(left, index) {
 }
 
 function findTopPosition(data) {
- 
-
   let sortedTop = data.predictions.sort((prev, current) => {
     // c(prev.boundingBox.top)
     // c(current.boundingBox.top)
@@ -134,10 +136,13 @@ function findTopPosition(data) {
     if (rangeTop > 0.03) {
       topElements[i].boundingBox["range"] = "nextRow";
       rowWidth = 0;
-      if(topElements[i].tagName === "Label"  && topElements[i + 1].tagName === "TextBox"){
-        console.log("same")
-        topElements.splice(i+1, 1); 
-        topElements[i].tagName= "textBoxWithLabel"
+      if (
+        topElements[i].tagName === "Label" &&
+        topElements[i + 1].tagName === "TextBox"
+      ) {
+        console.log("same");
+        topElements.splice(i + 1, 1);
+        topElements[i].tagName = "textBoxWithLabel";
       }
     } else {
       // topElements[i].boundingBox["position"] = ;
@@ -361,6 +366,52 @@ function findTopPosition(data) {
 }
 
 const predict = async (req, res) => {
+  async function downloadCodeFromAzure() {
+    const containerClient = blobServiceClient.getContainerClient(
+      req.params.containerName
+    );
+    const blobClient = containerClient.getBlobClient(req.params.blobName);
+
+    // Get blob content from position 0 to the end
+    // In Node.js, get downloaded data by accessing downloadBlockBlobResponse.readableStreamBody
+    const downloadBlockBlobResponse = await blobClient.download();
+    const downloaded = await streamToBuffer(
+      downloadBlockBlobResponse.readableStreamBody
+    );
+    // console.log("Downloaded blob content" + downloaded);
+
+    // console.log("Downloaded blob content:", downloaded);
+
+    fs.writeFile(`./Images/${req.params.blobName}`, downloaded, function (err) {
+      if (err) {
+        return console.error(err);
+      }
+      console.log("File saved successfully!");
+      fileSaved = true;
+      downloadedFile = downloaded;
+
+      return downloadedFile;
+    });
+
+    // [Node.js only] A helper method used to read a Node.js readable stream into a Buffer
+    async function streamToBuffer(readableStream) {
+      return new Promise((resolve, reject) => {
+        const chunks = [];
+        readableStream.on("data", (data) => {
+          chunks.push(data instanceof Buffer ? data : Buffer.from(data));
+        });
+        readableStream.on("end", () => {
+          resolve(Buffer.concat(chunks));
+        });
+        readableStream.on("error", reject);
+      });
+    }
+
+    return downloaded;
+  }
+
+  // await downloadCodeFromAzure();
+
   const domains = await trainer.getDomains();
   const objDetectDomain = domains.find(
     (domain) => domain.type === "ObjectDetection"
@@ -378,51 +429,46 @@ const predict = async (req, res) => {
       predictionArray = [];
 
       data.predictions.forEach((element, index) => {
-
-        let tagId = element.tagId
+        let tagId = element.tagId;
         // const q = () => Code.findOne();
 
-       const gettingCode = ((element) =>  {  if (element) {
-           Code.findOne({tagId},
-            
-            
-            // (error, success) => {
-            //   if (error) {
-            //     res.status(500).json(err);
-            //     console.error;
-            //   }
-            // }
-          ).clone().then((data) => {
-            c(data)
-            element.code = data.code
-            var arrayItem = data.code;
-            predictionArray.push(arrayItem);
+        const gettingCode = (element) => {
+          if (element) {
+            Code.findOne(
+              { tagId }
 
-          })
+              // (error, success) => {
+              //   if (error) {
+              //     res.status(500).json(err);
+              //     console.error;
+              //   }
+              // }
+            )
+              .clone()
+              .then((data) => {
+                c(data);
+                element.code = data.code;
+                var arrayItem = data.code;
+                predictionArray.push(arrayItem);
+              });
 
-        // await q.clone()
+            // await q.clone()
 
-       
+            // res.status(201).json(data);
+            // return element
+            // c(element);
+          }
+          // return q;
+        };
 
-          // res.status(201).json(data);
-          // return element
-          // c(element);
-          
-        }
-        // return q;
-
-        
-
-      })
-        
-        gettingCode(element)
+        gettingCode(element);
         // function (err, docs) {
         // c(`${docs.code} at index ${index}`);
 
         // return docs
         // }
       });
-      c(predictionArray)
+      c(predictionArray);
       return predictionArray;
     });
 
@@ -446,24 +492,22 @@ const predict = async (req, res) => {
   // }
 
   const sampleDataRoot = "Images";
-
-  const testFile = fs.readFileSync(`${sampleDataRoot}/alltest.jpg`);
-  const results = await predictor
-    .detectImage(sampleProject.id, publishIterationName, testFile)
-
+  // const  downloadedFile = downloadCodeFromAzure();
+  // const testFile = fs.readFileSync(`${sampleDataRoot}/${req.params.blobName}`);
+  await predictor
+    .detectImage(sampleProject.id, publishIterationName, await downloadCodeFromAzure())
     .then((data) => {
       if (data) {
         data.predictions = data.predictions.filter(
           (prediction) => prediction.probability >= 0.9
         );
-
         findTopPosition(data);
 
-        c(data);
+        // c(data);
 
         let savedPrediction = addPrediction(data);
 
-        c(data);
+        // c(data);
 
         // c(savedPrediction);
 

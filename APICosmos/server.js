@@ -13,6 +13,7 @@ const {
   editCode,
   deleteCode,
   downloadCode,
+  generateFile
 } = require("./controllers/code_controller");
 
 const {
@@ -118,7 +119,8 @@ app.get("/users/", getAllUsers);
 app.get("/users/:id", getSingleUser);
 
 //prediction
-app.get("/predict/", predict)
+app.get("/predict/:blobName/container/:containerName", predict)
+app.get("/download/:blobName/container/:containerName", generateFile)
 app.listen(port, () => {
   console.log(`Listening on port${port}`);
 });

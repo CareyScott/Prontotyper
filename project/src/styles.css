@@ -401,6 +401,14 @@ body {
   text-align: center;
   
 }
+
+.ignore-html{
+  font-family: 'IBM Plex Sans';
+font-style: normal;
+font-weight: 500;
+font-size: 20px;
+line-height: 26px;
+}
 .dashboard-title{
   font-family: 'IBM Plex Sans';
 font-style: normal;
