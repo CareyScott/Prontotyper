@@ -103,7 +103,7 @@ function findTopPosition(data) {
 
     // let i = top.indexOf(elementTop.boundingBox.top);
 
-    c(`Top: ${index} Left: ${i}`);
+    // c(`Top: ${index} Left: ${i}`);
   });
 
   let width = "";
@@ -123,9 +123,9 @@ function findTopPosition(data) {
         topElements[i].boundingBox.top - topElements[i - 1].boundingBox.top;
     }
 
-    c(
-      `Range Top: for index ${i} with a difference of ${rangeTop} for ${topElements[i].tagName}`
-    );
+    // c(
+    //   `Range Top: for index ${i} with a difference of ${rangeTop} for ${topElements[i].tagName}`
+    // );
 
     // if (topElements[i].boundingBox.left < topElements[i+1].boundingBox.left){
     //   i --;
@@ -215,7 +215,7 @@ function findTopPosition(data) {
 
       let sumOfS = nextS - s;
 
-      c(`ROW Width with S: ${rowWidth + sumOfS}`);
+      // c(`ROW Width with S: ${rowWidth + sumOfS}`);
 
       if (rowWidth + sumOfS > COLS) {
         let dif = rowWidth + sumOfS - COLS;
@@ -370,6 +370,8 @@ const predict = async (req, res) => {
     const containerClient = blobServiceClient.getContainerClient(
       req.params.containerName
     );
+
+    console.log(req.params.blobName)
     const blobClient = containerClient.getBlobClient(req.params.blobName);
 
     // Get blob content from position 0 to the end
@@ -446,7 +448,7 @@ const predict = async (req, res) => {
             )
               .clone()
               .then((data) => {
-                c(data);
+                // c(data);
                 element.code = data.code;
                 var arrayItem = data.code;
                 predictionArray.push(arrayItem);
@@ -468,7 +470,7 @@ const predict = async (req, res) => {
         // return docs
         // }
       });
-      c(predictionArray);
+      // c(predictionArray);
       return predictionArray;
     });
 
@@ -495,7 +497,11 @@ const predict = async (req, res) => {
   // const  downloadedFile = downloadCodeFromAzure();
   // const testFile = fs.readFileSync(`${sampleDataRoot}/${req.params.blobName}`);
   await predictor
-    .detectImage(sampleProject.id, publishIterationName, await downloadCodeFromAzure())
+    .detectImage(
+      sampleProject.id,
+      publishIterationName,
+      await downloadCodeFromAzure()
+    )
     .then((data) => {
       if (data) {
         data.predictions = data.predictions.filter(
@@ -534,6 +540,8 @@ const predict = async (req, res) => {
         //   })
 
         res.status(200).json(data);
+        console.log("done predicting");            
+
       } else {
         res.status(404).json("No prediction can be made");
       }

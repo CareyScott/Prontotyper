@@ -52,15 +52,15 @@ const uploadFiles = async (html, blobName ) => {
         blobHTTPHeaders: { blobContentType: "text/html" },
       };
 
-      const blockBlobClient = containerClient.getBlockBlobClient(blobName);
+      const blockBlobClient = containerClient.getBlockBlobClient(blobName + ".html");
       const uploadBlobResponse = await blockBlobClient.upload(
         content,
         content.length,
         blobOptions
       );
       console.log(
-        `Upload block blob ${blobName} successfully`,
-        uploadBlobResponse.requestId
+        `Upload code block blob ${blobName} successfully`,
+        // uploadBlobResponse.requestId
       );
     }
     await Promise.all(promises);
@@ -118,20 +118,20 @@ const generateFile = async (prediction, code, blobName) => {
     }
   });
 
- await uploadFiles(html, blobName);
+  uploadFiles(html, blobName);
 };
 
 // save file in container as componentName.js
-const createContainer = async (containerClient) => {
-  try {
-    console.log(`Creating container "${containerName}"...`);
-    await containerClient.createIfNotExists();
-    // reportStatus(`Done.`);
-    console.log("Created container");
-  } catch (error) {
-    console.log(error.message);
-  }
-};
+// const createContainer = async (containerClient) => {
+//   try {
+//     console.log(`Creating container "${containerName}"...`);
+//     await containerClient.createIfNotExists();
+//     // reportStatus(`Done.`);
+//     console.log("Created container");
+//   } catch (error) {
+//     console.log(error.message);
+//   }
+// };
 
 const downloadCode = async (req, res) => {
   let framework = req.params.framework;
@@ -191,7 +191,7 @@ const downloadCode = async (req, res) => {
           let fileName = blobName + ".html";
           // res.download(path.join("./") + fileName, fileName, (err) => {
 
-            res.status(200).json("done");            
+            // res.status(200).json("done");
         })
 
         .catch((err) => {
