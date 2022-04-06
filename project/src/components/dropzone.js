@@ -16,7 +16,7 @@ function Dropzone(props) {
 
   const files = acceptedFiles.map((file) => (
     <li key={file.path}>
-      {file.path} - {file.size} bytes
+      {props.blobName.blobName + ".jpg"}
     </li>
   ));
 
@@ -73,7 +73,7 @@ function Dropzone(props) {
         // console.log(file);
         const blobOptions = {
           blobHTTPHeaders: {
-            blobContentType: "text/html",
+            blobContentType: file.type,
             contentLength: file.length,
           },
         };
@@ -99,10 +99,7 @@ function Dropzone(props) {
     }
   };
 
-  // const handleUpload = () => {
-  //   uploadFiles();
-  //   console.log("done");
-  // };
+
 
   if (props.submitFile === true) {
     uploadFiles();
@@ -149,20 +146,13 @@ function Dropzone(props) {
           </label>
           {/* </div> */}
         </Grid>
-        <Grid item xs={4}></Grid>
-        <Grid item xs={6} sx={{ ml: 2 }}>
-          {/* <Button  onClick={handleUpload}>
-              Save
-            </Button> */}
+        {/* <Grid item xs={4}></Grid> */}
+        <Grid item xs={12} sx={{ ml: 2 }}>
+       <p className="centered">Files<p>{files}</p> </p> 
         </Grid>
       </Grid>
 
-      {/* </div> */}
-      {/* <aside> */}
-      {/* <h4>Files</h4> */}
-      {/* <ul>{files}</ul> */}
-      {/* </aside> */}
-      {/* <CheckCircleIcon button onClick={handleUpload} /> */}
+      
     </>
   );
 }

@@ -8,6 +8,7 @@ import { Box } from "@mui/system";
 import { useNavigate } from "react-router-dom";
 
 import { styled } from "@mui/material/styles";
+import Login from "./Login";
 
 const Dashboard = (props) => {
   function preventDefault(event) {
@@ -51,19 +52,27 @@ const Dashboard = (props) => {
     color: theme.palette.text.secondary,
   }));
 
+  
   {
     if (!projects) {
       return (
+
+        
         <>
+         {props.authenticated ? (
           <div className="container-main">
             <FirstProject />
-          </div>
+          </div>): (
+        <Login onAuthenticated={props.onAuthenticated}  authenticated={props.authenticated} />
+      )}
         </>
       );
     } else {
      
       return (
         <>
+                 {props.authenticated ? (
+
           <div className="container-main">
             <div className="col-2"></div>
             <div className="col-10">
@@ -194,6 +203,10 @@ const Dashboard = (props) => {
             </Box>{" "}
             <div className="col-2"></div>
           </div>
+
+):  (
+  <Login onAuthenticated={props.onAuthenticated}   authenticated={props.authenticated} />
+)}
         </>
       );
     }

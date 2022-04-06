@@ -111,7 +111,8 @@ const App = () => {
 
           <Route exact path="/components" element={<ComponentsIndex />} />
           {protectedPages}
-          <Route exact path="/dashboard" element={<Dashboard />} />
+          <Route exact path="/dashboard" element={<Dashboard onAuthenticated={onAuthenticated}
+                authenticated={authenticated} />} />
           <Route
             path="/register"
             element={

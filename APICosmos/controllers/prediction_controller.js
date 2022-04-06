@@ -382,16 +382,16 @@ const predict = async (req, res) => {
 
     // console.log("Downloaded blob content:", downloaded);
 
-    fs.writeFile(`./Images/${req.params.blobName}`, downloaded, function (err) {
-      if (err) {
-        return console.error(err);
-      }
-      console.log("File saved successfully!");
-      fileSaved = true;
-      downloadedFile = downloaded;
+    // fs.writeFile(`./Images/${req.params.blobName}`, downloaded, function (err) {
+    //   if (err) {
+    //     return console.error(err);
+    //   }
+    //   console.log("File saved successfully!");
+    //   fileSaved = true;
+    //   downloadedFile = downloaded;
 
-      return downloadedFile;
-    });
+    //   return downloadedFile;
+    // });
 
     // [Node.js only] A helper method used to read a Node.js readable stream into a Buffer
     async function streamToBuffer(readableStream) {

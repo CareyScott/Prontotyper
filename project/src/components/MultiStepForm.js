@@ -5,56 +5,118 @@ import { MultiStepForm, Step } from "react-multi-form";
 import Dropzone from "./dropzone";
 import { useState, useEffect } from "react";
 import axios from "axios";
-const { BlobServiceClient } = require("@azure/storage-blob");
+import download from "f-downloads";
+
 let token = localStorage.getItem("token");
+
+
 
 const CreateProject = (props) => {
   const [active, setActive] = React.useState(1);
   const [blobName, setBlobName] = useState({});
   const [submitFile, setSubmitFile] = useState(false);
   const [form, setForm] = useState({});
-  const [prediction, setPrediction] = useState();
+  const [prediction, setPrediction] = useState({});
+  const { BlobServiceClient } = require("@azure/storage-blob");
 
+  const blobSasUrl =
+    "https://sketch2codestoresc.blob.core.windows.net/?sv=2020-08-04&ss=bfqt&srt=sco&sp=rwdlacupitfx&se=2022-04-15T16:16:40Z&st=2022-03-31T08:16:40Z&spr=https&sig=UQvWQe5%2BbCMWl4vf5%2FJl5aOWH96O0lri0lwNBD7CkIs%3D";
+  const blobServiceClient = new BlobServiceClient(blobSasUrl);
+
+
+
+  async function handleDownload() {
+      console.log("Downloading blob content");
+      
+      const containerClient = blobServiceClient.getContainerClient(props.containerName);
+      const blobClient = containerClient.getBlobClient(blobName.blobName);
+    
+      // Get blob content from position 0 to the end
+      // In Node.js, get downloaded data by accessing downloadBlockBlobResponse.readableStreamBody
+      const downloadBlockBlobResponse = await blobClient.download();
+      const downloaded = await blobToString(await downloadBlockBlobResponse.blobBody);
+      console.log("Downloaded blob content", downloaded);
+
+      download(
+        downloaded,
+        blobName.blobName + ".html",
+        "text/html"
+      );
+
+      async function blobToString(blob) {
+        const fileReader = new FileReader();
+        return new Promise((resolve, reject) => {
+          fileReader.onloadend = (ev) => {
+            resolve(ev.target.result);
+          };
+          fileReader.onerror = reject;
+          fileReader.readAsDataURL(blob);
+          
+        });
+      }
+    }
   const predict = () => {
     // useEffect(() => {
-      axios
-        .get(
-          `http://localhost:3030/predict/${blobName.blobName}/container/${props.containerName}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        )
-        .then((response) => {
-          console.log(response.data);
-          setPrediction(response.data.predictions);
-          // setLoading(false);
+    axios
+      .get(
+        `http://localhost:3030/predict/${blobName.blobName}/container/${props.containerName}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then((response) => {
+        // console.log(response.data);
+         setPrediction(response.data);
+        // setLoading(false);
+        generateCode(prediction)
+        // console.log(prediction);
 
-          // console.log(setPredictions);
-        })
-        .catch((err) => {
-          console.log(`Error: ${err}`);
-        });
+      })
+      .catch((err) => {
+        console.log(`Error: ${err}`);
+      });
     // }, [token]);
-      }
-  //   //     useEffect(() => {
-  //   //       axios
-  //   //     .get(`http://localhost:3030/code/${framework}`, {
-  //   //       headers: {
-  //   //         Authorization: `Bearer ${token}`,
-  //   //       },
-  //   //     })
-  //   //     .then((response) => {
-  //   //       // console.log(response.data);
-  //   //       setCode(response.data);
-  //   //       // setLoading(false);
+  };
 
-  //   //       // console.log(setPredictions);
-  //   //     })
-  //   //     .catch((err) => {
-  //   //       console.log(`Error: ${err}`);
-  //   //     });
+
+  const generateCode = () => {
+    axios
+      .get(
+        `http://localhost:3030/code/${prediction.id}/frameworks/HTML/projects/${props.containerName}/sketch/${blobName.blobName}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then((response) => {
+        console.log("Prediction Code Generated")
+        
+      })
+      .catch((err) => {
+        console.log(`Error: ${err}`);
+      });
+    // }, [token]);
+  }
+  // useEffect(() => {
+  //   axios
+  // .get(`http://localhost:3030/code/${framework}`, {
+  //   headers: {
+  //     Authorization: `Bearer ${token}`,
+  //   },
+  // })
+  // .then((response) => {
+  //   // console.log(response.data);
+  //   setCode(response.data);
+  //   // setLoading(false);
+
+  //   // console.log(setPredictions);
+  // })
+  // .catch((err) => {
+  //   console.log(`Error: ${err}`);
+  // });
 
   //   // }, [token]);
   // };
@@ -71,10 +133,12 @@ const CreateProject = (props) => {
   //   setSubmitFile((current) => !current);
   // };
 
+
+
   const submitForm = () => {
     // console.log(form);
 
-    setSubmitFile((current) => !current);
+    setSubmitFile((current) => true);
     // downloadCodeFromAzure()
     axios
       .post("http://localhost:3030/components", {
@@ -84,14 +148,10 @@ const CreateProject = (props) => {
         description: form.description,
       })
       .then((response) => {
-        console.log(response.data.token);
+        // console.log(response.data.token);
         props.onAuthenticated(true, response.data.token);
-        // localStorage.setItem("userID", response.data);
       })
       .catch((err) => console.log(err));
-
-      
-
     setActive(active + 1);
   };
 
@@ -110,55 +170,7 @@ const CreateProject = (props) => {
     }));
   };
 
-  // async function downloadCodeFromAzure() {
-
-  //   const blobSasUrl =
-  //   "https://sketch2codestoresc.blob.core.windows.net/?sv=2020-08-04&ss=bfqt&srt=sco&sp=rwdlacupitfx&se=2022-04-15T16:16:40Z&st=2022-03-31T08:16:40Z&spr=https&sig=UQvWQe5%2BbCMWl4vf5%2FJl5aOWH96O0lri0lwNBD7CkIs%3D";
-  // // Create a new BlobServiceClient
-  //     const blobServiceClient = new BlobServiceClient(blobSasUrl);
-
-  //   const containerClient = blobServiceClient.getContainerClient(
-  //     props.containerName
-  //   );
-  //   const blobClient = containerClient.getBlobClient(blobName.blobName);
-
-  //   // Get blob content from position 0 to the end
-  //   // In Node.js, get downloaded data by accessing downloadBlockBlobResponse.readableStreamBody
-  //   const downloadBlockBlobResponse = await blobClient.download();
-  //   const downloaded = await streamToBuffer(
-  //     downloadBlockBlobResponse.readableStreamBody
-  //   );
-  //   // console.log("Downloaded blob content" + downloaded);
-
-  //   // console.log("Downloaded blob content:", downloaded);
-
-  //   // fs.writeFile(`./Images/${req.params.blobName}`, downloaded, function (err) {
-  //   //   if (err) {
-  //   //     return console.error(err);
-  //   //   }
-  //   //   console.log("File saved successfully!");
-  //   //   fileSaved = true;
-  //   //   downloadedFile = downloaded;
-  //   //   return downloadedFile;
-  //   // });
-
-  //   // [Node.js only] A helper method used to read a Node.js readable stream into a Buffer
-  //   async function streamToBuffer(readableStream) {
-  //     return new Promise((resolve, reject) => {
-  //       const chunks = [];
-  //       readableStream.on("data", (data) => {
-  //         chunks.push(data instanceof Buffer ? data : Buffer.from(data));
-  //       });
-  //       readableStream.on("end", () => {
-  //         resolve(Buffer.concat(chunks));
-  //       });
-  //       readableStream.on("error", reject);
-  //     });
-  //   }
-
-  //   return downloaded;
-  // }
-
+  
   // console.log(props);
   return (
     <Container>
@@ -166,9 +178,6 @@ const CreateProject = (props) => {
         <Step label="Upload Sketch">
           <div>
             <p className="purple-text-login">Upload your Sketch file</p>
-            {/* <p className="primary-text-login">
-              Fill in the details below to create your component
-            </p> */}
           </div>
           <Dropzone
             containerName={props.containerName}
@@ -250,13 +259,28 @@ const CreateProject = (props) => {
               )}{" "}
             </p>
           </div>
-          {/* <Button onClick={buttonHandler}>Form</Button> */}
         </Step>
         <Step label="Prediction">
-          <Button onClick={submitForm}>submit</Button>
+        <Button onClick={submitForm}>Submit</Button>
+
         </Step>
         <Step label="Download">
-          <Button onClick={predict}>submit</Button>
+        <Button onClick={predict}>Predict</Button>
+
+          <Button onClick={handleDownload}>Download</Button>
+          {/* <a
+            href="https://sketch2codestoresc.blob.core.windows.net/new/alltest2.jpg?sv=2020-08-04&ss=bfqt&srt=sco&sp=rwdlacupitfx&se=2022-04-15T16:16:40Z&st=2022-03-31T08:16:40Z&spr=https&sig=UQvWQe5%2BbCMWl4vf5%2FJl5aOWH96O0lri0lwNBD7CkIs%3D&_=1649241528906"
+            download="ScottCareyCV.docx"
+          >
+            Download
+          </a> */}
+          {/* <Button
+            // onClick={
+             
+            // }
+          >
+            submit
+          </Button> */}
         </Step>
       </MultiStepForm>
 

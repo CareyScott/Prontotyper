@@ -18,7 +18,6 @@ const Code = require("../models/code_schema");
 // const User = require("../models/user_schema");
 const Prediction = require("../models/prediction_schema");
 // const { append } = require("express/lib/response");
-const blobName = "newBoc";
 const blobSasUrl =
 "https://sketch2codestoresc.blob.core.windows.net/?sv=2020-08-04&ss=bfqt&srt=sco&sp=rwdlacupitfx&se=2022-04-15T16:16:40Z&st=2022-03-31T08:16:40Z&spr=https&sig=UQvWQe5%2BbCMWl4vf5%2FJl5aOWH96O0lri0lwNBD7CkIs%3D";
 // Create a new BlobServiceClient
@@ -40,7 +39,7 @@ const checkTagName = (prediction, code) => {
   return value;
 };
 
-const uploadFiles = async (html) => {
+const uploadFiles = async (html, blobName ) => {
   const containerClient = blobServiceClient.getContainerClient(containerName);
 
   let content = html;
@@ -74,7 +73,7 @@ const uploadFiles = async (html) => {
   }
 };
 
-const generateFile = async (prediction, code) => {
+const generateFile = async (prediction, code, blobName) => {
   let html = "";
   prediction.map((prediction, i) => {
     if (prediction.boundingBox.range === "nextRow") {
@@ -119,7 +118,7 @@ const generateFile = async (prediction, code) => {
     }
   });
 
- await uploadFiles(html);
+ await uploadFiles(html, blobName);
 };
 
 // save file in container as componentName.js
@@ -149,6 +148,7 @@ const downloadCode = async (req, res) => {
   // step 2, get the code by framework
 
   let id = req.params.id;
+  let blobName = req.params.blobName;
 
   Prediction.findOne({ id })
     .then((data) => {
@@ -169,7 +169,7 @@ const downloadCode = async (req, res) => {
           }
         })
         .then(async () => {
-          file = await generateFile(prediction, code);
+          file = await generateFile(prediction, code, blobName);
           // await uploadFiles()
           // console.log("generated file")
           // // await uploadFiles();

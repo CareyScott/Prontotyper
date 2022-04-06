@@ -5,6 +5,7 @@ import { TextField, Box, Grid, Button, Paper, Link } from "@mui/material";
 import "./../grid.css";
 import "./../styles.css";
 import { makeStyles } from "@material-ui/core/styles";
+import { useNavigate } from "react-router-dom";
 
 import logo from "../Images/Prontotyper.png";
 import { Typography } from "@material-ui/core";
@@ -26,6 +27,7 @@ const useStyles = makeStyles((theme) => ({
 const Login = (props) => {
   const [form, setForm] = useState({});
   const classes = useStyles();
+  // console.log(props);
 
   const handleForm = (e) => {
     setForm((prevState) => ({
@@ -33,8 +35,16 @@ const Login = (props) => {
       [e.target.name]: e.target.value,
     }));
   };
+
+  let navigate = useNavigate();
+
+  const routeDashboard = () => {
+    let path = "/dashboard";
+    navigate(path);
+  };
+
   const submitForm = () => {
-    console.log(form);
+    // console.log(form);
 
     axios
       .post("http://localhost:3030/login", {
@@ -44,10 +54,13 @@ const Login = (props) => {
       })
       .then((response) => {
         console.log(response.data.token);
+
         props.onAuthenticated(true, response.data.token);
         // localStorage.setItem("userID", response.data);
       })
       .catch((err) => console.log(err));
+
+    routeDashboard();
   };
 
   return (
@@ -138,7 +151,8 @@ const Login = (props) => {
             <hr />
 
             <p className="purple-text-login-small">
-              Not registered? Click&nbsp;<a href="/register">here</a>&nbsp;to sign up!
+              Not registered? Click&nbsp;<a href="/register">here</a>&nbsp;to
+              sign up!
             </p>
           </div>
           {/* </Box> */}
