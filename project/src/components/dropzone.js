@@ -16,7 +16,7 @@ function Dropzone(props) {
 
   const files = acceptedFiles.map((file) => (
     <li key={file.path}>
-      {props.blobName.blobName + ".jpg"}
+      {props.blobName.blobName }
     </li>
   ));
 
@@ -86,7 +86,7 @@ function Dropzone(props) {
         );
         console.log(
           `Upload block blob ${file.name} successfully`,
-          uploadBlobResponse
+          // uploadBlobResponse
         );
       });
       await Promise.all(promises);

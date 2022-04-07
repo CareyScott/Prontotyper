@@ -19,13 +19,13 @@ const Code = require("../models/code_schema");
 const Prediction = require("../models/prediction_schema");
 // const { append } = require("express/lib/response");
 const blobSasUrl =
-"https://sketch2codestoresc.blob.core.windows.net/?sv=2020-08-04&ss=bfqt&srt=sco&sp=rwdlacupitfx&se=2022-04-15T16:16:40Z&st=2022-03-31T08:16:40Z&spr=https&sig=UQvWQe5%2BbCMWl4vf5%2FJl5aOWH96O0lri0lwNBD7CkIs%3D";
+  "https://sketch2codestoresc.blob.core.windows.net/?sv=2020-08-04&ss=bfqt&srt=sco&sp=rwdlacupitfx&se=2022-04-15T16:16:40Z&st=2022-03-31T08:16:40Z&spr=https&sig=UQvWQe5%2BbCMWl4vf5%2FJl5aOWH96O0lri0lwNBD7CkIs%3D";
 // Create a new BlobServiceClient
-  const blobServiceClient = new BlobServiceClient(blobSasUrl);
+const blobServiceClient = new BlobServiceClient(blobSasUrl);
 // const containerName = "yurt";
 let fileSaved = false;
 let containerName = "new";
-let downloadedFile;
+let htmlSent;
 const instance = new express();
 
 const checkTagName = (prediction, code) => {
@@ -39,7 +39,7 @@ const checkTagName = (prediction, code) => {
   return value;
 };
 
-const uploadFiles = async (html, blobName ) => {
+const uploadFiles = async (html, blobName) => {
   const containerClient = blobServiceClient.getContainerClient(containerName);
 
   let content = html;
@@ -52,14 +52,16 @@ const uploadFiles = async (html, blobName ) => {
         blobHTTPHeaders: { blobContentType: "text/html" },
       };
 
-      const blockBlobClient = containerClient.getBlockBlobClient(blobName + ".html");
+      const blockBlobClient = containerClient.getBlockBlobClient(
+        blobName + ".html"
+      );
       const uploadBlobResponse = await blockBlobClient.upload(
         content,
         content.length,
         blobOptions
       );
       console.log(
-        `Upload code block blob ${blobName} successfully`,
+        `Upload code block blob ${blobName} successfully`
         // uploadBlobResponse.requestId
       );
     }
@@ -112,12 +114,13 @@ const generateFile = async (prediction, code, blobName) => {
             key={'same-${i}'}
             className={'flex  ${prediction.boundingBox.width}'}
           >
-            ${checkTagName(prediction).code}
+            ${checkTagName(prediction, code).code}
           </div>
           `;
     }
   });
 
+  htmlSent = html;
   uploadFiles(html, blobName);
 };
 
@@ -135,7 +138,7 @@ const generateFile = async (prediction, code, blobName) => {
 
 const downloadCode = async (req, res) => {
   let framework = req.params.framework;
-  let code;
+  let code = [];
   let prediction;
   let file;
   containerName = req.params.container;
@@ -162,6 +165,7 @@ const downloadCode = async (req, res) => {
     .then(() => {
       Code.find({ framework })
         .then((data) => {
+          // console.log(data);
           if (data) {
             code = data;
           } else {
@@ -175,7 +179,6 @@ const downloadCode = async (req, res) => {
           // // await uploadFiles();
           // console.log("upload")
 
-         
           // console.log("download")
 
           // if (fileSaved = true){
@@ -186,12 +189,11 @@ const downloadCode = async (req, res) => {
           // };
 
           // console.log(path.join("./"));
-          
 
           let fileName = blobName + ".html";
           // res.download(path.join("./") + fileName, fileName, (err) => {
-
-            // res.status(200).json("done");
+          console.log(htmlSent);
+          res.status(200).json(htmlSent);
         })
 
         .catch((err) => {
@@ -209,15 +211,15 @@ const downloadCode = async (req, res) => {
 
 async function downloadCodeFromAzure() {
   const containerClient = blobServiceClient.getContainerClient(containerName);
-  console.log("download")
+  console.log("download");
   const blobClient = containerClient.getBlobClient(blobName);
-  console.log("fghfgh")
+  console.log("fghfgh");
   // Get blob content from position 0 to the end
   // In Node.js, get downloaded data by accessing downloadBlockBlobResponse.readableStreamBody
   const downloadBlockBlobResponse = await blobClient.download();
-  const downloaded = (
-    await streamToBuffer(downloadBlockBlobResponse.readableStreamBody)
-  )
+  const downloaded = await streamToBuffer(
+    downloadBlockBlobResponse.readableStreamBody
+  );
   console.log("Downloaded blob content");
 
   // console.log("Downloaded blob content:", downloaded);
@@ -249,7 +251,7 @@ async function downloadCodeFromAzure() {
     });
   }
 
-  return downloaded
+  return downloaded;
 }
 
 const getSingleCode = (req, res) => {

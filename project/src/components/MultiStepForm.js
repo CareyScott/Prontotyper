@@ -1,61 +1,82 @@
 import React from "react";
 import { Button, Grid, Paper, Container, TextField } from "@mui/material";
-
 import { MultiStepForm, Step } from "react-multi-form";
 import Dropzone from "./dropzone";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import download from "f-downloads";
-
+import { getParameters } from "codesandbox/lib/api/define";
 let token = localStorage.getItem("token");
-
-
+let downloaded;
 
 const CreateProject = (props) => {
   const [active, setActive] = React.useState(1);
   const [blobName, setBlobName] = useState({});
   const [submitFile, setSubmitFile] = useState(false);
   const [form, setForm] = useState({});
-  const [prediction, setPrediction] = useState({});
+  const [prediction, setPrediction] = useState();
+
+  const [html, setHtml] = useState("");
+  const htmlHead = `import React from "react";
+  import ReactDOM from "react-dom";
+  import "./css/grid.css";
+  import Helmet from "react-helmet";
+ 
+  const element = (
+<>
+<Helmet><link rel=\"stylesheet\" href=\"https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css\" integrity=\"sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u\" crossorigin=\"anonymous\" /></Helmet>
+
+<div className="container">
+ ${html}
+ </div>
+ </> 
+ );
+
+  
+  ReactDOM.render(
+    element,
+    document.getElementById('root')
+  );`;
+
+  let htmlRoot = '<div id="root"></div>';
+
   const { BlobServiceClient } = require("@azure/storage-blob");
 
   const blobSasUrl =
     "https://sketch2codestoresc.blob.core.windows.net/?sv=2020-08-04&ss=bfqt&srt=sco&sp=rwdlacupitfx&se=2022-04-15T16:16:40Z&st=2022-03-31T08:16:40Z&spr=https&sig=UQvWQe5%2BbCMWl4vf5%2FJl5aOWH96O0lri0lwNBD7CkIs%3D";
   const blobServiceClient = new BlobServiceClient(blobSasUrl);
 
-
-
   async function handleDownload() {
-      console.log("Downloading blob content");
-      
-      const containerClient = blobServiceClient.getContainerClient(props.containerName);
-      const blobClient = containerClient.getBlobClient(blobName.blobName);
-    
-      // Get blob content from position 0 to the end
-      // In Node.js, get downloaded data by accessing downloadBlockBlobResponse.readableStreamBody
-      const downloadBlockBlobResponse = await blobClient.download();
-      const downloaded = await blobToString(await downloadBlockBlobResponse.blobBody);
-      console.log("Downloaded blob content", downloaded);
+    console.log(blobName.blobName);
 
-      download(
-        downloaded,
-        blobName.blobName + ".html",
-        "text/html"
-      );
+    const containerClient = blobServiceClient.getContainerClient(
+      props.containerName
+    );
+    const blobClient = containerClient.getBlobClient(
+      blobName.blobName + ".html"
+    );
 
-      async function blobToString(blob) {
-        const fileReader = new FileReader();
-        return new Promise((resolve, reject) => {
-          fileReader.onloadend = (ev) => {
-            resolve(ev.target.result);
-          };
-          fileReader.onerror = reject;
-          fileReader.readAsDataURL(blob);
-          
-        });
-      }
+    // Get blob content from position 0 to the end
+    // In Node.js, get downloaded data by accessing downloadBlockBlobResponse.readableStreamBody
+    const downloadBlockBlobResponse = await blobClient.download();
+    downloaded = await blobToString(await downloadBlockBlobResponse.blobBody);
+    console.log("Downloaded blob content", downloaded);
+
+    download(downloaded, blobName.blobName + ".html", "text/html");
+
+    async function blobToString(blob) {
+      const fileReader = new FileReader();
+      return new Promise((resolve, reject) => {
+        fileReader.onloadend = (ev) => {
+          resolve(ev.target.result);
+        };
+        fileReader.onerror = reject;
+        fileReader.readAsDataURL(blob);
+      });
     }
-  const predict = () => {
+  }
+  let predictionID;
+  const predict = async () => {
     // useEffect(() => {
     axios
       .get(
@@ -67,12 +88,14 @@ const CreateProject = (props) => {
         }
       )
       .then((response) => {
+        // predictionID = response.data.id
         // console.log(response.data);
-         setPrediction(response.data);
+        setPrediction(response.data.id);
         // setLoading(false);
-        generateCode(prediction)
-        // console.log(prediction);
+        // if (prediction) {
 
+        // }
+        // console.log(prediction);
       })
       .catch((err) => {
         console.log(`Error: ${err}`);
@@ -80,11 +103,11 @@ const CreateProject = (props) => {
     // }, [token]);
   };
 
-
   const generateCode = () => {
+    console.log("Generating code");
     axios
       .get(
-        `http://localhost:3030/code/${prediction.id}/frameworks/HTML/projects/${props.containerName}/sketch/${blobName.blobName}`,
+        `http://localhost:3030/code/${prediction}/frameworks/bootstrap/projects/${props.containerName}/sketch/${blobName.blobName}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -92,14 +115,15 @@ const CreateProject = (props) => {
         }
       )
       .then((response) => {
-        console.log("Prediction Code Generated")
-        
+        console.log(response.data);
+        setHtml(response.data);
+        console.log("Prediction Code Generated");
       })
       .catch((err) => {
         console.log(`Error: ${err}`);
       });
     // }, [token]);
-  }
+  };
   // useEffect(() => {
   //   axios
   // .get(`http://localhost:3030/code/${framework}`, {
@@ -133,8 +157,9 @@ const CreateProject = (props) => {
   //   setSubmitFile((current) => !current);
   // };
 
-
-
+  const returnState = () => {
+    setHtml('')
+  }
   const submitForm = () => {
     // console.log(form);
 
@@ -169,8 +194,38 @@ const CreateProject = (props) => {
       // newBlobName === blobName
     }));
   };
+  // console.log(downloaded)
 
-  
+  // const cssFile = fs.readFileSync("./positions.css");
+  // console.log(cssFile);
+
+  const parameters = getParameters({
+    files: {
+      "package.json": {
+        content: {
+          dependencies: {
+            react: "latest",
+            "react-dom": "latest",
+            "react-helmet": "^6.1.0",
+
+            bootstrap: "^5.1.3",
+          },
+        },
+      },
+      "index.js": {
+        content: htmlHead,
+      },
+      "index.html": {
+        content: htmlRoot,
+      },
+      "/css/grid.css": {
+        isBinary: true,
+        content:
+          "https://sketch2codestoresc.blob.core.windows.net/new/positions.css",
+      },
+    },
+  });
+
   // console.log(props);
   return (
     <Container>
@@ -261,13 +316,22 @@ const CreateProject = (props) => {
           </div>
         </Step>
         <Step label="Prediction">
-        <Button onClick={submitForm}>Submit</Button>
-
+          <Button onClick={submitForm}>Submit</Button>
         </Step>
         <Step label="Download">
-        <Button onClick={predict}>Predict</Button>
-
+          <Button onClick={predict}>Predict</Button>
+          <Button onClick={generateCode}>Generate</Button>
           <Button onClick={handleDownload}>Download</Button>
+          <Button onClick={returnState}>Reset Values</Button>
+          <form
+            action="https://codesandbox.io/api/v1/sandboxes/define"
+            method="POST"
+            target="_blank"
+          >
+            <input type="hidden" name="parameters" value={parameters} />
+            <input type="submit" value="Open in sandbox" />
+            
+          </form>{" "}
           {/* <a
             href="https://sketch2codestoresc.blob.core.windows.net/new/alltest2.jpg?sv=2020-08-04&ss=bfqt&srt=sco&sp=rwdlacupitfx&se=2022-04-15T16:16:40Z&st=2022-03-31T08:16:40Z&spr=https&sig=UQvWQe5%2BbCMWl4vf5%2FJl5aOWH96O0lri0lwNBD7CkIs%3D&_=1649241528906"
             download="ScottCareyCV.docx"
