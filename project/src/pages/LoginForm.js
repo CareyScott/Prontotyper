@@ -13,12 +13,9 @@ import { Typography } from "@material-ui/core";
 const useStyles = makeStyles((theme) => ({
   drawerPaper: { width: "inherit" },
   navList: {
-    // float: "right",
     textDecoration: "none",
-    // color: theme.palette.text.primary,
   },
   navListButton: {
-    // float: "right",
     textDecoration: "none",
   },
   link: { textDecoration: "none", color: theme.palette.text.primary },
@@ -27,7 +24,6 @@ const useStyles = makeStyles((theme) => ({
 const Login = (props) => {
   const [form, setForm] = useState({});
   const classes = useStyles();
-  // console.log(props);
 
   const handleForm = (e) => {
     setForm((prevState) => ({
@@ -35,6 +31,7 @@ const Login = (props) => {
       [e.target.name]: e.target.value,
     }));
   };
+
 
   let navigate = useNavigate();
 
@@ -44,19 +41,15 @@ const Login = (props) => {
   };
 
   const submitForm = () => {
-    // console.log(form);
-
     axios
       .post("http://localhost:3030/login", {
-        // name: form.name,
         email: form.email,
         password: form.password,
       })
       .then((response) => {
-        console.log(response.data.token);
+        // console.log(response.data.token);
 
         props.onAuthenticated(true, response.data.token);
-        // localStorage.setItem("userID", response.data);
       })
       .catch((err) => console.log(err));
 
@@ -92,9 +85,7 @@ const Login = (props) => {
               margin="normal"
               required
               fullWidth
-              // sx={{ m: 1 }}
               id="email"
-              // margin="dense"
               label="Email Address"
               name="email"
               variant="outlined"
@@ -108,16 +99,13 @@ const Login = (props) => {
               onChange={handleForm}
               margin="normal"
               className="col-8"
-              // margin="dense"
               required
               fullWidth
               id="password"
               variant="outlined"
-              // sx={{ width: 50 }}
               label="Password"
               name="password"
               autoComplete="password"
-              // autoFocus
             />
             <div className="col-12"></div>
             <div className="col-12"></div>
@@ -155,8 +143,6 @@ const Login = (props) => {
               sign up!
             </p>
           </div>
-          {/* </Box> */}
-          {/* </div> */}
         </Box>
       </div>
     </>

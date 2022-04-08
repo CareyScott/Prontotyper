@@ -9,7 +9,6 @@ import { DataGrid } from "@mui/x-data-grid";
 import CreateProject from "../../components/MultiStepForm";
 import download from "f-downloads";
 
-let token = localStorage.getItem("token");
 
 import PropTypes from "prop-types";
 import Backdrop from "@mui/material/Backdrop";
@@ -105,6 +104,7 @@ const ShowProject = (props) => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   let { id } = useParams();
+  let token = localStorage.getItem("token");
 
   useEffect(() => {
     axios

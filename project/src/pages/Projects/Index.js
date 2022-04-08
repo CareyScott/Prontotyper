@@ -6,15 +6,15 @@ import { Box } from "@mui/system";
 import { useNavigate } from "react-router-dom";
 
 // const [predictions, setPredictions] = useState({});
-let token = localStorage.getItem("token");
 import sketchhome from "./.././../Images/sketch-home.png";
 
 const ProjectsIndex = (props) => {
+  let token = localStorage.getItem("token");
+
+  const [projects, setProjects] = useState(null);
   function preventDefault(event) {
     event.preventDefault();
   }
-  const [projects, setProjects] = useState([]);
-
   let navigate = useNavigate();
 
   useEffect(() => {
@@ -33,15 +33,15 @@ const ProjectsIndex = (props) => {
       });
   }, [token]);
 
+  if (!projects) return null;
+
   const projectsList = projects.map((project) => {
-
-    let projectID =  project._id.toString()
+    let projectID = project._id.toString();
     const showProject = (project) => {
-
       navigate(`/projects/${projectID}`, { replace: true });
     };
 
-    console.log(projectID);
+    // console.log(projectID);
     return (
       // <Grid item xs={3} md={3}>
       <Box

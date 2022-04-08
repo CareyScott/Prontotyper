@@ -23,7 +23,7 @@ import ComponentsShow from "./pages/Components/Show";
 import ComponentsEdit from "./pages/Components/Edit";
 
 // Auth Pages
-import Login from "./pages/Login";
+import Login from "./pages/LoginForm";
 import Register from "./auth/Register";
 
 import Testing from "./pages/Testing";
@@ -61,13 +61,10 @@ const App = () => {
   if (authenticated) {
     protectedPages = (
       <>
-        {/* <Route path="/projects/create" element={<ProjectsCreate />} /> */}
-        {/* <Route path="/projects/:id/edit" element={<ProjectsEdit />} />
-        <Route path="/projects/:id" element={<ProjectsShow />} />
-
-        <Route path="/components/create" element={<ComponentsCreate />} />
-        <Route path="/components/:id/edit" element={<ComponentsEdit />} />
-        <Route path="/components/:id" element={<ComponentsShow />} /> */}
+        <Route exact path="/projects/:id" element={<ProjectsShow />} />
+        <Route exact path="/projects" element={<ProjectsIndex />} />
+        <Route exact path="/dashboard" element={<Dashboard />} />
+        <Route exact path="/components" element={<ComponentsIndex />} />
       </>
     );
   }
@@ -88,31 +85,9 @@ const App = () => {
               />
             }
           />
-          <Route
-            exact
-            path="/projects"
-            element={
-              <ProjectsIndex
-                onAuthenticated={onAuthenticated}
-                authenticated={authenticated}
-              />
-            }
-          />
-          <Route
-            exact
-            path="/projects/:id"
-            element={
-              <ProjectsShow
-                onAuthenticated={onAuthenticated}
-                authenticated={authenticated}
-              />
-            }
-          />
 
-          <Route exact path="/components" element={<ComponentsIndex />} />
           {protectedPages}
-          <Route exact path="/dashboard" element={<Dashboard onAuthenticated={onAuthenticated}
-                authenticated={authenticated} />} />
+
           <Route
             path="/register"
             element={
@@ -131,7 +106,6 @@ const App = () => {
               />
             }
           />
-          {/* <Route path="/register" element={<Register />} /> */}
 
           <Route path="*" element={<PageNotFound />} />
           <Route path="/testing" element={<Testing />} />

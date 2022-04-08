@@ -8,6 +8,7 @@ import "../button.css";
 import Dropzone from "../components/dropzone";
 import { Image } from "@mui/icons-material";
 import sketchhome from "../Images/sketch-home.png";
+import { Link } from "react-router-dom";
 
 const Home = (props) => {
   return (
@@ -44,6 +45,7 @@ const Home = (props) => {
           </div>
           <div className="col-1 "></div>
           <div className="col-1 paragraph-gap">
+            <Link to="/dashboard">
             <Button
               variant="contained"
               color="primary"
@@ -52,6 +54,7 @@ const Home = (props) => {
             >
               Try Now
             </Button>
+            </Link>
           </div>
           <div className="col-2 paragraph-gap">
             <Button

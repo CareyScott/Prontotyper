@@ -52,11 +52,12 @@ const login = (req, res) => {
         ),
       });
     })
-
     .catch((err) => {
       throw err;
     });
 };
+
+
 
 const loginRequired = (req, res, next) => {
   if (req.user) {
@@ -67,6 +68,8 @@ const loginRequired = (req, res, next) => {
     });
   }
 };
+
+
 const getAllUsers = (req, res) => {
   User.find()
     .populate("projects")

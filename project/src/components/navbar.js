@@ -30,6 +30,7 @@ const useStyles = makeStyles((theme) => ({
 
 const Navbar = (props) => {
   const [navbar, setNavbar] = useState(false);
+  let navigate = useNavigate();
 
   const changeBackground = () => {
     if (window.scrollY >= 60) {
@@ -39,6 +40,13 @@ const Navbar = (props) => {
     }
   };
 
+  const handleLogout = () => {
+    props.onAuthenticated(false);
+    console.log(props);
+    navigate(`/`, { replace: true });
+
+  };
+
   window.addEventListener("scroll", changeBackground);
 
   const classes = useStyles();
@@ -46,62 +54,109 @@ const Navbar = (props) => {
     <>
       <nav>
         <div className="container-main">
-          <div className="col-8">
-            <Link to="/">
-              <img src={logo} alt="Logo" className="logo-nav" />
-            </Link>
-          </div>
-          {/* </div> */}
+          {!props.authenticated ? (
+            <>
+              <div className="col-9">
+                <Link to="/">
+                  <img src={logo} alt="Logo" className="logo-nav" />
+                </Link>
+              </div>
+              {/* </div> */}
+              <div className="col-1">
+                <Link to="/">
+                  <ListItem>
+                    <Button sx={{ color: "#000000" }}>
+                      <Typography
+                        variant="h6"
+                        component="p"
+                        className={classes.navList}
+                      >
+                        Home
+                      </Typography>
+                    </Button>
+                  </ListItem>
+                </Link>
+              </div>{" "}
+              <div className="col-1">
+                <Link to="/login">
+                  <ListItem>
+                    <Button
+                      variant="contained"
+                      xs={6}
+                      sx={{ backgroundColor: "#790FFF", width: 200 }}
+                    >
+                      <Typography
+                        variant="h6"
+                        component="p"
+                        className={classes.navListButton}
+                      >
+                        Login
+                      </Typography>
+                    </Button>
+                  </ListItem>
+                </Link>
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="col-8">
+                <Link to="/">
+                  <img src={logo} alt="Logo" className="logo-nav" />
+                </Link>
+              </div>
+              {/* </div> */}
 
-          <div className="col-1">
-            <Link to="/dashboard">
-              <ListItem>
-                <Button sx={{ color: "#000000" }}>
-                  <Typography
-                    variant="h6"
-                    component="p"
-                    className={classes.navList}
+              <div className="col-1">
+                <Link to="/">
+                  <ListItem>
+                    <Button sx={{ color: "#000000" }}>
+                      <Typography
+                        variant="h6"
+                        component="p"
+                        className={classes.navList}
+                      >
+                        Home
+                      </Typography>
+                    </Button>
+                  </ListItem>
+                </Link>
+              </div>
+              <div className="col-1">
+                <Link to="/dashboard">
+                  <ListItem>
+                    <Button sx={{ color: "#000000" }}>
+                      <Typography
+                        variant="h6"
+                        component="p"
+                        className={classes.navList}
+                      >
+                        Dashboard
+                      </Typography>
+                    </Button>
+                  </ListItem>
+                </Link>
+              </div>
+
+              <div className="col-1">
+                <ListItem>
+                  <Button
+                    onClick={handleLogout}
+                    variant="contained"
+                    xs={6}
+                    sx={{ backgroundColor: "#790FFF", width: 200 }}
                   >
-                    Dashboard
-                  </Typography>
-                </Button>
-              </ListItem>
-            </Link>
-          </div>
-          <div className="col-1">
-            <Link to="/">
-              <ListItem>
-                <Button sx={{ color: "#000000" }}>
-                  <Typography
-                    variant="h6"
-                    component="p"
-                    className={classes.navList}
-                  >
-                    Home
-                  </Typography>
-                </Button>
-              </ListItem>
-            </Link>
-          </div>
-          <div className="col-1">
-            <Link to="/login">
-              <ListItem>
-                <Button
-                  variant="contained"
-                  xs={6}
-                  sx={{ backgroundColor: "#790FFF", width: 200 }}
-                >
-                  <Typography
-                    variant="h6"
-                    component="p"
-                    className={classes.navListButton}
-                  >
-                    Login
-                  </Typography>
-                </Button>
-              </ListItem>
-            </Link>
-          </div>
+                    <Typography
+                      variant="h6"
+                      component="p"
+                      className={classes.navListButton}
+                    >
+                      Logout
+                    </Typography>
+                  </Button>
+                </ListItem>
+              </div>
+            </>
+          )}
         </div>
       </nav>
     </>
