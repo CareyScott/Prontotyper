@@ -23,6 +23,12 @@
   position: -webkit-sticky !important;
 }
 
+/* .centered-img{
+  align-items: center;
+  text-align: center;
+  float: right;
+} */
+
 .navbar.active {
   background: black;
 }

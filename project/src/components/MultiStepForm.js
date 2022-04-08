@@ -6,6 +6,8 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import download from "f-downloads";
 import { getParameters } from "codesandbox/lib/api/define";
+import Loading from "./loadingBar";
+import { Box } from "@mui/system";
 let token = localStorage.getItem("token");
 let downloaded;
 
@@ -15,8 +17,13 @@ const CreateProject = (props) => {
   const [submitFile, setSubmitFile] = useState(false);
   const [form, setForm] = useState({});
   const [prediction, setPrediction] = useState();
-
+  const [status, setStatus] = useState("");
   const [html, setHtml] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [isDonePredicting, setIsDonePredicting] = useState(false);
+
+  let containerName = props.containerName.toLowerCase();
+
   const htmlHead = `import React from "react";
   import ReactDOM from "react-dom";
   import "./css/grid.css";
@@ -49,9 +56,7 @@ const CreateProject = (props) => {
   async function handleDownload() {
     console.log(blobName.blobName);
 
-    const containerClient = blobServiceClient.getContainerClient(
-      props.containerName
-    );
+    const containerClient = blobServiceClient.getContainerClient(containerName);
     const blobClient = containerClient.getBlobClient(
       blobName.blobName + ".html"
     );
@@ -78,9 +83,14 @@ const CreateProject = (props) => {
   let predictionID;
   const predict = async () => {
     // useEffect(() => {
+    setIsDonePredicting(false);
+    setIsLoading(true);
+    setStatus("Predicting...");
+    console.log(props);
+
     axios
       .get(
-        `http://localhost:3030/predict/${blobName.blobName}/container/${props.containerName}`,
+        `http://localhost:3030/predict/${blobName.blobName}/container/${containerName}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -90,7 +100,12 @@ const CreateProject = (props) => {
       .then((response) => {
         // predictionID = response.data.id
         // console.log(response.data);
+
         setPrediction(response.data.id);
+        setStatus("Predicting Complete");
+        setIsLoading(false);
+        setIsDonePredicting(true);
+
         // setLoading(false);
         // if (prediction) {
 
@@ -104,10 +119,25 @@ const CreateProject = (props) => {
   };
 
   const generateCode = () => {
-    console.log("Generating code");
+    setIsLoading(true);
+
+    // setStatus("Code Generated.")
+    // setStatus("Code Generated.")
+    // setStatus("Uploading Code To Storage...")
+    // setStatus("Uploading Code To Storage...")
+
+    setTimeout(() => {
+      setStatus("Code Generated.");
+    }, 500);
+    setTimeout(() => {
+      setStatus("Code Generated.");
+    }, 1000);
+    setTimeout(() => {
+      setStatus("Uploading Code To Storage...");
+    }, 1500);
     axios
       .get(
-        `http://localhost:3030/code/${prediction}/frameworks/bootstrap/projects/${props.containerName}/sketch/${blobName.blobName}`,
+        `http://localhost:3030/code/${prediction}/frameworks/bootstrap/projects/${containerName}/sketch/${blobName.blobName}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -117,7 +147,12 @@ const CreateProject = (props) => {
       .then((response) => {
         console.log(response.data);
         setHtml(response.data);
-        console.log("Prediction Code Generated");
+        setTimeout(() => {
+          setStatus("Success! Code uploaded to storage...");
+        }, 2000);
+        setTimeout(() => {
+          setIsLoading(false);
+        }, 2500);
       })
       .catch((err) => {
         console.log(`Error: ${err}`);
@@ -158,8 +193,10 @@ const CreateProject = (props) => {
   // };
 
   const returnState = () => {
-    setHtml('')
-  }
+    setHtml("");
+    setStatus("");
+    setIsDonePredicting(false);
+  };
   const submitForm = () => {
     // console.log(form);
 
@@ -173,11 +210,11 @@ const CreateProject = (props) => {
         description: form.description,
       })
       .then((response) => {
-        // console.log(response.data.token);
-        props.onAuthenticated(true, response.data.token);
+        console.log(response.data);
+        // props.onAuthenticated(true, response.data.token);
       })
       .catch((err) => console.log(err));
-    setActive(active + 1);
+    // setActive(active + 1);
   };
 
   const handleForm = (e) => {
@@ -235,7 +272,7 @@ const CreateProject = (props) => {
             <p className="purple-text-login">Upload your Sketch file</p>
           </div>
           <Dropzone
-            containerName={props.containerName}
+            containerName={containerName}
             blobName={blobName}
             submitFile={submitFile}
           />
@@ -313,16 +350,42 @@ const CreateProject = (props) => {
                 </div>
               )}{" "}
             </p>
+            <Button onClick={submitForm}>Submit Component</Button>
           </div>
         </Step>
         <Step label="Prediction">
-          <Button onClick={submitForm}>Submit</Button>
+          <Grid container>
+            <Grid item xs={12}>
+              {isLoading ? (
+                <Loading />
+              ) : isDonePredicting ? (
+                <>
+                  <p className="primary-text-login">
+                    Done Predicting! <br /> click below to generate your code
+                  </p>
+                  <Button onClick={generateCode}>Generate</Button>
+                </>
+              ) : (
+                <p className="primary-text-login">Click Below to predict.</p>
+              )}
+            </Grid>
+            {/* <Grid item xs={3}>
+              {/* <Box
+sx={{width: 250, justifyContent: "center"}}        component="img"
+                alt="Prediction Image"
+                src={`https://sketch2codestoresc.blob.core.windows.net/${containerName}/${blobName.blobName}`}
+              ></Box> */}
+            {/* </Grid> */}
+          </Grid>
+
+          <Button onClick={predict}>Predict</Button>
+          <p className="primary-text-login">{status}</p>
         </Step>
         <Step label="Download">
-          <Button onClick={predict}>Predict</Button>
-          <Button onClick={generateCode}>Generate</Button>
-          <Button onClick={handleDownload}>Download</Button>
+          <Button onClick={handleDownload}>Download Code</Button>
+          <p>OR</p>
           <Button onClick={returnState}>Reset Values</Button>
+          {status}
           <form
             action="https://codesandbox.io/api/v1/sandboxes/define"
             method="POST"
@@ -330,7 +393,6 @@ const CreateProject = (props) => {
           >
             <input type="hidden" name="parameters" value={parameters} />
             <input type="submit" value="Open in sandbox" />
-            
           </form>{" "}
           {/* <a
             href="https://sketch2codestoresc.blob.core.windows.net/new/alltest2.jpg?sv=2020-08-04&ss=bfqt&srt=sco&sp=rwdlacupitfx&se=2022-04-15T16:16:40Z&st=2022-03-31T08:16:40Z&spr=https&sig=UQvWQe5%2BbCMWl4vf5%2FJl5aOWH96O0lri0lwNBD7CkIs%3D&_=1649241528906"
@@ -345,6 +407,13 @@ const CreateProject = (props) => {
           >
             submit
           </Button> */}
+          {/* {isLoading ? (
+            <Loading />
+          ) : (
+            <>
+              {/* <p className="primary-text-login">Done</p> */}
+          {/* </> */}
+          {/* )}  */}
         </Step>
       </MultiStepForm>
 
@@ -353,7 +422,7 @@ const CreateProject = (props) => {
       )}
       {active !== 5 && (
         <Button
-          onClick={() => setActive(active + 1)}
+          onClick={() => returnState(setActive(active + 1))}
           style={{ float: "right" }}
         >
           Next

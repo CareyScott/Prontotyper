@@ -32,7 +32,6 @@ const Login = (props) => {
     }));
   };
 
-
   let navigate = useNavigate();
 
   const routeDashboard = () => {
@@ -47,8 +46,8 @@ const Login = (props) => {
         password: form.password,
       })
       .then((response) => {
-        // console.log(response.data.token);
-
+        console.log(response.data);
+        localStorage.setItem("user_id", response.data.userID);
         props.onAuthenticated(true, response.data.token);
       })
       .catch((err) => console.log(err));

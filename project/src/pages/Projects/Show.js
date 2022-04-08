@@ -9,7 +9,6 @@ import { DataGrid } from "@mui/x-data-grid";
 import CreateProject from "../../components/MultiStepForm";
 import download from "f-downloads";
 
-
 import PropTypes from "prop-types";
 import Backdrop from "@mui/material/Backdrop";
 import Box from "@mui/material/Box";
@@ -18,6 +17,8 @@ import Typography from "@mui/material/Typography";
 // web.cjs is required for IE11 support
 import { useSpring, animated } from "react-spring/web.cjs";
 const { BlobServiceClient } = require("@azure/storage-blob");
+
+
 
 // async function handleDownload() {
 //   console.log("Downloading blob content");
@@ -150,7 +151,6 @@ const ShowProject = (props) => {
           >
             Create Component
           </Button>
-          
         </div>
         <div className="col-2 paragraph-gap">
           <Button
@@ -193,8 +193,8 @@ const ShowProject = (props) => {
               <CreateProject
                 containerName={project.project_name}
                 projectID={project._id}
-                onAuthenticated={props.onAuthenticated}
-                authenticated={props.authenticated}
+                // onAuthenticated={props.onAuthenticated}
+                // authenticated={props.authenticated}
               />
             </Box>
           </Fade>

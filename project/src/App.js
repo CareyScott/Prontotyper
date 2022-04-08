@@ -57,6 +57,27 @@ const App = () => {
       localStorage.removeItem("token");
     }
   };
+  
+
+  // const [userID, setUserID] = useState(false);
+
+  // useEffect(() => {
+  //   if (localStorage.getItem("user_id")) {
+  //     setAuthenticated(true);
+  //   }
+  // }, []);
+
+  // const onUserID = (auth, token) => {
+  //   setAuthenticated(auth);
+  //   console.log(UserID);
+  //   if (auth) {
+  //     localStorage.setItem("user_id", UserID);
+  //   } else {
+  //     localStorage.removeItem("user_id");
+  //   }
+  // };
+
+
 
   if (authenticated) {
     protectedPages = (

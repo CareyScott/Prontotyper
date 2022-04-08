@@ -1,53 +1,92 @@
+import { Container, Grid, Button, TextField } from "@mui/material";
 import * as React from "react";
-import Backdrop from "@mui/material/Backdrop";
-import Box from "@mui/material/Box";
-import Modal from "@mui/material/Modal";
-import Fade from "@mui/material/Fade";
-import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
-
-const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 400,
-  bgcolor: "background.paper",
-  border: "2px solid #000",
-  boxShadow: 24,
-  p: 4,
-};
+import { MultiStepForm, Step } from "react-multi-form";
+import { useState, useEffect } from "react";
+import axios from "axios";
 
 export default function CreateProject() {
-  const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  let UserID = localStorage.getItem("user_id");
+
+  const [active, setActive] = React.useState(1);
+  const [form, setForm] = useState({});
+
+  const handleForm = (e) => {
+    setForm((prevState) => ({
+      ...prevState,
+      [e.target.name]: e.target.value,
+    }));
+  };
+
+  const submitForm = () => {
+    console.log(form);
+
+    // setSubmitFile((current) => true);
+    // downloadCodeFromAzure()
+    axios
+      .post("http://localhost:3030/projects", {
+        project_name: form.project_name,
+        user_id: UserID,
+        description: form.description,
+        components: []
+      })
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((err) => console.log(err));
+    // setActive(active + 1);
+  };
+
 
   return (
-    <div>
-      <Button onClick={handleOpen}>Open modal</Button>
-      <Modal
-        aria-labelledby="transition-modal-title"
-        aria-describedby="transition-modal-description"
-        open={open}
-        onClose={handleClose}
-        closeAfterTransition
-        BackdropComponent={Backdrop}
-        BackdropProps={{
-          timeout: 500,
-        }}
-      >
-        <Fade in={open}>
-          <Box sx={style}>
-            <Typography id="transition-modal-title" variant="h6" component="h2">
-              Text in a modal
-            </Typography>
-            <Typography id="transition-modal-description" sx={{ mt: 2 }}>
-              Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-            </Typography>
-          </Box>
-        </Fade>
-      </Modal>
-    </div>
+    <Container>
+      <MultiStepForm activeStep={active}>
+        <Step label="Create Project">
+        <div>
+            <p className="purple-text-login">Create your project</p>
+            <p className="primary-text-login">
+              Fill in the details below. This can be changed later!
+            </p>
+          </div>
+          <TextField
+            className="col-8"
+            onChange={handleForm}
+            margin="normal"
+            required
+            fullWidth
+            id="project_name"
+            label="Name Your Project"
+            name="project_name"
+            autoComplete="project_name"
+            autoFocus
+          />
+          <TextField
+            className="col-8"
+            onChange={handleForm}
+            margin="normal"
+            required
+            fullWidth
+            id="description"
+            label="Describe Your Project"
+            name="description"
+            autoComplete="description"
+            autoFocus
+            sx={{mb:4}}
+          />
+        </Step>
+        <Step label="Confirm"><Button onClick={submitForm}>Submit</Button></Step>
+      </MultiStepForm>
+
+      {active !== 1 && (
+        <Button onClick={() => setActive(active - 1)}>Previous</Button>
+      )}
+      {active !== 5 && (
+        <Button
+          onClick={() => setActive(active + 1)}
+          style={{ float: "right" }}
+        >
+          Next
+        </Button>
+      )}
+    </Container>
   );
 }

@@ -45,7 +45,7 @@ const Home = (props) => {
           </div>
           <div className="col-1 "></div>
           <div className="col-1 paragraph-gap">
-            <Link to="/dashboard">
+            <Link to="/login">
             <Button
               variant="contained"
               color="primary"

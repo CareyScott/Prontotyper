@@ -10,14 +10,18 @@ const projectSchema = new Schema(
       type: String,
       required: [true, "Name field is required"],
     },
-    project_framework: {
-      type: String,
-      required: [true, "framework field is required"],
-    },
+    // project_framework: {
+    //   type: String,
+    //   required: [true, "framework field is required"],
+    // },
     components: {
       type: [Schema.Types.ObjectId],
       ref: "Component",
       required: [true, "components are required"],
+    },
+    description: {
+      type: String,
+      required: [true, "file description field is required"],
     },
   },
   {

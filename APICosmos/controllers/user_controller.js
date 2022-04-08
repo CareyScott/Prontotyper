@@ -50,6 +50,8 @@ const login = (req, res) => {
 
           process.env.DECRYPT_STRING
         ),
+        userID: user._id
+        
       });
     })
     .catch((err) => {

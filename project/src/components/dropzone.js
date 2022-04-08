@@ -57,10 +57,10 @@ function Dropzone(props) {
 
   // Create a unique name for the container by
   // appending the current time to the file name
-  const containerName = props.containerName;
+  const containerName = props.containerName.toLowerCase();
 
   // Get a container client from the BlobServiceClient
-  const containerClient = blobServiceClient.getContainerClient(containerName);
+  const containerClient = blobServiceClient.getContainerClient(containerName);  
 
   const uploadFiles = async () => {
     await containerClient.createIfNotExists();

@@ -42,6 +42,7 @@ const Navbar = (props) => {
 
   const handleLogout = () => {
     props.onAuthenticated(false);
+    localStorage.removeItem("user_id");
     console.log(props);
     navigate(`/`, { replace: true });
 
