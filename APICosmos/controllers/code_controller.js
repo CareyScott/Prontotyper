@@ -150,13 +150,38 @@ const downloadCode = async (req, res) => {
   // step 1, mongoose get prediction by component id
   // step 2, get the code by framework
 
+  // alterPrediction = (predictionz) => {
+
+  // }
+
   let id = req.params.id;
   let blobName = req.params.blobName;
 
   Prediction.findOne({ id })
     .then((data) => {
       if (data) {
-        prediction = data.predictions;
+        // for (let i = 1; i < data.predictions.length - 1; i++) {
+        //   if (
+        //     data.predictions[i].boundingBox.range === "sameRow" && data.predictions[i].boundingBox.elementLeft < data.predictions[i - 1].boundingBox.elementLeft) {
+        //     let leftBB = data.predictions[i].boundingBox.pushLeft;
+        //     let leftRange = data.predictions[i].boundingBox.range;
+        //     let leftTn = data.predictions[i].tagName;
+
+        //     let rightBB = data.predictions[i + 1].boundingBox.pushLeft;
+        //     let rightRange = data.predictions[i + 1].boundingBox.range;
+        //     let rightTn = data.predictions[i + 1].tagName;
+
+        //     data.predictions[i + 1].boundingBox.pushLeft = leftBB;
+        //     data.predictions[i + 1].boundingBox.range = leftRange;
+        //     data.predictions[i + 1].tagName = leftTn;
+
+        //     data.predictions[i].boundingBox.pushLeft = rightBB;
+        //     data.predictions[i].boundingBox.range = rightRange;
+        //     data.predictions[i].tagName = rightTn;
+        //   }
+          prediction = data.predictions;
+        // }
+
         // console.log(prediction)
       } else {
         res.status(404).json("No Code not found");

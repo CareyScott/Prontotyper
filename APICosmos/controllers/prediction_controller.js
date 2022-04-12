@@ -84,7 +84,6 @@ function findTopPosition(data) {
   sortedLeft.forEach((element, index) => {
     let leftElement = element.boundingBox.left;
     // c(leftElement)#
-
     leftElements.push(element);
   });
   // c(leftElements)
@@ -153,6 +152,8 @@ function findTopPosition(data) {
       topElements[0].boundingBox["range"] = "firstElement";
     }
 
+    
+
     // determining columns
 
     resultWidth =
@@ -207,6 +208,10 @@ function findTopPosition(data) {
       topElements[0].boundingBox["range"] = "firstElement";
     }
 
+    if (i === topElements.length){
+      topElements[topElements.length].boundingBox["range"] = "lastElement";
+    }
+
     if (topElements[i].boundingBox.range === "sameRow") {
       let s = topElements[i].boundingBox.width;
       let nextS = topElements[i - 1].boundingBox.pushLeft;
@@ -221,9 +226,19 @@ function findTopPosition(data) {
         let dif = rowWidth + sumOfS - COLS;
         sumOfS -= dif;
       }
-
       topElements[i - 1].boundingBox.pushLeft = `left-${sumOfS}`;
     }
+
+    let temp1 = topElements[i - 1]
+    let temp2 = topElements[i]
+
+    if ( data.predictions[i].boundingBox.range === "sameRow" && data.predictions[i].boundingBox.elementLeft < data.predictions[i - 1].boundingBox.elementLeft){
+
+      temp2 = topElements[i - 1]
+      temp1 = topElements[i]
+
+    }
+    
 
     // c(rowWidth);
 

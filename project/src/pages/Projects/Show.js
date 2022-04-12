@@ -18,8 +18,6 @@ import Typography from "@mui/material/Typography";
 import { useSpring, animated } from "react-spring/web.cjs";
 const { BlobServiceClient } = require("@azure/storage-blob");
 
-
-
 // async function handleDownload() {
 //   console.log("Downloading blob content");
 //   const blobSasUrl =
@@ -91,7 +89,7 @@ const style = {
   left: "50%",
   transform: "translate(-50%, -50%)",
   width: 400,
-  height: 550,
+  display: "flex",
   bgcolor: "background.paper",
   border: "2px solid #000",
   boxShadow: 24,
@@ -158,7 +156,7 @@ const ShowProject = (props) => {
             xs={6}
             sx={{ color: "#790FFF", width: 200, height: 50 }}
           >
-            Help{" "}
+            Edit
           </Button>
         </div>
         <div className="col-8"></div>

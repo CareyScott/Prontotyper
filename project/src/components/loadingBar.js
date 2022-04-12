@@ -38,6 +38,7 @@ import {
     }, []);
   
     return (
+      <>
       <div className={classes.root}>
        
         
@@ -48,6 +49,7 @@ import {
           className={[classes.linearProgress, classes.margin]}
         />
       </div>
+      </>
     );
   }
   

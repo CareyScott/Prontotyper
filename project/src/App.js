@@ -83,8 +83,8 @@ const App = () => {
     protectedPages = (
       <>
         <Route exact path="/projects/:id" element={<ProjectsShow />} />
-        <Route exact path="/projects" element={<ProjectsIndex />} />
-        <Route exact path="/dashboard" element={<Dashboard />} />
+        {/* <Route exact path="/projects" element={<ProjectsIndex />} /> */}
+        <Route exact path="/dashboard" element={<ProjectsIndex />} />
         <Route exact path="/components" element={<ComponentsIndex />} />
       </>
     );

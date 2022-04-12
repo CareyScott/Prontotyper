@@ -34,6 +34,7 @@
     "html-react-parser": "^1.4.9",
     "material-ui-dropzone": "^3.5.0",
     "moment": "^2.29.1",
+    "mui-validate": "^0.1.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-dropzone": "^12.0.4",

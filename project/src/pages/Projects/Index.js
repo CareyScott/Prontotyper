@@ -10,6 +10,7 @@ import Backdrop from "@mui/material/Backdrop";
 // const [predictions, setPredictions] = useState({});
 import sketchhome from "./.././../Images/sketch-home.png";
 import CreateProject from "../../components/createProject";
+import ProjectListComponent from "../../components/projectListComponent";
 
 const Fade = React.forwardRef(function Fade(props, ref) {
   const { in: open, children, onEnter, onExited, ...other } = props;
@@ -93,50 +94,52 @@ const ProjectsIndex = (props) => {
 
     // console.log(projectID);
     return (
-      <Box
-        key={project._id}
-        sx={{
-          display: "flex",
-          flexWrap: "wrap",
-          "& > :not(style)": {
-            m: 1,
-            height: 180,
-          },
-        }}
-      >
-        <Paper elevation={3}>
-          <Grid container>
-            <Grid item xs={2}></Grid>
-            <Grid item xs={8}>
-              <Box>
-                <p className="project-title">{project.project_name}</p>
-              </Box>
-            </Grid>
+      // <Box
+      //   key={project._id}
+      //   sx={{
+      //     display: "flex",
+      //     flexWrap: "wrap",
+      //     "& > :not(style)": {
+      //       m: 1,
+      //       height: 180,
+      //     },
+      //   }}
+      // >
+      //   <Paper elevation={3}>
+      //     <Grid container>
+      //       <Grid item xs={2}></Grid>
+      //       <Grid item xs={8}>
+      //         <Box>
+      //           <p className="project-title">{project.project_name}</p>
+      //         </Box>
+      //       </Grid>
 
-            <Grid item xs={12}>
-              <Box>
-                <Button
-                  onClick={showProject}
-                  color="secondary"
-                  position="absolute"
-                  xs={6}
-                  sx={{ color: "#790FFF", width: 200 }}
-                >
-                  View
-                </Button>
-                <Button
-                  onClick={showProject}
-                  color="secondary"
-                  xs={6}
-                  sx={{ color: "#790FFF", width: 200 }}
-                >
-                  Edit
-                </Button>
-              </Box>
-            </Grid>
-          </Grid>
-        </Paper>
-      </Box>
+      //       <Grid item xs={12}>
+      //         <Box>
+      //           <Button
+      //             onClick={showProject}
+      //             color="secondary"
+      //             position="absolute"
+      //             xs={6}
+      //             sx={{ color: "#790FFF", width: 200 }}
+      //           >
+      //             View
+      //           </Button>
+      //           {/* <Button
+      //             onClick={showProject}
+      //             color="secondary"
+      //             xs={6}
+      //             sx={{ color: "#790FFF", width: 200 }}
+      //           >
+      //             Edit
+      //           </Button> */}
+      //         </Box>
+      //       </Grid>
+      //     </Grid>
+      //   </Paper>
+      // </Box>
+
+      <ProjectListComponent project={project} />
     );
   });
 
