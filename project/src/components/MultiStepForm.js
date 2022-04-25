@@ -342,6 +342,7 @@ const CreateProject = (props) => {
         project: props.projectID,
         password: form.password,
         description: form.description,
+        blob_name: blobName.blobName
       })
       .then((response) => {
         console.log(response.data);

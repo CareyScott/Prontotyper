@@ -7,11 +7,28 @@ import { getParameters } from "codesandbox/lib/api/define";
 
 const ComponentsShow = (props) => {
   const [component, setComponent] = useState({});
-  const [project, setProject] = useState("");
-  const [html, setHTML] = useState("");
-  const [sandboxName, setSandboxName] = useState("");
+  const [project, setProject] = useState('');
+  const [blobName, setBlobName] = useState('');
+  const [isLoading, setLoad] = useState(true);
 
-  const [prediction, setPrediction] = useState("");
+  const [html, setHTML] = useState('');
+  const [sandboxName, setSandboxName] = useState('');
+  const [prediction, setPrediction] = useState('');
+
+  let { id } = useParams();
+  let token = localStorage.getItem("token");
+
+  let containerName;
+  // let blobName;
+  let componentImage;
+  let sandbox_id;
+
+
+  useEffect(() => {
+    // write your code here, it's like componentWillMount
+    predictionRun();
+}, [])
+  
 
   const positionsCSS = `.container {
     padding-top: 40px;
@@ -174,62 +191,6 @@ const ComponentsShow = (props) => {
 
   let htmlRoot = '<div id="root"></div>';
 
-  let { id } = useParams();
-  let token = localStorage.getItem("token");
-  let containerName;
-  let blobName;
-  let componentImage;
-  let sandbox_id;
-
-  useEffect(() => {
-    axios
-      .get(`http://localhost:3030/components/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((response) => {
-        console.log(response.data);
-        setComponent(response.data);
-        // getProject(response.data)
-
-        axios
-          .get(`http://localhost:3030/projects/${response.data.project}`, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          })
-          .then((response, component) => {
-            console.log(response.data);
-            setProject(response.data.project_name.toLowerCase());
-          })
-          .catch((err) => {
-            console.log(`Error: ${err}`);
-          });
-      })
-      .catch((err) => {
-        console.log(`Error: ${err}`);
-      });
-  }, [token]);
-
-  const predict = () => {
-    axios
-      .get(
-        `http://localhost:3030/predict/${component.component_name}/container/${project}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      )
-      .then((response) => {
-        setPrediction(response.data.id);
-      })
-      .catch((err) => {
-        console.log(`Error: ${err}`);
-      });
-  };
-
   const parameters = getParameters({
     files: {
       "package.json": {
@@ -255,95 +216,289 @@ const ComponentsShow = (props) => {
     },
   });
 
-  const generateCode = () => {
-    axios
-      .get(
+  const doNothing = () => {};
+
+   const predictionRun = async () => {
+    await getComponentData(),
+    await predict(),
+    await generateCode(),
+    await openSandbox()
+  };
+
+  // const getData = () => {
+  //   axios
+  //     .get(`http://localhost:3030/components/${id}`, {
+  //       headers: {
+  //         Authorization: `Bearer ${token}`,
+  //       },
+  //     })
+  //     .then((response) => {
+  //       console.log(response.data);
+  //       setComponent(response.data);
+  //       setBlobName(response.data.blob_name);
+
+  //       axios
+  //         .get(`http://localhost:3030/projects/${response.data.project}`, {
+  //           headers: {
+  //             Authorization: `Bearer ${token}`,
+  //           },
+  //         })
+  //         .then((response) => {
+  //           console.log(response.data);
+  //           setProject(response.data.project_name.toLowerCase());
+  //         })
+  //         .catch((err) => {
+  //           console.log(`Error: ${err}`);
+  //         });
+
+  //       setLoad(false);
+  //     })
+  //     .catch((err) => {
+  //       console.log(`Error: ${err}`);
+  //     });
+
+  //   // await predict();
+  // };
+
+  const getComponentData = async () => {
+    try {
+      const resp = await axios.get(`http://localhost:3030/components/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setBlobName(resp.data.blob_name);
+      setProject(resp.data.project.project_name.toLowerCase());
+      setComponent(resp.data);
+    } catch (err) {
+      console.log(`Error: ${err}`);
+    }
+  };
+
+  // const getProjectData = async () => {
+  //   let componentString = component.project
+  //   componentString.toString()
+  //   try {
+  //     const resp = await axios.get(`http://localhost:3030/projects/${component.project}`, {
+  //       headers: {
+  //         Authorization: `Bearer ${token}`,
+  //       },
+  //     });
+  //     setProject(resp.data.project_name.toLowerCase())
+  //   } catch (err) {
+  //     console.log(`Error: ${err}`);
+  //   }
+  // };
+  // axios
+  //   .get(`http://localhost:3030/predict/${blobName}/container/${project}`, {
+  //     headers: {
+  //       Authorization: `Bearer ${token}`,
+  //     },
+  //   })
+  //   .then((response) => {
+  //     setPrediction(response.data.id);
+  //     // generateCode(response.data.id);
+  //     setPredicted(true);
+  //   })
+  //   .catch((err) => {
+  //     console.log(`Error: ${err}`);
+  //   });
+  //   // await generateCode();
+  //   // return Promise.resolve
+
+  const predict = async () => {
+    try {
+      const resp = await axios.get(
+        `http://localhost:3030/predict/${blobName}/container/${project}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setPrediction(resp.data.id);
+    } catch (err) {
+      console.log(`Error: ${err}`);
+    }
+  };
+
+  const generateCode = async () => {
+    try {
+      const resp = await axios.get(
         `http://localhost:3030/code/${prediction}/frameworks/bootstrap/projects/${project}/sketch/${component.component_name}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
-      )
-      .then((response) => {
-        setHTML(response.data);
-        console.log(response.data);
-        axios
-          .post(`https://codesandbox.io/api/v1/sandboxes/define?json=1`, {
-            parameters: parameters,
-          })
-          .then((response) => {
-            console.log(response.data.sandbox_id);
-            setSandboxName(response.data.sandbox_id);
-          })
-          .catch((err) => {
-            console.log(`Error: ${err}`);
-          });
-      })
-      .catch((err) => {
-        console.log(`Error: ${err}`);
-      });
+      );
+      setHTML(resp.data);
+    } catch (err) {
+      console.log(`Error: ${err}`);
+    }
   };
 
-  // generateCode()
+  const openSandbox = async () => {
+    try {
+      const resp = await axios.post(
+        `https://codesandbox.io/api/v1/sandboxes/define?json=1`,
+        {
+          parameters: parameters,
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      // console.log(resp);
+      setSandboxName(resp.data.sandbox_id);
+      setLoad(false)
 
-  return (
-    <>
-      <div className="container-main">
+    } catch (err) {
+      console.log(`Error: ${err}`);
+    }
+  };
+
+
+  // const generateCode =  () => {
+  //   axios
+  //     .get(
+  //       `http://localhost:3030/code/${prediction}/frameworks/bootstrap/projects/${project}/sketch/${component.component_name}`,
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //       }
+  //     )
+  //     .then((response) => {
+  //       setHTML(response.data);
+  //       // console.log(htmlCode);
+  //     })
+  //     // .then(() => openSandbox())
+
+  //     .catch((err) => {
+  //       console.log(`Error: ${err}`);
+  //     });
+  //     // await openSandbox();
+
+  //     // return Promise.resolve
+  // };
+
+  // const openSandbox = () => {
+  //   axios
+  //     .post(`https://codesandbox.io/api/v1/sandboxes/define?json=1`, {
+  //       parameters: parameters,
+  //     })
+  //     .then((response) => {
+  //       console.log(response.data.sandbox_id);
+  //       setSandboxName(response.data.sandbox_id);
+  //     })
+  //     .catch((err) => {
+  //       console.log(`Error: ${err}`);
+  //     });
+
+  //   // return Promise.resolve
+  // };
+
+  const Sandbox = () => {
+    return (
+      <iframe
+        src={`https://codesandbox.io/embed/${sandboxName}`}
+        width="100%"
+        height="590"
+        allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking"
+        sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
+      ></iframe>
+    );
+  };
+
+  if (isLoading === true) {
+    console.log("Loading");
+    return (
+      <>
+        {" "}
         <div className="col-1"></div>
-        <div className="col-11 line-1">{component.component_name}</div>
-        <div className="col-1 paragraph-gap "></div>
-        <div className="col-1 paragraph-gap">
-          <Button
-            variant="outlined"
-            color="secondary"
-            xs={6}
-            onClick={predict}
-            sx={{ color: "#790FFF", width: 250, height: 50, mb: 4 }}
-          >
-            Download Component
-          </Button>
-        </div>
-        <div className="col-10 paragraph-gap">
-          <Button
-            onClick={generateCode}
-            color="secondary"
-            xs={6}
-            sx={{ color: "#790FFF", width: 250, height: 50 }}
-          >
-            Edit
-          </Button>
-          
-        </div>
-        <div className="col-1"></div>
-        <div className="col-2">
+        <div className="col-11 line-1">Loading</div>
+      </>
+    );
+  } else {
+    console.log("Done Loading");
+    // predictionRun()
+    // predict()
+    // const once= (fn, context) => {
+    //   let result;
+
+    //   return function() {
+    //     if(fn) {
+    //       result = fn.apply(context || this, arguments);
+    //       fn = null;
+    //     }
+
+    //     return result;
+    //   };
+
+    // }
+
+    // // let canOnlyFireOnce = once(function() {
+    // //   console.log('Fired!');
+    // //   predict()
+    // // });
+
+    // canOnlyFireOnce(); // "Fired!"
+
+    // canOnlyFireOnce(); // "Fired!"
+    // if (predicted === false) {
+    // predict()
+    // }
+    // let count = 0;
+    // count === 1 ? predict : doNothing;
+    // count++;
+    return (
+      <>
+        <div className="container-main">
+          <div className="col-1"></div>
+          <div className="col-11 line-1">{component.component_name}</div>
+          <div className="col-1 paragraph-gap "></div>
+          <div className="col-1 paragraph-gap">
+            <Button
+              variant="outlined"
+              color="secondary"
+              xs={6}
+              // onClick={predict}
+              sx={{ color: "#790FFF", width: 250, height: 50, mb: 4 }}
+            >
+              Download Component
+            </Button>
+          </div>
+          <div className="col-10 paragraph-gap">
+            <Button
+              // onClick={generateCode}
+              color="secondary"
+              xs={6}
+              sx={{ color: "#790FFF", width: 250, height: 50 }}
+            >
+              Edit
+            </Button>
+          </div>
+          {/* <div className="col-2">
           {!project ? (
             <p>no img</p>
           ) : (
             <img
               width="100%"
-              src={`https://sketch2codestoresc.blob.core.windows.net/${project}/${component.component_name}`}
+              src={`https://sketch2codestoresc.blob.core.windows.net/${project}/${component.blob_name}`}
             />
-          )}
-        </div>
-        <div className="col-1"></div>
+          )} 
+        </div> */}
 
-        <div className="col-6">{sandboxName ? (
-            <iframe
-              src={`https://codesandbox.io/embed/${sandboxName}`}
-              width="1000" height="550"
-              allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking"
-              sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
-            ></iframe>
-          ) : (
-            <p>none</p>
-          )}</div>
-       
-        <div className="col-12"></div>
-        <div className="col-2"></div>
-      </div>
-    </>
-  );
+          <div className="col-12">
+            {sandboxName === "" ? <></> : <Sandbox />}
+          </div>
+          <div className="col-12"></div>
+          <div className="col-2"></div>
+        </div>
+      </>
+    );
+  }
 };
 
 export default ComponentsShow;

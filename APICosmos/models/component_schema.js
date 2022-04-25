@@ -25,6 +25,10 @@ const componentSchema = new Schema(
       ref: "Project",
       required: [true, "project is required"],
     },
+    blob_name: {
+      type: String,
+      required: [true, "file description field is required"],
+    }
   },
   {
     timestamps: true,

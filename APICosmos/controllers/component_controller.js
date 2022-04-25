@@ -18,6 +18,8 @@ const getAllComponents = (req, res) => {
 };
 const getSingleComponent = (req, res) => {
   Component.findById(req.params.id)
+  .populate("project")
+
     .then((data) => {
       if (data) {
         res.status(200).json(data);
