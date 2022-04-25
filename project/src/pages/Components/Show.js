@@ -7,29 +7,33 @@ import { getParameters } from "codesandbox/lib/api/define";
 
 const ComponentsShow = (props) => {
   const [component, setComponent] = useState({});
-  const [project, setProject] = useState('');
-  const [blobName, setBlobName] = useState('');
+  const [project, setProject] = useState("");
+  const [blobName, setBlobName] = useState("");
   const [isLoading, setLoad] = useState(true);
 
-  const [html, setHTML] = useState('');
-  const [sandboxName, setSandboxName] = useState('');
-  const [prediction, setPrediction] = useState('');
+  const [html, setHTML] = useState("");
+  const [sandboxName, setSandboxName] = useState("");
+  const [prediction, setPrediction] = useState("");
 
   let { id } = useParams();
   let token = localStorage.getItem("token");
 
-  let containerName;
-  // let blobName;
-  let componentImage;
-  let sandbox_id;
-
+  // let containerName;
+  // // let blobName;
+  // let componentImage;
+  // let sandbox_id;
 
   useEffect(() => {
-    // write your code here, it's like componentWillMount
     predictionRun();
-}, [])
-  
+  }, []);
 
+
+  let funcBlobName;
+  let funcComponentName;
+  let funcProjectName;
+  let funcPrediction;
+  let funcHtml;
+  
   const positionsCSS = `.container {
     padding-top: 40px;
     width: 1200px;
@@ -178,7 +182,7 @@ const ComponentsShow = (props) => {
   <Helmet><link rel=\"stylesheet\" href=\"https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css\" integrity=\"sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u\" crossorigin=\"anonymous\" /></Helmet>
   
   <div className="container">
-   ${html}
+   ${funcHtml}
    </div>
    </> 
    );
@@ -216,13 +220,16 @@ const ComponentsShow = (props) => {
     },
   });
 
-  const doNothing = () => {};
 
-   const predictionRun = async () => {
-    await getComponentData(),
-    await predict(),
-    await generateCode(),
-    await openSandbox()
+  const predictionRun = async () => {
+    await getComponentData();
+    await predict(funcBlobName, funcProjectName);
+    await generateCode(funcPrediction);
+    await openSandbox();
+
+    // const list = [getComponentData, predict, generateCode, openSandbox];
+
+    // await Promise.all(list.map(fn => fn()))  // call each function to get returned Promise
   };
 
   // const getData = () => {
@@ -267,9 +274,13 @@ const ComponentsShow = (props) => {
           Authorization: `Bearer ${token}`,
         },
       });
-      setBlobName(resp.data.blob_name);
-      setProject(resp.data.project.project_name.toLowerCase());
-      setComponent(resp.data);
+      setBlobName(await resp.data.blob_name);
+      setProject(await resp.data.project.project_name.toLowerCase());
+      setComponent(await resp.data);
+
+      funcBlobName = await resp.data.blob_name;
+      funcProjectName = await resp.data.project.project_name.toLowerCase();
+      funcComponentName = await resp.data.component_name;
     } catch (err) {
       console.log(`Error: ${err}`);
     }
@@ -309,14 +320,15 @@ const ComponentsShow = (props) => {
   const predict = async () => {
     try {
       const resp = await axios.get(
-        `http://localhost:3030/predict/${blobName}/container/${project}`,
+        `http://localhost:3030/predict/${funcBlobName}/container/${funcProjectName}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
       );
-      setPrediction(resp.data.id);
+      setPrediction(await resp.data.id);
+      funcPrediction = await resp.data.id;
     } catch (err) {
       console.log(`Error: ${err}`);
     }
@@ -325,14 +337,15 @@ const ComponentsShow = (props) => {
   const generateCode = async () => {
     try {
       const resp = await axios.get(
-        `http://localhost:3030/code/${prediction}/frameworks/bootstrap/projects/${project}/sketch/${component.component_name}`,
+        `http://localhost:3030/code/${funcPrediction}/frameworks/bootstrap/projects/${funcProjectName}/sketch/${funcBlobName}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
       );
-      setHTML(resp.data);
+      setHTML(await resp.data);
+      funcHtml = await resp.data
     } catch (err) {
       console.log(`Error: ${err}`);
     }
@@ -351,13 +364,11 @@ const ComponentsShow = (props) => {
       );
       // console.log(resp);
       setSandboxName(resp.data.sandbox_id);
-      setLoad(false)
-
+      setLoad(false);
     } catch (err) {
       console.log(`Error: ${err}`);
     }
   };
-
 
   // const generateCode =  () => {
   //   axios
@@ -401,17 +412,19 @@ const ComponentsShow = (props) => {
 
   const Sandbox = () => {
     return (
-      <iframe
-        src={`https://codesandbox.io/embed/${sandboxName}`}
-        width="100%"
-        height="590"
-        allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking"
-        sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
-      ></iframe>
+      <>
+        <iframe
+          src={`https://codesandbox.io/embed/${sandboxName}`}
+          width="100%"
+          height="590"
+          allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking"
+          sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
+        ></iframe>
+      </>
     );
   };
 
-  if (isLoading === true) {
+  if (isLoading === false) {
     console.log("Loading");
     return (
       <>
@@ -421,7 +434,7 @@ const ComponentsShow = (props) => {
       </>
     );
   } else {
-    console.log("Done Loading");
+    // console.log("Done Loading");
     // predictionRun()
     // predict()
     // const once= (fn, context) => {
@@ -479,16 +492,6 @@ const ComponentsShow = (props) => {
               Edit
             </Button>
           </div>
-          {/* <div className="col-2">
-          {!project ? (
-            <p>no img</p>
-          ) : (
-            <img
-              width="100%"
-              src={`https://sketch2codestoresc.blob.core.windows.net/${project}/${component.blob_name}`}
-            />
-          )} 
-        </div> */}
 
           <div className="col-12">
             {sandboxName === "" ? <></> : <Sandbox />}
