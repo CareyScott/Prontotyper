@@ -3,7 +3,14 @@ import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { Button } from "@mui/material";
+import download from "f-downloads";
+
 import { getParameters } from "codesandbox/lib/api/define";
+const { BlobServiceClient } = require("@azure/storage-blob");
+
+  const blobSasUrl =
+  "https://sketch2codestoresc.blob.core.windows.net/?sv=2020-08-04&ss=bfqt&srt=sco&sp=rwdlacupitfx&se=2022-09-01T15:55:24Z&st=2022-04-25T07:55:24Z&spr=https&sig=kT52sph2xMa4nwrsf0szfKehC6%2F%2FJsxKHxNfRgztWm4%3D";
+  const blobServiceClient = new BlobServiceClient(blobSasUrl);
 
 const ComponentsShow = (props) => {
   const [component, setComponent] = useState({});
@@ -23,17 +30,16 @@ const ComponentsShow = (props) => {
   // let componentImage;
   // let sandbox_id;
 
-  useEffect(() => {
-    predictionRun();
+  useEffect(async () => {
+    await predictionRun();
   }, []);
 
+  let funcBlobName = "";
+  let funcComponentName = "";
+  let funcProjectName = "";
+  let funcPrediction = "";
+  let funcHtml= "";
 
-  let funcBlobName;
-  let funcComponentName;
-  let funcProjectName;
-  let funcPrediction;
-  let funcHtml;
-  
   const positionsCSS = `.container {
     padding-top: 40px;
     width: 1200px;
@@ -172,64 +178,12 @@ const ComponentsShow = (props) => {
     
   }`;
 
-  const htmlHead = `import React from "react";
-    import ReactDOM from "react-dom";
-    import "./css/grid.css";
-    import Helmet from "react-helmet";
-   
-    const element = (
-  <>
-  <Helmet><link rel=\"stylesheet\" href=\"https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css\" integrity=\"sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u\" crossorigin=\"anonymous\" /></Helmet>
-  
-  <div className="container">
-   ${funcHtml}
-   </div>
-   </> 
-   );
-  
-    
-    ReactDOM.render(
-      element,
-      document.getElementById('root')
-    );`;
-
   let htmlRoot = '<div id="root"></div>';
-
-  const parameters = getParameters({
-    files: {
-      "package.json": {
-        content: {
-          dependencies: {
-            react: "latest",
-            "react-dom": "latest",
-            "react-helmet": "^6.1.0",
-
-            bootstrap: "^5.1.3",
-          },
-        },
-      },
-      "index.js": {
-        content: htmlHead,
-      },
-      "index.html": {
-        content: htmlRoot,
-      },
-      "/css/grid.css": {
-        content: positionsCSS,
-      },
-    },
-  });
-
 
   const predictionRun = async () => {
     await getComponentData();
     await predict(funcBlobName, funcProjectName);
     await generateCode(funcPrediction);
-    await openSandbox();
-
-    // const list = [getComponentData, predict, generateCode, openSandbox];
-
-    // await Promise.all(list.map(fn => fn()))  // call each function to get returned Promise
   };
 
   // const getData = () => {
@@ -327,8 +281,9 @@ const ComponentsShow = (props) => {
           },
         }
       );
-      setPrediction(await resp.data.id);
       funcPrediction = await resp.data.id;
+      setPrediction(await resp.data.id);
+      console.log(await resp.data);
     } catch (err) {
       console.log(`Error: ${err}`);
     }
@@ -345,25 +300,71 @@ const ComponentsShow = (props) => {
         }
       );
       setHTML(await resp.data);
-      funcHtml = await resp.data
+      funcHtml = await resp.data;
+      await openSandbox(funcHtml);
+      // console.log(funcHtml)
     } catch (err) {
       console.log(`Error: ${err}`);
     }
   };
 
-  const openSandbox = async () => {
+  const openSandbox = async (funcHtml) => {
+    const htmlHead = `import React from "react";
+    import ReactDOM from "react-dom";
+    import "./css/grid.css";
+    import Helmet from "react-helmet";
+   
+    const element = (
+  <>
+  <Helmet><link rel=\"stylesheet\" href=\"https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css\" integrity=\"sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u\" crossorigin=\"anonymous\" /></Helmet>
+  
+  <div className="container">
+  ${funcHtml}
+   </div>
+   </> 
+   );
+  
+    
+    ReactDOM.render(
+      element,
+      document.getElementById('root')
+    );`;
+
+    const parameters = getParameters({
+      files: {
+        "package.json": {
+          content: {
+            dependencies: {
+              react: "latest",
+              "react-dom": "latest",
+              "react-helmet": "^6.1.0",
+
+              bootstrap: "^5.1.3",
+            },
+          },
+        },
+        "index.js": {
+          content: htmlHead,
+        },
+        "index.html": {
+          content: htmlRoot,
+        },
+        "/css/grid.css": {
+          content: positionsCSS,
+        },
+      },
+    });
+
     try {
       const resp = await axios.post(
         `https://codesandbox.io/api/v1/sandboxes/define?json=1`,
         {
           parameters: parameters,
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
         }
       );
-      // console.log(resp);
-      setSandboxName(resp.data.sandbox_id);
+      console.log(resp);
+      await setSandboxName(resp.data.sandbox_id);
+
       setLoad(false);
     } catch (err) {
       console.log(`Error: ${err}`);
@@ -424,8 +425,38 @@ const ComponentsShow = (props) => {
     );
   };
 
-  if (isLoading === false) {
+
+  async function handleDownload(funcProjectName) {
+    console.log(funcProjectName);
+    let downloaded;
+
+    const containerClient = blobServiceClient.getContainerClient(project);
+    console.log(funcProjectName)
+    const blobClient = containerClient.getBlobClient(
+      blobName + ".html"
+    );
+    const downloadBlockBlobResponse = await blobClient.download();
+    downloaded = await blobToString(await downloadBlockBlobResponse.blobBody);
+    console.log("Downloaded blob content", downloaded);
+
+    download(downloaded, blobName + ".html", "text/html");
+
+    async function blobToString(blob) {
+      const fileReader = new FileReader();
+      return new Promise((resolve, reject) => {
+        fileReader.onloadend = (ev) => {
+          resolve(ev.target.result);
+        };
+        fileReader.onerror = reject;
+        fileReader.readAsDataURL(blob);
+      });
+    }
+  }
+
+
+  if (isLoading === true) {
     console.log("Loading");
+    // console.log(parameters)
     return (
       <>
         {" "}
@@ -476,7 +507,7 @@ const ComponentsShow = (props) => {
               variant="outlined"
               color="secondary"
               xs={6}
-              // onClick={predict}
+              onClick={ () => handleDownload(funcProjectName)}
               sx={{ color: "#790FFF", width: 250, height: 50, mb: 4 }}
             >
               Download Component

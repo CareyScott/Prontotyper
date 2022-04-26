@@ -77,12 +77,11 @@ const uploadFiles = async (html, blobName) => {
 
 const generateFile = async (prediction, code, blobName) => {
   let html = "";
-  prediction.map((prediction, i) => {
+   prediction.map((prediction, i) => {
     if (prediction.boundingBox.range === "nextRow") {
       html += `
        <div className="break flex"></div>
-       <div
-       key={'spacing-${i}'}
+       <div key={'spacing-${i}'}
        className={'element ${prediction.boundingBox.pushLeft}  flex flexWidth'}
      >
      </div>
@@ -194,11 +193,11 @@ const downloadCode = async (req, res) => {
           if (data) {
             code = data;
           } else {
-            res.status(404).json("No Code not found");
+            res.status(404).json("No Code found");
           }
         })
         .then(async () => {
-          file = await generateFile(prediction, code, blobName);
+          file = await generateFile(await prediction, await code, await blobName);
           // await uploadFiles()
           // console.log("generated file")
           // // await uploadFiles();
@@ -217,7 +216,7 @@ const downloadCode = async (req, res) => {
 
           let fileName = blobName + ".html";
           // res.download(path.join("./") + fileName, fileName, (err) => {
-          console.log(htmlSent);
+          // console.log(htmlSent);
           res.status(200).json(htmlSent);
         })
 
@@ -230,8 +229,6 @@ const downloadCode = async (req, res) => {
       console.error(err);
       res.status(500).json(err);
     });
-
-  // sends the componentName.js to the user
 };
 
 async function downloadCodeFromAzure() {
