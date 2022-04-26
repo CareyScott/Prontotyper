@@ -8,9 +8,9 @@ import download from "f-downloads";
 import { getParameters } from "codesandbox/lib/api/define";
 const { BlobServiceClient } = require("@azure/storage-blob");
 
-  const blobSasUrl =
+const blobSasUrl =
   "https://sketch2codestoresc.blob.core.windows.net/?sv=2020-08-04&ss=bfqt&srt=sco&sp=rwdlacupitfx&se=2022-09-01T15:55:24Z&st=2022-04-25T07:55:24Z&spr=https&sig=kT52sph2xMa4nwrsf0szfKehC6%2F%2FJsxKHxNfRgztWm4%3D";
-  const blobServiceClient = new BlobServiceClient(blobSasUrl);
+const blobServiceClient = new BlobServiceClient(blobSasUrl);
 
 const ComponentsShow = (props) => {
   const [component, setComponent] = useState({});
@@ -38,7 +38,7 @@ const ComponentsShow = (props) => {
   let funcComponentName = "";
   let funcProjectName = "";
   let funcPrediction = "";
-  let funcHtml= "";
+  let funcHtml = "";
 
   const positionsCSS = `.container {
     padding-top: 40px;
@@ -317,7 +317,6 @@ const ComponentsShow = (props) => {
     const element = (
   <>
   <Helmet><link rel=\"stylesheet\" href=\"https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css\" integrity=\"sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u\" crossorigin=\"anonymous\" /></Helmet>
-  
   <div className="container">
   ${funcHtml}
    </div>
@@ -338,7 +337,6 @@ const ComponentsShow = (props) => {
               react: "latest",
               "react-dom": "latest",
               "react-helmet": "^6.1.0",
-
               bootstrap: "^5.1.3",
             },
           },
@@ -417,7 +415,7 @@ const ComponentsShow = (props) => {
         <iframe
           src={`https://codesandbox.io/embed/${sandboxName}`}
           width="100%"
-          height="590"
+          height="900"
           allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking"
           sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
         ></iframe>
@@ -425,16 +423,12 @@ const ComponentsShow = (props) => {
     );
   };
 
-
   async function handleDownload(funcProjectName) {
-    console.log(funcProjectName);
     let downloaded;
 
     const containerClient = blobServiceClient.getContainerClient(project);
-    console.log(funcProjectName)
-    const blobClient = containerClient.getBlobClient(
-      blobName + ".html"
-    );
+    console.log(funcProjectName);
+    const blobClient = containerClient.getBlobClient(blobName + ".html");
     const downloadBlockBlobResponse = await blobClient.download();
     downloaded = await blobToString(await downloadBlockBlobResponse.blobBody);
     console.log("Downloaded blob content", downloaded);
@@ -453,13 +447,11 @@ const ComponentsShow = (props) => {
     }
   }
 
-
   if (isLoading === true) {
     console.log("Loading");
     // console.log(parameters)
     return (
       <>
-        {" "}
         <div className="col-1"></div>
         <div className="col-11 line-1">Loading</div>
       </>
@@ -507,7 +499,7 @@ const ComponentsShow = (props) => {
               variant="outlined"
               color="secondary"
               xs={6}
-              onClick={ () => handleDownload(funcProjectName)}
+              onClick={() => handleDownload(funcProjectName)}
               sx={{ color: "#790FFF", width: 250, height: 50, mb: 4 }}
             >
               Download Component
@@ -523,8 +515,11 @@ const ComponentsShow = (props) => {
               Edit
             </Button>
           </div>
+          <div className="col-1"></div>
+          <div className="col-11 "><p className="">View & edit your sketch</p></div>
 
-          <div className="col-12">
+          <div className="col-1"></div>
+          <div className="col-10">
             {sandboxName === "" ? <></> : <Sandbox />}
           </div>
           <div className="col-12"></div>
