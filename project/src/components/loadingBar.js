@@ -19,7 +19,7 @@ import {
         margin: theme.spacing(3),
       },
       linearProgress: {
-        width: theme.spacing(30),
+        width: theme.spacing(70),
       },
     })
   );
@@ -41,7 +41,8 @@ import {
       <>
       <div className={classes.root}>
        
-        
+      <div className="col-11 line-1 loadingBuffer">Loading</div>
+
         <LinearProgress
           variant="buffer"
           value={level}

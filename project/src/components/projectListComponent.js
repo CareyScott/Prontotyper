@@ -18,7 +18,7 @@ export default function ProjectListComponent(props) {
   let navigate = useNavigate();
 
   const showProject = () => {
-    navigate(`/projects/${props.project._id}`, { replace: true });
+    navigate(`/projects/${props.project._id}`, { replace: false });
   };
 
 

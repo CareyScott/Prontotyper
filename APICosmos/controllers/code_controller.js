@@ -39,10 +39,10 @@ const checkTagName = (prediction, code) => {
   return value;
 };
 
-const uploadFiles = async (html, blobName) => {
+const uploadFiles = async (file, blobName) => {
   const containerClient = blobServiceClient.getContainerClient(containerName);
 
-  let content = html;
+  let content = file;
   try {
     console.log("Uploading files...");
     const promises = [];
@@ -67,12 +67,15 @@ const uploadFiles = async (html, blobName) => {
     }
     await Promise.all(promises);
     console.log("Done.");
+
+
     // downloadCodeFromAzure();
 
     // listFiles();
   } catch (error) {
     console.log(error.message);
   }
+  return htmlSent;
 };
 
 const generateFile = async (prediction, code, blobName) => {
@@ -80,47 +83,27 @@ const generateFile = async (prediction, code, blobName) => {
    prediction.map((prediction, i) => {
     if (prediction.boundingBox.range === "nextRow") {
       html += `
-       <div className="break flex"></div>
-       <div key={'spacing-${i}'}
-       className={'element ${prediction.boundingBox.pushLeft}  flex flexWidth'}
-     >
-     </div>
-     <div
-       key={"object-${i}"}
-       className={'${prediction.boundingBox.width} flex flexWidth'}
-     >
-       
-     ${checkTagName(prediction, code).code}
-     </div>
-       `;
+          <div className="break flex"></div>
+          <div key={'spacing-${i}'} className={'element ${prediction.boundingBox.pushLeft}  flex flexWidth'}> </div>
+          <div key={"object-${i}"} className={'${prediction.boundingBox.width} flex flexWidth'} >
+       ${checkTagName(prediction, code).code}
+          </div>`
     } else if (prediction.boundingBox.range === "firstElement") {
       html += `
-          <div
-            key={'first-${i}'}
-            className={'${prediction.boundingBox.pushLeft}  flex flexWidth'}
-          >
-          </div>
-          <div
-            key={'same-${i}'} 
-            className={'flex  ${prediction.boundingBox.width}'}
-          >
+          <div key={'first-${i}'} className={'${prediction.boundingBox.pushLeft}  flex flexWidth'} ></div>
+          <div key={'same-${i}'} className={'flex  ${prediction.boundingBox.width}'} >
             ${checkTagName(prediction, code).code}
-          </div>
-      `;
+          </div>`
     } else {
       html += `
-          <div
-            key={'same-${i}'}
-            className={'flex  ${prediction.boundingBox.width}'}
-          >
+          <div key={'same-${i}'} className={'flex  ${prediction.boundingBox.width} '} >
             ${checkTagName(prediction, code).code}
-          </div>
-          `;
+          </div>`
     }
   });
 
-  htmlSent = html;
-  uploadFiles(html, blobName);
+
+return html;
 };
 
 // save file in container as componentName.js
@@ -136,54 +119,23 @@ const generateFile = async (prediction, code, blobName) => {
 // };
 
 const downloadCode = async (req, res) => {
+  containerName = req.params.container;
+  let id = req.params.id;
+  let blobName = req.params.blobName;
   let framework = req.params.framework;
   let code = [];
   let prediction;
   let file;
-  containerName = req.params.container;
 
-  // const containerClient = blobServiceClient.getContainerClient(containerName);
-
-  // createContainer(containerClient);
-
-  // step 1, mongoose get prediction by component id
-  // step 2, get the code by framework
-
-  // alterPrediction = (predictionz) => {
-
-  // }
-
-  let id = req.params.id;
-  let blobName = req.params.blobName;
 
   Prediction.findOne({ id })
-    .then((data) => {
-      if (data) {
-        // for (let i = 1; i < data.predictions.length - 1; i++) {
-        //   if (
-        //     data.predictions[i].boundingBox.range === "sameRow" && data.predictions[i].boundingBox.elementLeft < data.predictions[i - 1].boundingBox.elementLeft) {
-        //     let leftBB = data.predictions[i].boundingBox.pushLeft;
-        //     let leftRange = data.predictions[i].boundingBox.range;
-        //     let leftTn = data.predictions[i].tagName;
-
-        //     let rightBB = data.predictions[i + 1].boundingBox.pushLeft;
-        //     let rightRange = data.predictions[i + 1].boundingBox.range;
-        //     let rightTn = data.predictions[i + 1].tagName;
-
-        //     data.predictions[i + 1].boundingBox.pushLeft = leftBB;
-        //     data.predictions[i + 1].boundingBox.range = leftRange;
-        //     data.predictions[i + 1].tagName = leftTn;
-
-        //     data.predictions[i].boundingBox.pushLeft = rightBB;
-        //     data.predictions[i].boundingBox.range = rightRange;
-        //     data.predictions[i].tagName = rightTn;
-        //   }
+    .then( (data) => {
+      if ( data) {
           prediction = data.predictions;
-        // }
-
-        // console.log(prediction)
+        console.log(data.predictions[0])
       } else {
-        res.status(404).json("No Code not found");
+        res.status(404).json("Code not found");
+        console.log("it was me")
       }
     })
     .then(() => {
@@ -194,30 +146,15 @@ const downloadCode = async (req, res) => {
             code = data;
           } else {
             res.status(404).json("No Code found");
+            console.log("NOOOO! it was me")
+
           }
         })
         .then(async () => {
-          file = await generateFile(await prediction, await code, await blobName);
-          // await uploadFiles()
-          // console.log("generated file")
-          // // await uploadFiles();
-          // console.log("upload")
+            file = await generateFile( prediction, await code, await blobName);
+            await uploadFiles(file, blobName);
 
-          // console.log("download")
-
-          // if (fileSaved = true){
-          //   // res.download(downloadedFile);
-          // }
-          // let options = {
-          //   root: path.join("./"),
-          // };
-
-          // console.log(path.join("./"));
-
-          let fileName = blobName + ".html";
-          // res.download(path.join("./") + fileName, fileName, (err) => {
-          // console.log(htmlSent);
-          res.status(200).json(htmlSent);
+          res.status(200).json(file)
         })
 
         .catch((err) => {
@@ -231,50 +168,50 @@ const downloadCode = async (req, res) => {
     });
 };
 
-async function downloadCodeFromAzure() {
-  const containerClient = blobServiceClient.getContainerClient(containerName);
-  console.log("download");
-  const blobClient = containerClient.getBlobClient(blobName);
-  console.log("fghfgh");
-  // Get blob content from position 0 to the end
-  // In Node.js, get downloaded data by accessing downloadBlockBlobResponse.readableStreamBody
-  const downloadBlockBlobResponse = await blobClient.download();
-  const downloaded = await streamToBuffer(
-    downloadBlockBlobResponse.readableStreamBody
-  );
-  console.log("Downloaded blob content");
+// async function downloadCodeFromAzure() {
+//   const containerClient = blobServiceClient.getContainerClient(containerName);
+//   console.log("download");
+//   const blobClient = containerClient.getBlobClient(blobName);
+//   console.log("fghfgh");
+//   // Get blob content from position 0 to the end
+//   // In Node.js, get downloaded data by accessing downloadBlockBlobResponse.readableStreamBody
+//   const downloadBlockBlobResponse = await blobClient.download();
+//   const downloaded = await streamToBuffer(
+//     downloadBlockBlobResponse.readableStreamBody
+//   );
+//   console.log("Downloaded blob content");
 
-  // console.log("Downloaded blob content:", downloaded);
+//   // console.log("Downloaded blob content:", downloaded);
 
-  // console.log("download")
-  // fs.writeFile(`${blobName}.html`, downloaded, function (err) {
-  //   console.log("gffghgjk")
-  //   if (err) {
-  //     return console.error(err);
-  //   }
-  //   console.log("File saved successfully!");
-  //   fileSaved = true;
-  //   downloadedFile = downloaded;
+//   // console.log("download")
+//   // fs.writeFile(`${blobName}.html`, downloaded, function (err) {
+//   //   console.log("gffghgjk")
+//   //   if (err) {
+//   //     return console.error(err);
+//   //   }
+//   //   console.log("File saved successfully!");
+//   //   fileSaved = true;
+//   //   downloadedFile = downloaded;
 
-  //   // return downloadedFile;
-  // });
+//   //   // return downloadedFile;
+//   // });
 
-  // [Node.js only] A helper method used to read a Node.js readable stream into a Buffer
-  async function streamToBuffer(readableStream) {
-    return new Promise((resolve, reject) => {
-      const chunks = [];
-      readableStream.on("data", (data) => {
-        chunks.push(data instanceof Buffer ? data : Buffer.from(data));
-      });
-      readableStream.on("end", () => {
-        resolve(Buffer.concat(chunks));
-      });
-      readableStream.on("error", reject);
-    });
-  }
+//   // [Node.js only] A helper method used to read a Node.js readable stream into a Buffer
+//   async function streamToBuffer(readableStream) {
+//     return new Promise((resolve, reject) => {
+//       const chunks = [];
+//       readableStream.on("data", (data) => {
+//         chunks.push(data instanceof Buffer ? data : Buffer.from(data));
+//       });
+//       readableStream.on("end", () => {
+//         resolve(Buffer.concat(chunks));
+//       });
+//       readableStream.on("error", reject);
+//     });
+//   }
 
-  return downloaded;
-}
+//   return downloaded;
+// }
 
 const getSingleCode = (req, res) => {
   let framework = req.params.framework;
@@ -371,7 +308,6 @@ const deleteCode = (req, res) => {
     });
 };
 module.exports = {
-  //   getAllCode,
   generateFile,
   downloadCode,
   getSingleCode,

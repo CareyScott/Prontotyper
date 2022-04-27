@@ -24,6 +24,8 @@ const register = (req, res) => {
 
           process.env.DECRYPT_STRING
         ),
+        userID: user._id
+
       });
     }
   });

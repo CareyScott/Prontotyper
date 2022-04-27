@@ -1,5 +1,5 @@
 import { Button, Grid, Paper, Typography, Box } from "@mui/material";
-import React from "react";
+import React, { useEffect } from "react";
 import { useDropzone } from "react-dropzone";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
 import "./../App.css";
@@ -13,9 +13,20 @@ function Dropzone(props) {
     noKeyboard: true,
   });
 
-  const files = acceptedFiles.map((file) => (
-    <li key={file.path}>{file.name}</li>
-  ));
+  const files = acceptedFiles.map((file) => 
+    {          props.setFileRecieved(1)
+     return (
+    <li key={file.path}>{file.name}</li>)
+    });
+
+console.log(props);
+
+      // useEffect((props) =>{
+      //   if ( files === !null ) {
+      //     }
+      // })
+
+  
 
   const { BlobServiceClient } = require("@azure/storage-blob");
 
@@ -26,6 +37,8 @@ function Dropzone(props) {
   const containerName = props.containerName.toLowerCase();
 
   const containerClient = blobServiceClient.getContainerClient(containerName);
+
+
 
   const uploadFiles = async () => {
     await containerClient.createIfNotExists();
@@ -62,6 +75,10 @@ function Dropzone(props) {
     uploadFiles();
   }
 
+
+  
+    
+  
   return (
     <>
       <Grid container spacing={2}>

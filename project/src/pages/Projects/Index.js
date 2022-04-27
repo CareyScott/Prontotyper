@@ -63,6 +63,7 @@ const ProjectsIndex = (props) => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [projects, setProjects] = useState(null);
+  
   function preventDefault(event) {
     event.preventDefault();
   }
@@ -89,7 +90,7 @@ const ProjectsIndex = (props) => {
   const projectsList = projects.map((project) => {
     let projectID = project._id.toString();
     const showProject = (project) => {
-      navigate(`/projects/${projectID}`, { replace: true });
+      navigate(`/projects/${projectID}`, { replace: false });
     };
 
     // console.log(projectID);
@@ -138,7 +139,6 @@ const ProjectsIndex = (props) => {
       //     </Grid>
       //   </Paper>
       // </Box>
-
       <ProjectListComponent project={project} />
     );
   });
@@ -175,7 +175,7 @@ const ProjectsIndex = (props) => {
         <div className="col-1"></div>
         <div className="col-4">
           <Box display="grid" gridTemplateColumns="repeat(3, 1fr)" gap={3}>
-            {projectsList}
+            {projectsList}{" "}
           </Box>{" "}
         </div>
       </div>

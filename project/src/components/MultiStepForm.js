@@ -31,6 +31,7 @@ const CreateProject = (props) => {
   const [html, setHtml] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isDonePredicting, setIsDonePredicting] = useState(false);
+  const [fileRecieved, setFileRecieved] = useState(0);
 
   let containerName = props.containerName.toLowerCase();
 
@@ -342,7 +343,7 @@ const CreateProject = (props) => {
         project: props.projectID,
         password: form.password,
         description: form.description,
-        blob_name: blobName.blobName
+        blob_name: blobName.blobName,
       })
       .then((response) => {
         console.log(response.data);
@@ -389,6 +390,14 @@ const CreateProject = (props) => {
     },
   });
 
+  const closeForm = () => {
+    submitForm();
+    
+    setTimeout( () => {
+      window.location.reload();
+    }, 5000);
+  }
+
   let compName = form.component_name;
   // console.log(props);
   return (
@@ -402,6 +411,7 @@ const CreateProject = (props) => {
             <Dropzone
               containerName={containerName}
               blobName={blobName}
+              setFileRecieved={setFileRecieved}
               submitFile={submitFile}
             />
           </Step>
@@ -457,36 +467,57 @@ const CreateProject = (props) => {
               <p className="purple-text-login">Confirm Your Details</p>
             </div>
             <div>
-              <p className="primary-text-login">
-                {!form.blobName ? (
+              <p className="">
+                {!form.blobName && !form.component_name && !form.description ? (
                   <div className="primary-text-login">
                     You Have not completed the form.
                   </div>
                 ) : (
-                  <div>
-                    <div className="primary-text-login">
-                      Component Name: {form.component_name}
-                    </div>
+                  // <div>
+                  //   <div className="primary-text-login">
+                  //     Component Name: {form.component_name}
+                  //   </div>
 
-                    <div className="primary-text-login">
-                      Sketch Name: {blobName.blobName}
-                    </div>
-                    <div className="primary-text-login">
-                      Description: {form.description}
-                    </div>
-                  </div>
+                  //   <div className="primary-text-login">
+                  //     Sketch Name: {blobName.blobName}
+                  //   </div>
+                  //   <div className="primary-text-login">
+                  //     Description: {form.description}
+                  //   </div>
+                  // </div>
+
+                  <Grid sx={{ mt: 12, mb: 12 }}>
+                    <Grid>
+                      <Grid item>
+                        <p className="showFormHeading">
+                          Component Name: {form.component_name}
+                        </p>
+                      </Grid>
+                    </Grid>
+
+                    <Grid item>
+                      <p className="showFormHeading">
+                        Description: {form.description}
+                      </p>
+                    </Grid>
+
+                    <Grid item>
+                      <p className="showFormHeading">
+                        Sketch Name: {blobName.blobName}
+                      </p>
+                    </Grid>
+                  </Grid>
                 )}{" "}
               </p>
-              <Button
+              {/* <Button
                 onClick={submitForm}
                 variant="outlined"
-                sx={{ display: "flex", margin: "0 auto", mt: 10, mb: 10 }}
               >
                 Submit Component
-              </Button>
+              </Button> */}
             </div>
           </Step>
-          <Step label="Prediction">
+          {/* <Step label="Prediction">
             <Grid container>
               <Grid item xs={12}>
                 {isLoading ? (
@@ -555,7 +586,7 @@ const CreateProject = (props) => {
               </Button>
             </form>{" "}
             {status}
-          </Step>
+          </Step> */}
         </MultiStepForm>
 
         <Box>
@@ -568,13 +599,36 @@ const CreateProject = (props) => {
             </Button>
           )}
 
-          {active !== 5 && (
+          {active !== 3 ? (
+            <>
+              {active === 1 ? (
+                <Button
+                  onClick={() => returnState(setActive(active + 1))}
+                  sx={{ float: "right", color: "#790FFF" }}
+                  disabled={fileRecieved === 0}
+                >
+                  Next
+                </Button>
+              ) : (
+                <Button
+                  onClick={() => returnState(setActive(active + 1))}
+                  sx={{ float: "right", color: "#790FFF" }}
+                  disabled={
+                    (!form.blobName && !form.component_name) ||
+                    !form.description
+                  }
+                >
+                  Nex
+                </Button>
+              )}
+            </>
+          ) : (
             <>
               <Button
-                onClick={() => returnState(setActive(active + 1))}
+                onClick={() => closeForm()}
                 sx={{ float: "right", color: "#790FFF" }}
               >
-                Next
+                Submit
               </Button>
             </>
           )}

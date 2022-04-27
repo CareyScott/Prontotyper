@@ -2,8 +2,9 @@ import * as React from "react";
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { Button } from "@mui/material";
+import { Button, Grid } from "@mui/material";
 import download from "f-downloads";
+import Loading from "../../components/loadingBar";
 
 import { getParameters } from "codesandbox/lib/api/define";
 const { BlobServiceClient } = require("@azure/storage-blob");
@@ -17,6 +18,8 @@ const ComponentsShow = (props) => {
   const [project, setProject] = useState("");
   const [blobName, setBlobName] = useState("");
   const [isLoading, setLoad] = useState(true);
+
+  const [status, setStatus] = useState("");
 
   const [html, setHTML] = useState("");
   const [sandboxName, setSandboxName] = useState("");
@@ -181,9 +184,16 @@ const ComponentsShow = (props) => {
   let htmlRoot = '<div id="root"></div>';
 
   const predictionRun = async () => {
+    setStatus("Getting things ready!");
     await getComponentData();
+    setStatus("Predicting your code...");
     await predict(funcBlobName, funcProjectName);
-    await generateCode(funcPrediction);
+    setStatus("Done Predicting...");
+    setTimeout(async () => {
+      setStatus("Generating code...");
+      await generateCode(funcPrediction);
+    }, 3000);
+    
   };
 
   // const getData = () => {
@@ -452,8 +462,14 @@ const ComponentsShow = (props) => {
     // console.log(parameters)
     return (
       <>
-        <div className="col-1"></div>
-        <div className="col-11 line-1">Loading</div>
+        <Grid container>
+          <Grid item xs={12}>
+            <Loading />
+          </Grid>
+          <Grid item xs={12}>
+            <p className="statusCode">{status}</p>
+          </Grid>
+        </Grid>
       </>
     );
   } else {
@@ -516,7 +532,9 @@ const ComponentsShow = (props) => {
             </Button>
           </div>
           <div className="col-1"></div>
-          <div className="col-11 "><p className="">View & edit your sketch</p></div>
+          <div className="col-11 ">
+            <p className="statusCode ">View & edit your sketch</p>
+          </div>
 
           <div className="col-1"></div>
           <div className="col-10">

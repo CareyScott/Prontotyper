@@ -54,53 +54,38 @@ function inRangeLeft(left, index) {
 }
 
 function findTopPosition(data) {
+  // Sort prediction array by top-most values
   let sortedTop = data.predictions.sort((prev, current) => {
-    // c(prev.boundingBox.top)
-    // c(current.boundingBox.top)
     return prev.boundingBox.top - current.boundingBox.top;
   });
-  // c("sortedTop: ")
-  // c(sortedTop)
-
-  // sortedTop.filter(() => {});
-
-  // c("sorting top");
 
   let topElements = [];
 
+  // creating an array of elements ordered by top
   sortedTop.forEach((element, index) => {
     let topElement = element.boundingBox.top;
-    // c(element.boundingBox.left *100)
     topElements.push(element);
   });
-  // c(topElements)
 
+  //	Sort prediction array by left-most values
   let sortedLeft = data.predictions.sort((prev, current) => {
     return prev.boundingBox.left - current.boundingBox.left;
   });
 
+  // creating an array of elements ordered by left
   let leftElements = [];
-  // c('sorting left')
   sortedLeft.forEach((element, index) => {
     let leftElement = element.boundingBox.left;
-    // c(leftElement)#
     leftElements.push(element);
   });
-  // c(leftElements)
 
+  // writing leftIndex of corresponding left most & top most index
   topElements.forEach((elementTop, index) => {
     let i = leftElements.findIndex((elementLeft) => {
-      // c(elementTop.boundingBox.top)
-      // c(elementLeft.boundingBox.top)
       return elementLeft.boundingBox.top === elementTop.boundingBox.top;
     });
 
     elementTop.boundingBox["elementLeft"] = i;
-
-    // c(elementTop)
-    // let top = sortedLeft.map(elementLeft => elementLeft.boundingBox.top);
-
-    // let i = top.indexOf(elementTop.boundingBox.top);
 
     // c(`Top: ${index} Left: ${i}`);
   });
@@ -113,10 +98,15 @@ function findTopPosition(data) {
 
   let rowLeft = 0;
 
+  // iterating through each prediction & determining difference between each by top value
+
   for (let i = 0; i < topElements.length; i++) {
     let rangeTop;
+
+    // if index is 0, rangetop stays the same
     if (i === 0) {
       rangeTop = topElements[i].boundingBox.top;
+      // else rangetop is equal to top minus top of the last entry
     } else {
       rangeTop =
         topElements[i].boundingBox.top - topElements[i - 1].boundingBox.top;
@@ -132,30 +122,30 @@ function findTopPosition(data) {
 
     // determining rows
 
+    // if rangetop is greather than 0.3, move to the next line
     if (rangeTop > 0.03) {
       topElements[i].boundingBox["range"] = "nextRow";
       rowWidth = 0;
+
+      // if there is a textbox + label beside eachother, call for textBoxWithLabel
       if (
         topElements[i].tagName === "Label" &&
         topElements[i + 1].tagName === "TextBox"
       ) {
-        console.log("same");
         topElements.splice(i + 1, 1);
         topElements[i].tagName = "textBoxWithLabel";
       }
     } else {
-      // topElements[i].boundingBox["position"] = ;
+      // otherwise keep on same row
       topElements[i].boundingBox["range"] = "sameRow";
     }
 
+    // if the index is 0 name as firstElement
     if (i === 0) {
       topElements[0].boundingBox["range"] = "firstElement";
     }
 
-    
-
-    // determining columns
-
+    // determining width column span
     resultWidth =
       inRangeWidth(topElements[i].boundingBox.width, 0) ||
       inRangeWidth(topElements[i].boundingBox.width, 1) ||
@@ -172,6 +162,7 @@ function findTopPosition(data) {
 
     rowWidth += resultWidth;
 
+    // determining the pushLeft span
     resultLeft =
       inRangeLeft(topElements[i].boundingBox.left, 0) ||
       inRangeLeft(topElements[i].boundingBox.left, 1) ||
@@ -200,27 +191,30 @@ function findTopPosition(data) {
 
     // }
 
+    // width = classNameWidth string + the result resultRight integer
     topElements[i].boundingBox["width"] = classNameWidth + resultWidth;
 
+    // pushLeft = classNameLeft string + the result resultLeft integer
     topElements[i].boundingBox["pushLeft"] = classNameLeft + resultLeft;
 
     if (i === 0) {
       topElements[0].boundingBox["range"] = "firstElement";
     }
 
-    if (i === topElements.length){
+    // index at length of array = lastElement
+    if (i === topElements.length) {
       topElements[topElements.length].boundingBox["range"] = "lastElement";
     }
 
     if (topElements[i].boundingBox.range === "sameRow") {
       let s = topElements[i].boundingBox.width;
       let nextS = topElements[i - 1].boundingBox.pushLeft;
+      // extracting the value of width of last element
       s = s.substring(s.indexOf("-") + 1);
+      // extracting the value of next element
       nextS = nextS.substring(nextS.indexOf("-") + 1);
 
       let sumOfS = nextS - s;
-
-      // c(`ROW Width with S: ${rowWidth + sumOfS}`);
 
       if (rowWidth + sumOfS > COLS) {
         let dif = rowWidth + sumOfS - COLS;
@@ -229,16 +223,17 @@ function findTopPosition(data) {
       topElements[i - 1].boundingBox.pushLeft = `left-${sumOfS}`;
     }
 
-    let temp1 = topElements[i - 1]
-    let temp2 = topElements[i]
+    let temp1 = topElements[i - 1];
+    let temp2 = topElements[i];
 
-    if ( data.predictions[i].boundingBox.range === "sameRow" && data.predictions[i].boundingBox.elementLeft < data.predictions[i - 1].boundingBox.elementLeft){
-
-      temp2 = topElements[i - 1]
-      temp1 = topElements[i]
-
+    if (
+      data.predictions[i].boundingBox.range === "sameRow" &&
+      data.predictions[i].boundingBox.elementLeft <
+        data.predictions[i - 1].boundingBox.elementLeft
+    ) {
+      temp2 = topElements[i - 1];
+      temp1 = topElements[i];
     }
-    
 
     // c(rowWidth);
 
@@ -386,7 +381,7 @@ const predict = async (req, res) => {
       req.params.containerName
     );
 
-    console.log(req.params.blobName)
+    console.log(req.params.blobName);
     const blobClient = containerClient.getBlobClient(req.params.blobName);
 
     // Get blob content from position 0 to the end
@@ -555,8 +550,7 @@ const predict = async (req, res) => {
         //   })
 
         res.status(200).json(data);
-        console.log("done predicting");            
-
+        console.log("done predicting");
       } else {
         res.status(404).json("No prediction can be made");
       }

@@ -5,9 +5,11 @@ import { TextField, Box, Grid, Button, Paper, Link } from "@mui/material";
 import "./../grid.css";
 import "./../styles.css";
 import logo from "../Images/Prontotyper.png";
+import { useNavigate } from "react-router-dom";
 
 export default function Register(props) {
   const [form, setForm] = useState({});
+  let navigate = useNavigate();
 
   const handleForm = (e) => {
     setForm((prevState) => ({
@@ -18,6 +20,9 @@ export default function Register(props) {
   const submitForm = () => {
     console.log(form);
 
+    const navigateHome = () => {
+      navigate(`/`, { replace: true });
+    };
     axios
       .post("http://localhost:3030/register", {
         full_name: form.full_name,
@@ -28,6 +33,11 @@ export default function Register(props) {
         console.log(response.data.token);
         props.onAuthenticated(true, response.data.token);
         // localStorage.setItem("userID", response.data);
+        localStorage.setItem("user_id", response.data.userID);
+
+      })
+      .then(() => {
+        navigateHome();
       })
       .catch((err) => console.log(err));
   };
@@ -176,8 +186,8 @@ export default function Register(props) {
             <hr />
 
             <p className="purple-text-login-small">
-              Already registered? Click&nbsp;<a href="/login">here</a>&nbsp;to sign
-              in!
+              Already registered? Click&nbsp;<a href="/login">here</a>&nbsp;to
+              sign in!
             </p>
           </div>
           {/* </Box> */}
