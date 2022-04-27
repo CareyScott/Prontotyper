@@ -378,11 +378,11 @@ function findTopPosition(data) {
 const predict = async (req, res) => {
   async function downloadCodeFromAzure() {
     const containerClient = blobServiceClient.getContainerClient(
-      req.params.containerName
+      req.params.user
     );
 
     console.log(req.params.blobName);
-    const blobClient = containerClient.getBlobClient(req.params.blobName);
+    const blobClient = containerClient.getBlobClient(`${req.params.containerName}/ ${req.params.blobName}`);
 
     // Get blob content from position 0 to the end
     // In Node.js, get downloaded data by accessing downloadBlockBlobResponse.readableStreamBody

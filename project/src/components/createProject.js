@@ -31,6 +31,7 @@ export default function CreateProject() {
       })
       .then((response) => {
         console.log(response.data);
+        setTimeout(() => window.location.reload(), 3000)
       })
       .catch((err) => console.log(err));
     // setActive(active + 1);

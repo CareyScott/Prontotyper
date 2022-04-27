@@ -27,6 +27,7 @@ const ComponentsShow = (props) => {
 
   let { id } = useParams();
   let token = localStorage.getItem("token");
+  let UserID = localStorage.getItem("user_id");
 
   // let containerName;
   // // let blobName;
@@ -284,7 +285,7 @@ const ComponentsShow = (props) => {
   const predict = async () => {
     try {
       const resp = await axios.get(
-        `http://localhost:3030/predict/${funcBlobName}/container/${funcProjectName}`,
+        `http://localhost:3030/predict/${funcBlobName}/container/${funcProjectName}/user/${UserID}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -302,7 +303,7 @@ const ComponentsShow = (props) => {
   const generateCode = async () => {
     try {
       const resp = await axios.get(
-        `http://localhost:3030/code/${funcPrediction}/frameworks/bootstrap/projects/${funcProjectName}/sketch/${funcBlobName}`,
+        `http://localhost:3030/code/${funcPrediction}/frameworks/bootstrap/projects/${funcProjectName}/user/${UserID}/sketch/${funcBlobName}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

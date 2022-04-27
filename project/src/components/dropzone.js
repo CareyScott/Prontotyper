@@ -8,6 +8,8 @@ import "./../button.css";
 
 function Dropzone(props) {
   
+  let UserID = localStorage.getItem("user_id");
+
   const { getRootProps, getInputProps, open, acceptedFiles } = useDropzone({
     noClick: true,
     noKeyboard: true,
@@ -36,7 +38,7 @@ console.log(props);
 
   const containerName = props.containerName.toLowerCase();
 
-  const containerClient = blobServiceClient.getContainerClient(containerName);
+  const containerClient = blobServiceClient.getContainerClient(UserID);
 
 
 
@@ -55,7 +57,7 @@ console.log(props);
         };
 
         const blockBlobClient = containerClient.getBlockBlobClient(
-          props.blobName.blobName
+         `${containerName}/ ${props.blobName.blobName}`
         );
         const uploadBlobResponse = blockBlobClient.upload(
           file,

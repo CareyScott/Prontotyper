@@ -99,7 +99,7 @@ app.put("/projects/:id", editProject);
 app.delete("/projects/:id", deleteProject);
 
 // code
-app.get("/code/:id/frameworks/:framework/projects/:container/sketch/:blobName", downloadCode);
+app.get("/code/:id/frameworks/:framework/projects/:container/user/:user/sketch/:blobName", downloadCode);
 
 app.get("/code/:framework", getSingleCode);
 // app.get("/projects/:id", loginRequired, getSingleProject);
@@ -119,7 +119,7 @@ app.get("/users/", getAllUsers);
 app.get("/users/:id", getSingleUser);
 
 //prediction
-app.get("/predict/:blobName/container/:containerName", predict)
+app.get("/predict/:blobName/container/:containerName/user/:user", predict)
 app.get("/download/:blobName/container/:containerName", generateFile)
 app.listen(port, () => {
   console.log(`Listening on port${port}`);

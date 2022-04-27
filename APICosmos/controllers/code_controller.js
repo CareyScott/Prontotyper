@@ -39,8 +39,8 @@ const checkTagName = (prediction, code) => {
   return value;
 };
 
-const uploadFiles = async (file, blobName) => {
-  const containerClient = blobServiceClient.getContainerClient(containerName);
+const uploadFiles = async (file, blobName, UserID) => {
+  const containerClient = blobServiceClient.getContainerClient(UserID);
 
   let content = file;
   try {
@@ -53,7 +53,8 @@ const uploadFiles = async (file, blobName) => {
       };
 
       const blockBlobClient = containerClient.getBlockBlobClient(
-        blobName + ".html"
+        
+        `${containerName}/ ${blobName}.html`
       );
       const uploadBlobResponse = await blockBlobClient.upload(
         content,
@@ -123,6 +124,7 @@ const downloadCode = async (req, res) => {
   let id = req.params.id;
   let blobName = req.params.blobName;
   let framework = req.params.framework;
+  let UserID = req.params.user;
   let code = [];
   let prediction;
   let file;
@@ -152,7 +154,7 @@ const downloadCode = async (req, res) => {
         })
         .then(async () => {
             file = await generateFile( prediction, await code, await blobName);
-            await uploadFiles(file, blobName);
+            await uploadFiles(file, blobName, UserID);
 
           res.status(200).json(file)
         })
