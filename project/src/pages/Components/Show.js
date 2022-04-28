@@ -437,9 +437,10 @@ const ComponentsShow = (props) => {
   async function handleDownload(funcProjectName) {
     let downloaded;
 
-    const containerClient = blobServiceClient.getContainerClient(project);
+    const containerClient = blobServiceClient.getContainerClient(UserID);
     console.log(funcProjectName);
-    const blobClient = containerClient.getBlobClient(blobName + ".html");
+    const blobClient = containerClient.getBlobClient(`${project}/ ${blobName}.html`)
+    ;
     const downloadBlockBlobResponse = await blobClient.download();
     downloaded = await blobToString(await downloadBlockBlobResponse.blobBody);
     console.log("Downloaded blob content", downloaded);

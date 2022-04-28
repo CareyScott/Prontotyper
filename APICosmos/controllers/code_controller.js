@@ -24,7 +24,6 @@ const blobSasUrl =
 const blobServiceClient = new BlobServiceClient(blobSasUrl);
 // const containerName = "yurt";
 let fileSaved = false;
-let containerName = "new";
 let htmlSent;
 const instance = new express();
 
@@ -154,7 +153,7 @@ const downloadCode = async (req, res) => {
         })
         .then(async () => {
             file = await generateFile( prediction, await code, await blobName);
-            await uploadFiles(file, blobName, UserID);
+            await uploadFiles(file, blobName, UserID, containerName);
 
           res.status(200).json(file)
         })

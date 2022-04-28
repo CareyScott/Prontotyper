@@ -1,0 +1,4 @@
+{
+    "appService.defaultWebAppToDeploy": "/subscriptions/c9e00d87-1435-44d3-9a46-48489b2abcd7/resourceGroups/appsvc_linux_centralus/providers/Microsoft.Web/sites/Prontotyper",
+    "appService.deploySubpath": "."
+}
