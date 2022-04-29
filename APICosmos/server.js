@@ -5,6 +5,8 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config();
 require("./db")();
 
+const port = process.env.PORT || "3030";
+
 // importing the controllers
 const {
   // getAllCode,
@@ -59,7 +61,7 @@ const {
 } = require("./controllers/project_controller");
 
 
-const port = process.env.PORT;
+// const port = process.env.PORT;
 
 const app = express();
 app.use(cors());
