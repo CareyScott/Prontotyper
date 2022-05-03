@@ -1,0 +1,14 @@
+{
+  "files": {
+    "main.css": "/static/css/main.99e42cf4.css",
+    "main.js": "/static/js/main.8e18ef53.js",
+    "static/js/27.5c241c21.chunk.js": "/static/js/27.5c241c21.chunk.js",
+    "static/media/Prontotyper.png": "/static/media/Prontotyper.f570a80b464e54f9ac2d.png",
+    "static/media/sketch-home.png": "/static/media/sketch-home.71181fe352cc474ef04c.png",
+    "index.html": "/index.html"
+  },
+  "entrypoints": [
+    "static/css/main.99e42cf4.css",
+    "static/js/main.8e18ef53.js"
+  ]
+}

@@ -1,4 +1,4 @@
-import { Button, Grid, Modal, Paper } from "@mui/material";
+import { Button, Modal } from "@mui/material";
 import * as React from "react";
 import axios from "axios";
 import { useState, useEffect } from "react";
@@ -7,7 +7,6 @@ import { useNavigate } from "react-router-dom";
 import { useSpring, animated } from "react-spring/web.cjs";
 import PropTypes from "prop-types";
 import Backdrop from "@mui/material/Backdrop";
-// const [predictions, setPredictions] = useState({});
 import sketchhome from "./.././../Images/sketch-home.png";
 import CreateProject from "../../components/createProject";
 import ProjectListComponent from "../../components/projectListComponent";
@@ -64,20 +63,20 @@ const ProjectsIndex = (props) => {
   const handleClose = () => setOpen(false);
   const [projects, setProjects] = useState(null);
   
-  function preventDefault(event) {
-    event.preventDefault();
-  }
+  // function preventDefault(event) {
+  //   event.preventDefault();
+  // }
   let navigate = useNavigate();
 
   useEffect(() => {
     axios
-      .get(`http://localhost:3030/users/${UserID}`, {
+      .get(`https://pronto-api-rest.azurewebsites.net/users/${UserID}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       })
       .then((response) => {
-        console.log(response.data);
+        // console.log(response.data);
         setProjects(response.data.projects);
       })
       .catch((err) => {

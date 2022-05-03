@@ -9,6 +9,8 @@ import { useNavigate } from "react-router-dom";
 
 export default function Register(props) {
   const [form, setForm] = useState({});
+  const [failed, setFailed] = useState(false);
+
   let navigate = useNavigate();
 
   const navigateLogin = () => {
@@ -22,7 +24,7 @@ export default function Register(props) {
     }));
   };
   const submitForm = () => {
-    console.log(form);
+    // console.log(form);
 
     const navigateHome = () => {
       navigate(`/`, { replace: true });
@@ -30,13 +32,13 @@ export default function Register(props) {
 
     
     axios
-      .post("http://localhost:3030/register", {
+      .post("https://pronto-api-rest.azurewebsites.net/register", {
         full_name: form.full_name,
         email: form.email,
         password: form.password,
       })
       .then((response) => {
-        console.log(response.data.token);
+        // console.log(response.data.token);
         props.onAuthenticated(true, response.data.token);
         // localStorage.setItem("userID", response.data);
         localStorage.setItem("user_id", response.data.userID);
@@ -45,8 +47,10 @@ export default function Register(props) {
       .then(() => {
         navigateHome();
       })
-      .catch((err) => console.log(err));
-  };
+      .catch((err) => {
+        setFailed(true);
+        console.log(err);
+      });  };
 
   return (
     <>
@@ -123,8 +127,12 @@ export default function Register(props) {
               margin="normal"
               required
               fullWidth
+              error={failed}
+
               id="full_name"
               label="Full Name"
+              helperText={failed ? "Invalid Entry." : ""}
+
               name="full_name"
               autoComplete="full_name"
               autoFocus
@@ -137,10 +145,13 @@ export default function Register(props) {
               margin="normal"
               className="col-8"
               required
+              error={failed}
+
               fullWidth
               id="email"
               label="Email Address"
               name="email"
+              helperText={failed ? "Invalid Email." : ""}
               autoComplete="email"
               autoFocus
             />
@@ -150,10 +161,15 @@ export default function Register(props) {
             <TextField
               onChange={handleForm}
               margin="normal"
+              error={failed}
+
               required
               className="col-8"
               fullWidth
+              helperText={failed ? "Invalid Password." : ""}
               id="password"
+              type={ "password"}
+              placeholder="password"
               label="Password"
               name="password"
               autoComplete="password"
