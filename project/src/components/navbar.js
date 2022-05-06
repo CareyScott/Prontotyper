@@ -5,12 +5,8 @@ import { Button } from "@mui/material";
 import { Typography, Grid } from "@mui/material";
 import { makeStyles } from "@material-ui/core/styles";
 import { ListItem } from "@material-ui/core";
-import "@fontsource/roboto/300.css";
-import "@fontsource/roboto/400.css";
-import "@fontsource/roboto/500.css";
-import "@fontsource/roboto/700.css";
-import logo from "../Images/Prontotyper.png";
 
+import logo from "../Images/Prontotyper.png";
 import "./../App.css";
 import "./../grid.css";
 
@@ -32,32 +28,21 @@ const Navbar = (props) => {
   const [navbar, setNavbar] = useState(false);
   let navigate = useNavigate();
 
-  const changeBackground = () => {
-    if (window.scrollY >= 60) {
-      setNavbar(true);
-    } else {
-      setNavbar(false);
-    }
-  };
-
   const handleLogout = () => {
     props.onAuthenticated(false);
     localStorage.removeItem("user_id");
-    console.log(props);
+    // console.log(props);
     navigate(`/`, { replace: true });
-
   };
-
-  window.addEventListener("scroll", changeBackground);
 
   const classes = useStyles();
   return (
     <>
       <nav>
-        <div className="container-main">
-          {!props.authenticated ? (
-            <>
-              <div className="col-9">
+        {!props.authenticated ? (
+          <>
+            <div className="container-main">
+              <div className="col-7">
                 <Link to="/">
                   <img src={logo} alt="Logo" className="logo-nav" />
                 </Link>
@@ -77,13 +62,13 @@ const Navbar = (props) => {
                     </Button>
                   </ListItem>
                 </Link>
-              </div>{" "}
+              </div>
               <div className="col-1">
                 <Link to="/login">
                   <ListItem>
                     <Button
                       variant="contained"
-                      xs={6}
+                      // xs={6}
                       sx={{ backgroundColor: "#790FFF", width: 200 }}
                     >
                       <Typography
@@ -97,10 +82,13 @@ const Navbar = (props) => {
                   </ListItem>
                 </Link>
               </div>
-            </>
-          ) : (
-            <>
-              <div className="col-8">
+              <div className="col-3"></div>
+            </div>
+          </>
+        ) : (
+          <>
+            <div className="container-main">
+              <div className="col-6">
                 <Link to="/">
                   <img src={logo} alt="Logo" className="logo-nav" />
                 </Link>
@@ -156,9 +144,10 @@ const Navbar = (props) => {
                   </Button>
                 </ListItem>
               </div>
-            </>
-          )}
-        </div>
+              <div className="col-3"></div>
+            </div>
+          </>
+        )}
       </nav>
     </>
   );

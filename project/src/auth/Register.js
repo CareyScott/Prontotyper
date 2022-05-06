@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useState } from "react";
 import axios from "axios";
-import { TextField, Box, Grid, Button, Paper, Link } from "@mui/material";
+import { TextField, Box, Button, Link } from "@mui/material";
 import "./../grid.css";
 import "./../styles.css";
 import logo from "../Images/Prontotyper.png";
@@ -9,6 +9,8 @@ import { useNavigate } from "react-router-dom";
 
 export default function Register(props) {
   const [form, setForm] = useState({});
+  const [failed, setFailed] = useState(false);
+
   let navigate = useNavigate();
 
   const navigateLogin = () => {
@@ -22,80 +24,33 @@ export default function Register(props) {
     }));
   };
   const submitForm = () => {
-    console.log(form);
-
+    // navigated home + submits axios user registration to API
     const navigateHome = () => {
       navigate(`/`, { replace: true });
     };
 
-    
     axios
-      .post("http://localhost:3030/register", {
+      .post("https://pronto-api-rest.azurewebsites.net/register", {
         full_name: form.full_name,
         email: form.email,
         password: form.password,
       })
       .then((response) => {
-        console.log(response.data.token);
         props.onAuthenticated(true, response.data.token);
-        // localStorage.setItem("userID", response.data);
         localStorage.setItem("user_id", response.data.userID);
-
       })
       .then(() => {
         navigateHome();
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        setFailed(true);
+        console.log(err);
+      });
   };
 
+  // render
   return (
     <>
-      {/* <Grid container component="main" sx={{ height: "91.2vh" }}>
-        <Box component="form" noValidate sx={{ mt: 1 }}>
-          <TextField
-            onChange={handleForm}
-            margin="normal"
-            required
-            fullWidth
-            id="full_name"
-            label="full_name"
-            name="full_name"
-            autoComplete="full_name"
-            autoFocus
-          />
-          <TextField
-            onChange={handleForm}
-            margin="normal"
-            required
-            fullWidth
-            id="email"
-            label="Email Address"
-            name="email"
-            autoComplete="email"
-            autoFocus
-          />
-          <TextField
-            onChange={handleForm}
-            margin="normal"
-            required
-            fullWidth
-            id="password"
-            label="Password"
-            name="password"
-            autoComplete="password"
-            autoFocus
-          />
-          <Button
-            fullWidth
-            variant="contained"
-            sx={{ mt: 3, mb: 2 }}
-            onClick={submitForm}
-          >
-            Sign In
-          </Button>{" "}
-        </Box>
-      </Grid> */}
-
       <div className="container-main">
         <div className="col-4"></div>
         <Box
@@ -123,8 +78,10 @@ export default function Register(props) {
               margin="normal"
               required
               fullWidth
+              error={failed}
               id="full_name"
               label="Full Name"
+              helperText={failed ? "Invalid Entry." : ""}
               name="full_name"
               autoComplete="full_name"
               autoFocus
@@ -137,10 +94,12 @@ export default function Register(props) {
               margin="normal"
               className="col-8"
               required
+              error={failed}
               fullWidth
               id="email"
               label="Email Address"
               name="email"
+              helperText={failed ? "Invalid Email." : ""}
               autoComplete="email"
               autoFocus
             />
@@ -150,10 +109,14 @@ export default function Register(props) {
             <TextField
               onChange={handleForm}
               margin="normal"
+              error={failed}
               required
               className="col-8"
               fullWidth
+              helperText={failed ? "Invalid Password." : ""}
               id="password"
+              type={"password"}
+              placeholder="password"
               label="Password"
               name="password"
               autoComplete="password"
@@ -192,12 +155,10 @@ export default function Register(props) {
             <hr />
 
             <p className="purple-text-login-small">
-              Already registered? Click&nbsp;<Link onClick={navigateLogin}>here</Link>&nbsp;to
-              sign in!
+              Already registered? Click&nbsp;
+              <Link onClick={navigateLogin}>here</Link>&nbsp;to sign in!
             </p>
           </div>
-          {/* </Box> */}
-          {/* </div> */}
         </Box>
       </div>
     </>

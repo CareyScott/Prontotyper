@@ -1,7 +1,6 @@
-import { Button, Grid, Paper, Typography, Box } from "@mui/material";
-import React, { useEffect } from "react";
+import {  Grid } from "@mui/material";
+import React from "react";
 import { useDropzone } from "react-dropzone";
-import FileUploadIcon from "@mui/icons-material/FileUpload";
 import "./../App.css";
 import "./../grid.css";
 import "./../button.css";
@@ -10,8 +9,10 @@ function Dropzone(props) {
   
   let UserID = localStorage.getItem("user_id");
 
-  const { getRootProps, getInputProps, open, acceptedFiles } = useDropzone({
-    noClick: true,
+  // const { getRootProps, getInputProps, open, acceptedFiles } = useDropzone({
+
+    const { open, acceptedFiles } = useDropzone({
+      noClick: true,
     noKeyboard: true,
   });
 
@@ -21,7 +22,7 @@ function Dropzone(props) {
     <li key={file.path}>{file.name}</li>)
     });
 
-console.log(props);
+// console.log(props);
 
       // useEffect((props) =>{
       //   if ( files === !null ) {
@@ -59,7 +60,8 @@ console.log(props);
         const blockBlobClient = containerClient.getBlockBlobClient(
          `${containerName}/ ${props.blobName.blobName}`
         );
-        const uploadBlobResponse = blockBlobClient.upload(
+        // const uploadBlobResponse = blockBlobClient.upload(
+          blockBlobClient.upload(
           file,
           file.size,
           blobOptions

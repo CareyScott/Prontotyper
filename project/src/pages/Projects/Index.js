@@ -1,4 +1,4 @@
-import { Button, Grid, Modal, Paper } from "@mui/material";
+import { Button, Modal } from "@mui/material";
 import * as React from "react";
 import axios from "axios";
 import { useState, useEffect } from "react";
@@ -7,11 +7,11 @@ import { useNavigate } from "react-router-dom";
 import { useSpring, animated } from "react-spring/web.cjs";
 import PropTypes from "prop-types";
 import Backdrop from "@mui/material/Backdrop";
-// const [predictions, setPredictions] = useState({});
 import sketchhome from "./.././../Images/sketch-home.png";
 import CreateProject from "../../components/createProject";
 import ProjectListComponent from "../../components/projectListComponent";
 
+// effects from modal
 const Fade = React.forwardRef(function Fade(props, ref) {
   const { in: open, children, onEnter, onExited, ...other } = props;
   const style = useSpring({
@@ -29,6 +29,7 @@ const Fade = React.forwardRef(function Fade(props, ref) {
     },
   });
 
+  // animation of model
   return (
     <animated.div ref={ref} style={style} {...other}>
       {children}
@@ -36,6 +37,7 @@ const Fade = React.forwardRef(function Fade(props, ref) {
   );
 });
 
+// fade properties of modal
 Fade.propTypes = {
   children: PropTypes.element,
   in: PropTypes.bool.isRequired,
@@ -43,6 +45,7 @@ Fade.propTypes = {
   onExited: PropTypes.func,
 };
 
+// modal style
 const style = {
   position: "absolute",
   top: "50%",
@@ -56,28 +59,25 @@ const style = {
   p: 4,
 };
 
-const ProjectsIndex = (props) => {
+const ProjectsIndex = () => {
   let token = localStorage.getItem("token");
   let UserID = localStorage.getItem("user_id");
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const [projects, setProjects] = useState(null);
-  
-  function preventDefault(event) {
-    event.preventDefault();
-  }
+  const [projects, setProjects] = useState([]);
+
   let navigate = useNavigate();
 
+  // getting projects array
   useEffect(() => {
     axios
-      .get(`http://localhost:3030/users/${UserID}`, {
+      .get(`https://pronto-api-rest.azurewebsites.net/users/${UserID}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       })
       .then((response) => {
-        console.log(response.data);
         setProjects(response.data.projects);
       })
       .catch((err) => {
@@ -87,67 +87,26 @@ const ProjectsIndex = (props) => {
 
   if (!projects) return null;
 
+  // displaying project list comonent
   const projectsList = projects.map((project) => {
     let projectID = project._id.toString();
     const showProject = (project) => {
       navigate(`/projects/${projectID}`, { replace: true });
     };
-
-    // console.log(projectID);
-    return (
-      // <Box
-      //   key={project._id}
-      //   sx={{
-      //     display: "flex",
-      //     flexWrap: "wrap",
-      //     "& > :not(style)": {
-      //       m: 1,
-      //       height: 180,
-      //     },
-      //   }}
-      // >
-      //   <Paper elevation={3}>
-      //     <Grid container>
-      //       <Grid item xs={2}></Grid>
-      //       <Grid item xs={8}>
-      //         <Box>
-      //           <p className="project-title">{project.project_name}</p>
-      //         </Box>
-      //       </Grid>
-
-      //       <Grid item xs={12}>
-      //         <Box>
-      //           <Button
-      //             onClick={showProject}
-      //             color="secondary"
-      //             position="absolute"
-      //             xs={6}
-      //             sx={{ color: "#790FFF", width: 200 }}
-      //           >
-      //             View
-      //           </Button>
-      //           {/* <Button
-      //             onClick={showProject}
-      //             color="secondary"
-      //             xs={6}
-      //             sx={{ color: "#790FFF", width: 200 }}
-      //           >
-      //             Edit
-      //           </Button> */}
-      //         </Box>
-      //       </Grid>
-      //     </Grid>
-      //   </Paper>
-      // </Box>
-      <ProjectListComponent project={project} />
-    );
+    return <ProjectListComponent project={project} />;
   });
 
+  // render
   return (
     <>
       <div className="container-main">
         <div className="col-1"></div>
-        <div className="col-11 line-1">Your Projects</div>
+
+        {projects[0] ? (
+          <div className="col-11 line-1">Your Projects</div>
+        ) : (
+          <div className="col-11 line-1">Create your first project!</div>
+        )}
 
         <div className="col-1 paragraph-gap "></div>
         <div className="col-1 paragraph-gap">

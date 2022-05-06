@@ -1,33 +1,14 @@
 import * as React from "react";
-import { styled } from "@mui/material/styles";
-import IconButton from "@mui/material/IconButton";
-
-import { Container, Button, Grid, Box, Paper } from "@mui/material";
-import { Typography } from "@material-ui/core";
-import "../button.css";
-import Dropzone from "../components/dropzone";
-import { Image } from "@mui/icons-material";
+import { Button} from "@mui/material";
 import sketchhome from "../Images/sketch-home.png";
 import { Link } from "react-router-dom";
+import "../button.css";
 
 const Home = (props) => {
   return (
     <>
       <div className="app">
-        {/* <Grid spacing={3}>
-          <Grid  xs="3" >
-            <div>hi</div>
-            </Grid>
-            <Grid item xs="auto" className="line-1">
-             variable width content
-            </Grid>
-            <Grid item xs={12}  className="line-2">
-           variable width content
-            </Grid>
-            <Grid item xs="auto"  className="line-3">
-            variable width content
-            </Grid>
-          </Grid> */}
+       
 
         <div className="container-main">
           <div className="col-1"></div>
@@ -39,7 +20,7 @@ const Home = (props) => {
 
           <div className="col-1"></div>
           <div className="col-11 paragraph-home paragraph-gap">
-            Prontotyper is an intuiotive and unique application which utilisesa
+            Prontotyper is an intuitive and unique application which utilisesa
             trained Artificial Intelligence to make your hand drawn web-designs
             into a functioning webpage in seconds.{" "}
           </div>
@@ -66,24 +47,11 @@ const Home = (props) => {
             </Button>
           </div>
         </div>
-        {/* <p className="paragraph-home">Prontotyper is an intuiotive and unique application which utilisesa trained Artificial Intelligence to make your hand drawn web-designs into a functioning webpage in seconds. </p>
-
-          <button type="button" className="button-primary">Try Now</button>
-          <button type="button" className="button-secondary">Find Out More</button>  */}
-
-        {/* <Paper elevation={3}> */}
-        {/* <Dropzone /> */}
-        {/* </Paper> */}
-        {/* </Box> */}
-        {/* </div> */}
-        {/* <div className="right-side"> */}
-        {/* <Grid> */}
+       
 
         <img src={sketchhome} alt="Logo" className="home-img" />
 
-        {/* </Grid> */}
       </div>
-      {/* </div> */}
     </>
   );
 };

@@ -2,24 +2,25 @@ import React from "react";
 import {
   Button,
   Grid,
-  Paper,
+  // Paper,
   Container,
   TextField,
-  Typography,
-  ButtonBase,
+  // Typography,
+  // ButtonBase,
 } from "@mui/material";
 import { MultiStepForm, Step } from "react-multi-form";
 import Dropzone from "./dropzone";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import axios from "axios";
-import download from "f-downloads";
+// import download from "f-downloads";
 import { getParameters } from "codesandbox/lib/api/define";
-import Loading from "./loadingBar";
+// import Loading from "./loadingBar";
 import { Box } from "@mui/system";
-import { Validate, ValidationGroup, AutoDisabler } from "mui-validate";
+import {  ValidationGroup } from "mui-validate";
+import "../check.css";
 
-let token = localStorage.getItem("token");
-let downloaded;
+// let token = localStorage.getItem("token");
+// let downloaded;
 
 const CreateProject = (props) => {
   const [active, setActive] = React.useState(1);
@@ -38,264 +39,264 @@ const CreateProject = (props) => {
   // let reader = new FileReader();
   // console.log(reader.readAsText(positionsCSS))
 
-  const positionsCSS = `.container {
-  padding-top: 40px;
-  width: 1200px;
-  margin: auto;
-  display: grid;
-  grid-template-columns: repeat(12, 1fr);
-  grid-column-gap: 2em;
-  grid-row-gap: 1em;
-  grid-row: auto;
-}
+//   const positionsCSS = `.container {
+//   padding-top: 40px;
+//   width: 1200px;
+//   margin: auto;
+//   display: grid;
+//   grid-template-columns: repeat(12, 1fr);
+//   grid-column-gap: 2em;
+//   grid-row-gap: 1em;
+//   grid-row: auto;
+// }
 
-.nested {
-  display: grid;
-  grid-template-columns: repeat(12, 1fr);
-  grid-column-gap: 1.5em;
-  grid-row-gap: 1em;
-  height: fit-content;
-}
-
-
-.width-1 {
-  grid-column: span 1;
-}
-
-.width-2 {
-  grid-column: span 2;
-}
-
-.width-3 {
-  grid-column: span 3;
-}
-
-.width-4 {
-  grid-column: span 4;
-}
-
-.width-5 {
-  grid-column: span 5;
-}
-
-.width-6 {
-  grid-column: span 6;
-}
-
-.width-7 {
-  grid-column: span 7;
-}
-
-.width-8 {
-  grid-column: span 8;
-}
-
-.width-9 {
-  grid-column: span 9;
-}
-
-.width-10 {
-  grid-column: span 10;
-}
-
-.width-11 {
-  grid-column: span 11;
-}
-
-.width-12 {
-  grid-column: span 12;
-}
-
-.flex {
-  display: flex;
-  gap: 12px;
-}
-
-.flexWidth {
-  flex-grow: 1;
-}
+// .nested {
+//   display: grid;
+//   grid-template-columns: repeat(12, 1fr);
+//   grid-column-gap: 1.5em;
+//   grid-row-gap: 1em;
+//   height: fit-content;
+// }
 
 
-.left-1 {
-  grid-column: span 1;
-}
+// .width-1 {
+//   grid-column: span 1;
+// }
 
-.left-2 {
-  grid-column: span 2;
-}
+// .width-2 {
+//   grid-column: span 2;
+// }
 
-.left-3 {
-  grid-column: span 3;
-}
+// .width-3 {
+//   grid-column: span 3;
+// }
 
-.left-4 {
-  grid-column: span 4;
-}
+// .width-4 {
+//   grid-column: span 4;
+// }
 
-.left-5 {
-  grid-column: span 5;
-}
+// .width-5 {
+//   grid-column: span 5;
+// }
 
-.left-6 {
-  grid-column: span 6;
-}
+// .width-6 {
+//   grid-column: span 6;
+// }
 
-.left-7 {
-  grid-column: span 7;
-}
+// .width-7 {
+//   grid-column: span 7;
+// }
 
-.left-8 {
-  grid-column: span 8;
-}
+// .width-8 {
+//   grid-column: span 8;
+// }
 
-.left-9 {
-  grid-column: span 9;
-}
+// .width-9 {
+//   grid-column: span 9;
+// }
 
-.left-10 {
-  grid-column: span 10;
-}
+// .width-10 {
+//   grid-column: span 10;
+// }
 
-.left-11 {
-  grid-column: span 11;
-}
+// .width-11 {
+//   grid-column: span 11;
+// }
 
-.left-12 {
-  grid-column: span 12;
-}
+// .width-12 {
+//   grid-column: span 12;
+// }
 
-.break {
-  grid-column: span 12;
+// .flex {
+//   display: flex;
+//   gap: 12px;
+// }
 
-}
+// .flexWidth {
+//   flex-grow: 1;
+// }
 
 
-.same{
+// .left-1 {
+//   grid-column: span 1;
+// }
+
+// .left-2 {
+//   grid-column: span 2;
+// }
+
+// .left-3 {
+//   grid-column: span 3;
+// }
+
+// .left-4 {
+//   grid-column: span 4;
+// }
+
+// .left-5 {
+//   grid-column: span 5;
+// }
+
+// .left-6 {
+//   grid-column: span 6;
+// }
+
+// .left-7 {
+//   grid-column: span 7;
+// }
+
+// .left-8 {
+//   grid-column: span 8;
+// }
+
+// .left-9 {
+//   grid-column: span 9;
+// }
+
+// .left-10 {
+//   grid-column: span 10;
+// }
+
+// .left-11 {
+//   grid-column: span 11;
+// }
+
+// .left-12 {
+//   grid-column: span 12;
+// }
+
+// .break {
+//   grid-column: span 12;
+
+// }
+
+
+// .same{
 
 
   
-}`;
+// }`;
 
-  const htmlHead = `import React from "react";
-  import ReactDOM from "react-dom";
-  import "./css/grid.css";
-  import Helmet from "react-helmet";
+//   const htmlHead = `import React from "react";
+//   import ReactDOM from "react-dom";
+//   import "./css/grid.css";
+//   import Helmet from "react-helmet";
  
-  const element = (
-<>
-<Helmet><link rel=\"stylesheet\" href=\"https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css\" integrity=\"sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u\" crossorigin=\"anonymous\" /></Helmet>
+//   const element = (
+// <>
+// <Helmet><link rel=\"stylesheet\" href=\"https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css\" integrity=\"sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u\" crossorigin=\"anonymous\" /></Helmet>
 
-<div className="container">
- ${html}
- </div>
- </> 
- );
+// <div className="container">
+//  ${html}
+//  </div>
+//  </> 
+//  );
 
   
-  ReactDOM.render(
-    element,
-    document.getElementById('root')
-  );`;
+//   ReactDOM.render(
+//     element,
+//     document.getElementById('root')
+//   );`;
 
-  let htmlRoot = '<div id="root"></div>';
+//   let htmlRoot = '<div id="root"></div>';
 
-  const { BlobServiceClient } = require("@azure/storage-blob");
+  // const { BlobServiceClient } = require("@azure/storage-blob");
 
-  const blobSasUrl =
-    "https://sketch2codestoresc.blob.core.windows.net/?sv=2020-08-04&ss=bfqt&srt=sco&sp=rwdlacupitfx&se=2022-04-15T16:16:40Z&st=2022-03-31T08:16:40Z&spr=https&sig=UQvWQe5%2BbCMWl4vf5%2FJl5aOWH96O0lri0lwNBD7CkIs%3D";
-  const blobServiceClient = new BlobServiceClient(blobSasUrl);
+  // const blobSasUrl =
+    // "https://sketch2codestoresc.blob.core.windows.net/?sv=2020-08-04&ss=bfqt&srt=sco&sp=rwdlacupitfx&se=2022-04-15T16:16:40Z&st=2022-03-31T08:16:40Z&spr=https&sig=UQvWQe5%2BbCMWl4vf5%2FJl5aOWH96O0lri0lwNBD7CkIs%3D";
+  // const blobServiceClient = new BlobServiceClient(blobSasUrl);
 
-  async function handleDownload() {
-    console.log(blobName.blobName);
+  // async function handleDownload() {
+  //   console.log(blobName.blobName);
 
-    const containerClient = blobServiceClient.getContainerClient(containerName);
-    const blobClient = containerClient.getBlobClient(
-      blobName.blobName + ".html"
-    );
-    const downloadBlockBlobResponse = await blobClient.download();
-    downloaded = await blobToString(await downloadBlockBlobResponse.blobBody);
-    console.log("Downloaded blob content", downloaded);
+  //   const containerClient = blobServiceClient.getContainerClient(containerName);
+  //   const blobClient = containerClient.getBlobClient(
+  //     blobName.blobName + ".html"
+  //   );
+  //   const downloadBlockBlobResponse = await blobClient.download();
+  //   downloaded = await blobToString(await downloadBlockBlobResponse.blobBody);
+  //   console.log("Downloaded blob content", downloaded);
 
-    download(downloaded, blobName.blobName + ".html", "text/html");
+  //   download(downloaded, blobName.blobName + ".html", "text/html");
 
-    async function blobToString(blob) {
-      const fileReader = new FileReader();
-      return new Promise((resolve, reject) => {
-        fileReader.onloadend = (ev) => {
-          resolve(ev.target.result);
-        };
-        fileReader.onerror = reject;
-        fileReader.readAsDataURL(blob);
-      });
-    }
-  }
-  let predictionID;
-  const predict = async () => {
-    setIsDonePredicting(false);
-    setIsLoading(true);
-    setStatus("Predicting...");
-    console.log(props);
+  //   async function blobToString(blob) {
+  //     const fileReader = new FileReader();
+  //     return new Promise((resolve, reject) => {
+  //       fileReader.onloadend = (ev) => {
+  //         resolve(ev.target.result);
+  //       };
+  //       fileReader.onerror = reject;
+  //       fileReader.readAsDataURL(blob);
+  //     });
+  //   }
+  // }
+  // let predictionID;
+  // const predict = async () => {
+  //   setIsDonePredicting(false);
+  //   setIsLoading(true);
+  //   setStatus("Predicting...");
+  //   console.log(props);
 
-    axios
-      .get(
-        `http://localhost:3030/predict/${blobName.blobName}/container/${containerName}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      )
-      .then((response) => {
-        setPrediction(response.data.id);
-        setStatus("Predicting Complete");
-        setIsLoading(false);
-        setIsDonePredicting(true);
-      })
-      .catch((err) => {
-        console.log(`Error: ${err}`);
-      });
-  };
+  //   axios
+  //     .get(
+  //       `https://pronto-api-rest.azurewebsites.net/predict/${blobName.blobName}/container/${containerName}`,
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //       }
+  //     )
+  //     .then((response) => {
+  //       setPrediction(response.data.id);
+  //       setStatus("Predicting Complete");
+  //       setIsLoading(false);
+  //       setIsDonePredicting(true);
+  //     })
+  //     .catch((err) => {
+  //       console.log(`Error: ${err}`);
+  //     });
+  // };
 
-  const generateCode = () => {
-    setIsLoading(true);
+  // const generateCode = () => {
+  //   setIsLoading(true);
 
-    setTimeout(() => {
-      setStatus("Code Generated.");
-    }, 500);
-    setTimeout(() => {
-      setStatus("Code Generated.");
-    }, 1000);
-    setTimeout(() => {
-      setStatus("Uploading Code To Storage...");
-    }, 1500);
-    axios
-      .get(
-        `http://localhost:3030/code/${prediction}/frameworks/bootstrap/projects/${containerName}/sketch/${blobName.blobName}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      )
-      .then((response) => {
-        console.log(response.data);
+  //   setTimeout(() => {
+  //     setStatus("Code Generated.");
+  //   }, 500);
+  //   setTimeout(() => {
+  //     setStatus("Code Generated.");
+  //   }, 1000);
+  //   setTimeout(() => {
+  //     setStatus("Uploading Code To Storage...");
+  //   }, 1500);
+  //   axios
+  //     .get(
+  //       `https://pronto-api-rest.azurewebsites.net/code/${prediction}/frameworks/bootstrap/projects/${containerName}/sketch/${blobName.blobName}`,
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //       }
+  //     )
+  //     .then((response) => {
+  //       console.log(response.data);
 
-        setTimeout(() => {
-          setStatus("Success! Code uploaded to storage...");
-        }, 2000);
-        setTimeout(() => {
-          setIsLoading(false);
-        }, 2500);
-        setHtml(response.data);
-      })
-      .catch((err) => {
-        console.log(`Error: ${err}`);
-      });
-    // }, [token]);
-  };
+  //       setTimeout(() => {
+  //         setStatus("Success! Code uploaded to storage...");
+  //       }, 2000);
+  //       setTimeout(() => {
+  //         setIsLoading(false);
+  //       }, 2500);
+  //       setHtml(response.data);
+  //     })
+  //     .catch((err) => {
+  //       console.log(`Error: ${err}`);
+  //     });
+  //   // }, [token]);
+  // };
   // useEffect(() => {
   //   axios
-  // .get(`http://localhost:3030/code/${framework}`, {
+  // .get(`https://pronto-api-rest.azurewebsites.net/code/${framework}`, {
   //   headers: {
   //     Authorization: `Bearer ${token}`,
   //   },
@@ -338,7 +339,7 @@ const CreateProject = (props) => {
     }, 0.1);
 
     axios
-      .post("http://localhost:3030/components", {
+      .post("https://pronto-api-rest.azurewebsites.net/components", {
         component_name: form.component_name,
         project: props.projectID,
         password: form.password,
@@ -346,7 +347,7 @@ const CreateProject = (props) => {
         blob_name: blobName.blobName,
       })
       .then((response) => {
-        console.log(response.data);
+        // console.log(response.data);
       })
       .catch((err) => console.log(err));
   };
@@ -365,40 +366,41 @@ const CreateProject = (props) => {
     }));
   };
 
-  const parameters = getParameters({
-    files: {
-      "package.json": {
-        content: {
-          dependencies: {
-            react: "latest",
-            "react-dom": "latest",
-            "react-helmet": "^6.1.0",
+  // const parameters = getParameters({
+  //   files: {
+  //     "package.json": {
+  //       content: {
+  //         dependencies: {
+  //           react: "latest",
+  //           "react-dom": "latest",
+  //           "react-helmet": "^6.1.0",
 
-            bootstrap: "^5.1.3",
-          },
-        },
-      },
-      "index.js": {
-        content: htmlHead,
-      },
-      "index.html": {
-        content: htmlRoot,
-      },
-      "/css/grid.css": {
-        content: positionsCSS,
-      },
-    },
-  });
+  //           bootstrap: "^5.1.3",
+  //         },
+  //       },
+  //     },
+  //     "index.js": {
+  //       content: htmlHead,
+  //     },
+  //     "index.html": {
+  //       content: htmlRoot,
+  //     },
+  //     "/css/grid.css": {
+  //       content: positionsCSS,
+  //     },
+  //   },
+  // });
 
   const closeForm = () => {
+    setActive(active + 1);
     submitForm();
-    
-    setTimeout( () => {
+
+    setTimeout(() => {
       window.location.reload();
     }, 5000);
-  }
+  };
 
-  let compName = form.component_name;
+  // let compName = form.component_name;
   // console.log(props);
   return (
     <ValidationGroup>
@@ -427,7 +429,7 @@ const CreateProject = (props) => {
               className="col-8"
               onChange={handleForm}
               margin="normal"
-              // required
+              required
               fullWidth
               id="component_name"
               label="Name Your Component"
@@ -473,18 +475,7 @@ const CreateProject = (props) => {
                     You Have not completed the form.
                   </div>
                 ) : (
-                  // <div>
-                  //   <div className="primary-text-login">
-                  //     Component Name: {form.component_name}
-                  //   </div>
-
-                  //   <div className="primary-text-login">
-                  //     Sketch Name: {blobName.blobName}
-                  //   </div>
-                  //   <div className="primary-text-login">
-                  //     Description: {form.description}
-                  //   </div>
-                  // </div>
+                  
 
                   <Grid sx={{ mt: 12, mb: 12 }}>
                     <Grid>
@@ -587,6 +578,29 @@ const CreateProject = (props) => {
             </form>{" "}
             {status}
           </Step> */}
+          <Step label="Complete">
+            <div class="wrapper">
+              {" "}
+              <svg
+                class="checkmark"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 52 52"
+              >
+                <circle
+                  class="checkmark__circle"
+                  cx="26"
+                  cy="26"
+                  r="25"
+                  fill="none"
+                />
+                <path
+                  class="checkmark__check"
+                  fill="none"
+                  d="M14.1 27.2l7.1 7.2 16.7-16.8"
+                />
+              </svg>
+            </div>
+          </Step>
         </MultiStepForm>
 
         <Box>
@@ -605,7 +619,7 @@ const CreateProject = (props) => {
                 <Button
                   onClick={() => returnState(setActive(active + 1))}
                   sx={{ float: "right", color: "#790FFF" }}
-                  disabled={fileRecieved === 0}
+                  disabled={fileRecieved === 0 || active === 4}
                 >
                   Next
                 </Button>
@@ -614,11 +628,11 @@ const CreateProject = (props) => {
                   onClick={() => returnState(setActive(active + 1))}
                   sx={{ float: "right", color: "#790FFF" }}
                   disabled={
-                    (!form.blobName && !form.component_name) ||
-                    !form.description
+                    ((!form.blobName && !form.component_name) ||
+                    !form.description) || active === 4
                   }
                 >
-                  Nex
+                  Next
                 </Button>
               )}
             </>
@@ -626,8 +640,7 @@ const CreateProject = (props) => {
             <>
               <Button
                 onClick={() => closeForm()}
-                sx={{ float: "right", color: "#790FFF" }}
-              >
+                sx={{ float: "right", color: "#790FFF" }}              >
                 Submit
               </Button>
             </>

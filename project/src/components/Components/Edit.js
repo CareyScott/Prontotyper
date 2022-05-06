@@ -1,20 +1,14 @@
+// functionality not in use -- requires further development to rename storage blob at the same time.
+
 import { useState, useEffect } from "react";
 import axios from "axios";
-import {
-  TextField,
-  Button,
-} from "@mui/material";
+import { TextField, Button } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
 import * as React from "react";
-import ComponentsTable from "../Components/ComponentsTable";
-
-
-
 
 const Edit = (props) => {
   let navigate = useNavigate();
-    let {id} = useParams();
-
+  let { id } = useParams();
 
   console.log(id);
 
@@ -25,13 +19,13 @@ const Edit = (props) => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:3030/components/${id}`, {
+      .get(`https://pronto-api-rest.azurewebsites.net/components/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       })
       .then((response) => {
-        console.log(response.data);
+        // console.log(response.data);
         setComponent(response.data);
         // setForm(response.data)
       })
@@ -43,9 +37,7 @@ const Edit = (props) => {
   useEffect(() => {
     setForm({
       component_name: component.component_name,
-      file_url: component.file_url,
-      code_output_url: component.code_output_url,
-      project: component.project,
+      description: component.description,
     });
   }, [component]);
 
@@ -59,33 +51,26 @@ const Edit = (props) => {
   };
 
   const submitForm = () => {
-    console.log(form);
+    // console.log(form);
 
     let token = localStorage.getItem("token");
 
     axios
-      .put(
-        `http://localhost:3030/components/${id}`,
-        form,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      )
+      .put(`https://pronto-api-rest.azurewebsites.net/components/${id}`, form, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((response) => {
-        console.log(response.data);
-        navigate(`/dashboard/`);
+        // console.log(response.data);
+        window.location.reload();
       })
       .catch((err) => console.log(err));
   };
 
-  
-
   return (
     <div>
       <h2>Edit Component</h2>
-
 
       <div className="form-group">
         <TextField
@@ -104,45 +89,15 @@ const Edit = (props) => {
         <TextField
           multiline
           variant="filled"
-          label="Component File URL"
-          name="file_url"
-          value={form.file_url}
+          label="Component Description"
+          name="description"
+          value={form.description}
           onChange={handleForm}
           InputLabelProps={{
             shrink: true,
           }}
         />
       </div>
-      
-      <div className="form-group">
-        <TextField
-          multiline
-          variant="filled"
-          label="Component Framework"
-          name="component_framework"
-          value={form.component_framework}
-          onChange={handleForm}
-          InputLabelProps={{
-            shrink: true,
-          }}
-        />
-      </div>
-
-      {/* <div className="form-group">
-        <TextField
-          multiline
-          variant="filled"
-          label="User_Id"
-          name="user_id"
-          value={form.user_id}
-          onChange={handleForm}
-          InputLabelProps={{
-            shrink: true,
-          }}
-        />
-      </div> */}
-
-      {/* <ComponentsTable/> */}
 
       <Button onClick={submitForm} variant="contained">
         Submit

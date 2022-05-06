@@ -10,9 +10,7 @@ import Fab from "@mui/material/Fab";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { Grid } from "@mui/material";
 import axios from "axios";
-import { useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
-import "@fontsource/roboto/500.css";
 
 const style = {
   position: "absolute",
@@ -35,7 +33,7 @@ export default function DeleteComponentModal(props) {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:3030/components/${props.component_id}`, {
+      .get(`https://pronto-api-rest.azurewebsites.net/components/${props.component_id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -59,7 +57,7 @@ export default function DeleteComponentModal(props) {
     let token = localStorage.getItem("token");
 
     axios
-      .delete(`http://localhost:3030/components/${props.component_id}`, {
+      .delete(`https://pronto-api-rest.azurewebsites.net/components/${props.component_id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

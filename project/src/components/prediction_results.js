@@ -1,47 +1,13 @@
-import { Prediction } from "@azure/cognitiveservices-customvision-prediction/esm/models/mappers";
-import classNames from "classnames";
 
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-} from "@material-ui/core";
-import { Code, ConstructionOutlined } from "@mui/icons-material";
+// code used during testing + development -- testing for code Generation function 
+
 import React from "react";
 import "../positions.css";
 import parse from "html-react-parser";
-import { stateToHTML } from "draft-js-export-html";
-
-import { useState, useEffect } from "react";
 import Helmet from "react-helmet";
-
 const PredictionResults = (props, importFrom) => {
-  console.log(props.importFrom.predictions);
-  console.log(props.code);
-  console.log(props);
-
-  // function positioning(props) {
-  //   if (isLoggedIn) {
-  //     return <UserGreeting />;
-  //   }
-  //   return <GuestGreeting />;
-  // }
-
-  // function downloadCode() {
-  //   // let html = stateToHTML(contentState);
-  //   return (
-  //     <a href={html} download="code.html">
-  //       Download Code
-  //     </a>
-  //   );
-  // }
-
   function checkTagName(prediction, props) {
     let value;
-    console.log(prediction);
     props.code.forEach((element, index) => {
       if (element.tagName === prediction.tagName) {
         value = element;
@@ -55,7 +21,6 @@ const PredictionResults = (props, importFrom) => {
       <Helmet>{parse(props.frameworkScript)}</Helmet>
 
       {props.importFrom.predictions.map((prediction, i) => {
-        // document.getElementById("element").innerHTML = codeResponse();
 
         {
           if (props.isLoading) {

@@ -1,9 +1,12 @@
-import { Container, Grid, Button, TextField } from "@mui/material";
+// form used for creating projects
+
+
+import { Container, Button, TextField } from "@mui/material";
 import * as React from "react";
 import { MultiStepForm, Step } from "react-multi-form";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import axios from "axios";
-
+import "../check.css";
 export default function CreateProject() {
   let UserID = localStorage.getItem("user_id");
 
@@ -18,35 +21,27 @@ export default function CreateProject() {
   };
 
   const submitForm = () => {
-    console.log(form);
-
-    // setSubmitFile((current) => true);
-    // downloadCodeFromAzure()
+    setActive(active + 1);
     axios
-      .post("http://localhost:3030/projects", {
+      .post("https://pronto-api-rest.azurewebsites.net/projects", {
         project_name: form.project_name,
         user_id: UserID,
         description: form.description,
-        components: []
+        components: [],
       })
       .then((response) => {
-        console.log(response.data);
-        setTimeout(() => window.location.reload(), 3000)
+        setTimeout(() => window.location.reload(), 3000);
       })
       .catch((err) => console.log(err));
-    // setActive(active + 1);
   };
-
 
   return (
     <Container>
       <MultiStepForm activeStep={active}>
         <Step label="Create Project">
-        <div>
+          <div>
             <p className="purple-text-login">Create your project</p>
-            <p className="primary-text-login">
-              Fill in the details below. This can be changed later!
-            </p>
+            <p className="primary-text-login">Fill in the details below.</p>
           </div>
           <TextField
             className="col-8"
@@ -71,21 +66,47 @@ export default function CreateProject() {
             name="description"
             autoComplete="description"
             autoFocus
-            sx={{mb:4}}
+            sx={{ mb: 4 }}
           />
         </Step>
-        <Step label="Confirm"><Button onClick={submitForm}>Submit</Button></Step>
+        <Step label="Done">
+          <div class="wrapper">
+            <svg
+              class="checkmark"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 52 52"
+            >
+              <circle
+                class="checkmark__circle"
+                cx="26"
+                cy="26"
+                r="25"
+                fill="none"
+              />
+              <path
+                class="checkmark__check"
+                fill="none"
+                d="M14.1 27.2l7.1 7.2 16.7-16.8"
+              />
+            </svg>
+          </div>
+        </Step>
       </MultiStepForm>
 
       {active !== 1 && (
         <Button onClick={() => setActive(active - 1)}>Previous</Button>
       )}
-      {active !== 5 && (
+      {/* {active !== 2 && (
         <Button
           onClick={() => setActive(active + 1)}
           style={{ float: "right" }}
         >
           Next
+        </Button>
+      )} */}
+      {active !== 2 && (
+        <Button style={{ float: "right" }} onClick={submitForm}>
+          Submit
         </Button>
       )}
     </Container>

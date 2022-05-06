@@ -1,13 +1,9 @@
 import * as React from "react";
-import { Paper, Grid, Button, Link } from "@mui/material";
+import { Paper, Grid, Button } from "@mui/material";
 import FirstProject from "../pages/Projects/FirstProject";
 
-import axios from "axios";
-import { useState, useEffect } from "react";
 import { Box } from "@mui/system";
 import { useNavigate } from "react-router-dom";
-
-import { styled } from "@mui/material/styles";
 
 const DashboardComponent = () => {
   let navigate = useNavigate();
@@ -16,24 +12,6 @@ const DashboardComponent = () => {
     let path = "/projects";
     navigate(path);
   };
-//   let token = localStorage.getItem("token");
-
-
-//   useEffect(() => {
-//     axios
-//       .get(`http://localhost:3030/projects`, {
-//         headers: {
-//           Authorization: `Bearer ${token}`,
-//         },
-//       })
-//       .then((response) => {
-//         console.log(response.data);
-//         setProjects(response.data);
-//       })
-//       .catch((err) => {
-//         console.log(`Error: ${err}`);
-//       });
-//   }, [token]);
 
   return (
     <>

@@ -1,21 +1,4 @@
-/* .parent {
-display: grid;
-grid-template-columns: repeat(3, 1fr);
-grid-template-rows: repeat(3, 1fr);
-grid-column-gap: 0px;
-width: 100vw;
-height: 100vh;
-grid-row-gap: 0px;
-}
-
-.left-left { grid-column: 1 ; }
-.left-center { grid-column: 2 ; }
-.left-right { grid-column: 3 ; }
-.top-left { grid-row: 1 ; }
-.top-center { grid-row: 2 ; }
-.top-right { grid-row: 3 ; }
- */
-
+/* Positioning of predicted objects */
 .container {
     padding-top: 40px;
     width: 1200px;
@@ -149,7 +132,5 @@ grid-row-gap: 0px;
 
 
   .same{
-
-
     
 }

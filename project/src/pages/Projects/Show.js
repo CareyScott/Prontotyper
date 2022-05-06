@@ -1,7 +1,6 @@
 import {
   Button,
   Paper,
-  Grid,
   TableContainer,
   Table,
   TableHead,
@@ -10,25 +9,16 @@ import {
   TableBody,
 } from "@mui/material";
 import * as React from "react";
-import sketchhome from "./.././../Images/sketch-home.png";
 import { useParams } from "react-router-dom";
 import Moment from "react-moment";
-
 import { useTheme } from "@mui/material/styles";
-
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { Project } from "@azure/cognitiveservices-customvision-training/esm/models/mappers";
-import { DataGrid } from "@mui/x-data-grid";
 import CreateProject from "../../components/MultiStepForm";
-import download from "f-downloads";
-
 import PropTypes from "prop-types";
 import Backdrop from "@mui/material/Backdrop";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
-import Typography from "@mui/material/Typography";
-// web.cjs is required for IE11 support
 import { useSpring, animated } from "react-spring/web.cjs";
 import IconButton from "@mui/material/IconButton";
 import FirstPageIcon from "@mui/icons-material/FirstPage";
@@ -37,45 +27,17 @@ import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 import LastPageIcon from "@mui/icons-material/LastPage";
 import TablePagination from "@mui/material/TablePagination";
 import TableFooter from "@mui/material/TableFooter";
-// import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
+import download from "f-downloads";
+import { FormControl, InputLabel, MenuItem, Select } from "@material-ui/core";
 
+// Azure Connection Strings -- Should be added to environement var. Hosting would not allow
 const { BlobServiceClient } = require("@azure/storage-blob");
+const blobSasUrl =
+  "https://sketch2codestoresc.blob.core.windows.net/?sv=2020-08-04&ss=bfqt&srt=sco&sp=rwdlacupitfx&se=2022-09-01T15:55:24Z&st=2022-04-25T07:55:24Z&spr=https&sig=kT52sph2xMa4nwrsf0szfKehC6%2F%2FJsxKHxNfRgztWm4%3D";
+const blobServiceClient = new BlobServiceClient(blobSasUrl);
 
-// async function handleDownload() {
-//   console.log("Downloading blob content");
-//   const blobSasUrl =
-//     "https://sketch2codestoresc.blob.core.windows.net/?sv=2020-08-04&ss=bfqt&srt=sco&sp=rwdlacupitfx&se=2022-04-15T16:16:40Z&st=2022-03-31T08:16:40Z&spr=https&sig=UQvWQe5%2BbCMWl4vf5%2FJl5aOWH96O0lri0lwNBD7CkIs%3D";
-//   const blobServiceClient = new BlobServiceClient(blobSasUrl);
-
-//   const containerClient = blobServiceClient.getContainerClient("new");
-//   const blobClient = containerClient.getBlobClient("codeforContainer4.html");
-
-//   // Get blob content from position 0 to the end
-//   // In Node.js, get downloaded data by accessing downloadBlockBlobResponse.readableStreamBody
-//   const downloadBlockBlobResponse = await blobClient.download();
-//   const downloaded = await blobToString(
-//     await downloadBlockBlobResponse.blobBody
-//   );
-//   console.log("Downloaded blob content", downloaded);
-
-//   async function blobToString(blob) {
-//     const fileReader = new FileReader();
-//     return new Promise((resolve, reject) => {
-//       fileReader.onloadend = (ev) => {
-//         resolve(ev.target.result);
-//       };
-//       fileReader.onerror = reject;
-//       // fileReader.readAsDataURL(blob);
-//       download(
-//         fileReader.readAsDataURL(blob),
-//         "dlDataUrlText.html",
-//         "text/html"
-//       );
-//     });
-//   }
-// }
-
+// modal fade effect
 const Fade = React.forwardRef(function Fade(props, ref) {
   const { in: open, children, onEnter, onExited, ...other } = props;
   const style = useSpring({
@@ -93,6 +55,7 @@ const Fade = React.forwardRef(function Fade(props, ref) {
     },
   });
 
+  // animate
   return (
     <animated.div ref={ref} style={style} {...other}>
       {children}
@@ -100,6 +63,7 @@ const Fade = React.forwardRef(function Fade(props, ref) {
   );
 });
 
+// fade properties
 Fade.propTypes = {
   children: PropTypes.element,
   in: PropTypes.bool.isRequired,
@@ -107,6 +71,7 @@ Fade.propTypes = {
   onExited: PropTypes.func,
 };
 
+// modal styles
 const style = {
   position: "absolute",
   top: "50%",
@@ -119,7 +84,7 @@ const style = {
   boxShadow: 24,
   p: 4,
 };
-
+// pagination for table of components -- MUI Component
 const TablePaginationActions = (props) => {
   const theme = useTheme();
   const { count, page, rowsPerPage, onPageChange } = props;
@@ -195,14 +160,12 @@ const ShowProject = (props) => {
   const [open, setOpen] = React.useState(false);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [framework, setFramework] = React.useState("");
+
   let navigate = useNavigate();
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-
-  // const navigateComponent = (id) => {
-  //   navigate(`/components/${id}`, { replace: true });
-  // };
 
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - components.length) : 0;
@@ -216,18 +179,22 @@ const ShowProject = (props) => {
     setPage(0);
   };
 
+  const handleChange = (event) => {
+    setFramework(event.target.value);
+  };
+
+  // getting params and token for api request to get project
   let { id } = useParams();
   let token = localStorage.getItem("token");
-
+  // getting project by ObjectID
   useEffect(() => {
     axios
-      .get(`http://localhost:3030/projects/${id}`, {
+      .get(`https://pronto-api-rest.azurewebsites.net/projects/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       })
       .then((response) => {
-        console.log(response.data);
         setProject(response.data);
         setComponents(response.data.components);
       })
@@ -236,17 +203,76 @@ const ShowProject = (props) => {
       });
   }, [token]);
 
-  // const columns = [
-  //   { field: "_id", headerName: "ID", width: 150 },
-  //   { field: "project", headerName: "Project ID", width: 150 },
-  //   { field: "component_name", headerName: "component_name", width: 150 },
-  //   { field: "createdAt", headerName: "Created At", width: 150 },
-  //   { field: "updatedAt", headerName: "Last Updated", width: 150 },
-  //   // { field: 'file_url', headerName: 'File Location', width: 150 },
-  // ];
+  // delete component function -- Delete by ID
+  const deleteComponent = (ComponentID) => {
+    let token = localStorage.getItem("token");
+    axios
+      .delete(
+        `https://pronto-api-rest.azurewebsites.net/components/${ComponentID}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then(() => {
+        window.location.reload();
+      })
+      .catch((err) => console.log(err));
+  };
 
-  // console.log(props)
+  // delete project + components
+  async function handleDelete() {
+    console.log("\nDeleting container...");
+    axios
+      .delete(
+        `https://pronto-api-rest.azurewebsites.net/projects/${project._id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then(() => {
+        window.location.replace("/dashboard");
+      })
+      .catch((err) => console.log(err));
+  }
 
+  // download file to pc
+  async function handleDownload(fileToDownload, blobName) {
+    // file + userID
+    let downloaded;
+    let UserID = localStorage.getItem("user_id");
+
+    // getting by container
+    const containerClient = blobServiceClient.getContainerClient(UserID);
+    // getting blob with fileToDownload -- 'FOLDER/ BLOBNAME'
+    const blobClient = containerClient.getBlobClient(fileToDownload);
+    //Download using blob  + container client merged as blob client
+    const downloadBlockBlobResponse = await blobClient.download();
+    // response contains blob data - converted to dataURL for download
+    downloaded = await blobToString(await downloadBlockBlobResponse.blobBody);
+
+    // if is HTML file, format with 'text/html' else format as an image for download
+    if (fileToDownload.includes(".html")) {
+      download(downloaded, blobName + ".html", "text/html");
+    } else download(downloaded, blobName, "image/jpeg");
+
+    // blobToDataURL for download by client
+    async function blobToString(blob) {
+      const fileReader = new FileReader();
+      return new Promise((resolve, reject) => {
+        fileReader.onloadend = (ev) => {
+          resolve(ev.target.result);
+        };
+        fileReader.onerror = reject;
+        // blob convertion to DataURL
+        fileReader.readAsDataURL(blob);
+      });
+    }
+  }
+  // render
   return (
     <>
       <div className="container-main">
@@ -267,25 +293,27 @@ const ShowProject = (props) => {
         <div className="col-2 paragraph-gap">
           <Button
             color="secondary"
+            onClick={handleDelete}
             xs={6}
             sx={{ color: "#790FFF", width: 200, height: 50 }}
           >
-            Edit
+            Delete Project
           </Button>
         </div>
         <div className="col-8"></div>
         <div className="col-12"></div>
-        <div className="col-2"></div>
+        <div className="col-1"></div>
 
         {/* <div className="col-7">{componentTable}</div> */}
-        <TableContainer className="col-8" component={Paper}>
-          <Table sx={{ minWidth: 650 }} aria-label="simple table">
+        <TableContainer className="col-10" component={Paper}>
+          <Table sx={{ minWidth: 800 }} aria-label="simple table">
             <TableHead>
               <TableRow>
                 <TableCell>Component Name</TableCell>
                 <TableCell>Description</TableCell>
                 <TableCell>Created At</TableCell>
                 <TableCell>Last Modified</TableCell>
+                <TableCell align="left">Framework &nbsp; &nbsp;</TableCell>
                 <TableCell align="left">Actions</TableCell>
               </TableRow>
             </TableHead>
@@ -314,18 +342,53 @@ const ShowProject = (props) => {
                     </Moment>
                   </TableCell>
                   <TableCell>
+                    <FormControl fullWidth>
+                      <InputLabel id="demo-simple-select-label">
+                        Framework
+                      </InputLabel>
+                      <Select
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        value={framework}
+                        label="Framework"
+                        onChange={handleChange}
+                      >
+                        <MenuItem value={"bootstrap"}>Bootstrap</MenuItem>
+                        <MenuItem value={"HTML"}>HTML</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </TableCell>
+                  <TableCell>
                     <Button
                       onClick={() => {
                         navigate(`/components/${component._id}`, {
+                          state: { framework: framework },
                           replace: true,
                         });
                       }}
                     >
                       View
                     </Button>
-                    <Button sx={{ color: "green" }}>Download</Button>
-                    <Button sx={{ color: "orange" }}>Edit</Button>
-                    <Button sx={{ color: "red" }}>Delete</Button>
+
+                    <Button
+                      sx={{ color: "green" }}
+                      onClick={() =>
+                        handleDownload(
+                          `${project.project_name.toLowerCase()}/ ${
+                            component.blob_name
+                          }`,
+                          component.blob_name
+                        )
+                      }
+                    >
+                      Download
+                    </Button>
+                    <Button
+                      onClick={() => deleteComponent(component._id)}
+                      sx={{ color: "red" }}
+                    >
+                      Delete
+                    </Button>
                   </TableCell>
                 </TableRow>
               ))}
@@ -374,8 +437,6 @@ const ShowProject = (props) => {
               <CreateProject
                 containerName={project.project_name}
                 projectID={project._id}
-                // onAuthenticated={props.onAuthenticated}
-                // authenticated={props.authenticated}
               />
             </Box>
           </Fade>

@@ -10,34 +10,27 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import { Button, Link } from "@mui/material";
+import { Button } from "@mui/material";
 import DeleteComponentModal from "./Delete";
 
 const ComponentsTable = () => {
-  function preventDefault(event) {
-    event.preventDefault();
-  }
-
   const [components, setComponents] = useState([]);
   let token = localStorage.getItem("token");
-
   useEffect(() => {
     axios
-      .get(`http://localhost:3030/components`, {
+      .get(`https://pronto-api-rest.azurewebsites.net/components`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       })
       .then((response) => {
-        console.log(response.data);
+        // console.log(response.data);
         setComponents(response.data);
       })
       .catch((err) => {
         console.log(`Error: ${err}`);
       });
   }, []);
-
-
   if (!components) return null;
 
   return (
@@ -49,12 +42,11 @@ const ComponentsTable = () => {
             <TableCell align="right"> file_url</TableCell>
             <TableCell align="right">code_output_url</TableCell>
             <TableCell align="right">project</TableCell>
-           
+
             <TableCell align="right">Date Created</TableCell>
             <TableCell align="right">Last Modified</TableCell>
             <TableCell align="center">Edit</TableCell>
             <TableCell align="center">Delete</TableCell>
-
           </TableRow>
         </TableHead>
         <TableBody>
@@ -71,11 +63,23 @@ const ComponentsTable = () => {
               <TableCell align="right">{component.code_output_url}</TableCell>
               <TableCell align="right">{component.project}</TableCell>
 
-              <TableCell align="right"><Moment fromNow>{component.createdAt}</Moment></TableCell>
-              <TableCell align="right"><Moment fromNow>{component.updatedAt}</Moment></TableCell>
-              <TableCell align="center"><Button href={"/components/"+ component._id + "/edit"} component_id={component._id}>Edit</Button></TableCell>
-              <TableCell align="center"><DeleteComponentModal component_id={component._id}/></TableCell>
-
+              <TableCell align="right">
+                <Moment fromNow>{component.createdAt}</Moment>
+              </TableCell>
+              <TableCell align="right">
+                <Moment fromNow>{component.updatedAt}</Moment>
+              </TableCell>
+              <TableCell align="center">
+                <Button
+                  href={"/components/" + component._id + "/edit"}
+                  component_id={component._id}
+                >
+                  Edit
+                </Button>
+              </TableCell>
+              <TableCell align="center">
+                <DeleteComponentModal component_id={component._id} />
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>

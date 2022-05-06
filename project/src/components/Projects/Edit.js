@@ -1,3 +1,6 @@
+// functionality not in use -- requires further development to rename storage container folder at the same time.
+
+
 import { useState, useEffect } from "react";
 import axios from "axios";
 import {
@@ -25,7 +28,7 @@ const Edit = (props) => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:3030/projects/${id}`, {
+      .get(`https://pronto-api-rest.azurewebsites.net/projects/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -64,7 +67,7 @@ const Edit = (props) => {
 
     axios
       .put(
-        `http://localhost:3030/projects/${id}`,
+        `https://pronto-api-rest.azurewebsites.net/projects/${id}`,
         form,
         {
           headers: {

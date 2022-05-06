@@ -10,9 +10,7 @@ import Fab from "@mui/material/Fab";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { Grid } from "@mui/material";
 import axios from "axios";
-import { useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
-import "@fontsource/roboto/500.css";
 
 const style = {
   position: "absolute",
@@ -28,18 +26,20 @@ const style = {
 };
 
 export default function DeleteProjectModal(props) {
-  //   const id = props;
   const [projects, setProjects] = useState([]);
 
   let token = localStorage.getItem("token");
 
   useEffect(() => {
     axios
-      .get(`http://localhost:3030/projects/${props.project_id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
+      .get(
+        `https://pronto-api-rest.azurewebsites.net/projects/${props.project_id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
       .then((response) => {
         // console.log(response.data);
         setProjects(response.data);
@@ -49,8 +49,6 @@ export default function DeleteProjectModal(props) {
       });
   }, []);
 
-  //   console.log(props.project_id);
-  //   let navigate = useNavigate();
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -59,11 +57,14 @@ export default function DeleteProjectModal(props) {
     let token = localStorage.getItem("token");
 
     axios
-      .delete(`http://localhost:3030/projects/${props.project_id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
+      .delete(
+        `https://pronto-api-rest.azurewebsites.net/projects/${props.project_id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
       .then((response) => {
         console.log(response.data);
       })
@@ -78,9 +79,6 @@ export default function DeleteProjectModal(props) {
         onClose={handleClose}
         closeAfterTransition
         BackdropComponent={Backdrop}
-        // BackdropProps={{
-        //   timeout: 500,
-        // }}
       >
         <Fade in={open}>
           <Box sx={style}>

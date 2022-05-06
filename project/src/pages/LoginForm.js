@@ -1,14 +1,12 @@
 import * as React from "react";
 import { useState } from "react";
 import axios from "axios";
-import { TextField, Box, Grid, Button, Paper, Link } from "@mui/material";
-import "./../grid.css";
-import "./../styles.css";
+import { TextField, Box, Button, Link } from "@mui/material";
 import { makeStyles } from "@material-ui/core/styles";
 import { useNavigate } from "react-router-dom";
-
 import logo from "../Images/Prontotyper.png";
-import { Typography } from "@material-ui/core";
+import "./../grid.css";
+import "./../styles.css";
 
 const useStyles = makeStyles((theme) => ({
   drawerPaper: { width: "inherit" },
@@ -23,7 +21,8 @@ const useStyles = makeStyles((theme) => ({
 
 const Login = (props) => {
   const [form, setForm] = useState({});
-  const classes = useStyles();
+
+  const [failed, setFailed] = useState(false);
 
   const handleForm = (e) => {
     setForm((prevState) => ({
@@ -42,11 +41,11 @@ const Login = (props) => {
   const routeRegister = () => {
     let path = "/register";
     navigate(path);
-  }
+  };
 
   const submitForm = () => {
     axios
-      .post("http://localhost:3030/login", {
+      .post("https://pronto-api-rest.azurewebsites.net/login", {
         email: form.email,
         password: form.password,
       })
@@ -54,10 +53,12 @@ const Login = (props) => {
         console.log(response.data);
         localStorage.setItem("user_id", response.data.userID);
         props.onAuthenticated(true, response.data.token);
+        routeDashboard();
       })
-      .catch((err) => console.log(err));
-
-    routeDashboard();
+      .catch((err) => {
+        setFailed(true);
+        console.log(err);
+      });
   };
 
   return (
@@ -88,11 +89,13 @@ const Login = (props) => {
               onChange={handleForm}
               margin="normal"
               required
+              error={failed}
               fullWidth
               id="email"
               label="Email Address"
               name="email"
               variant="outlined"
+              helperText={failed ? "Incorrect Email." : ""}
               autoComplete="email"
               autoFocus
             />
@@ -104,11 +107,15 @@ const Login = (props) => {
               margin="normal"
               className="col-8"
               required
+              helperText={failed ? "Incorrect Password." : ""}
+              error={failed}
               fullWidth
               id="password"
               variant="outlined"
               label="Password"
               name="password"
+              type={"password"}
+              placeholder="password"
               autoComplete="password"
             />
             <div className="col-12"></div>
@@ -143,8 +150,8 @@ const Login = (props) => {
             <hr />
 
             <p className="purple-text-login-small">
-              Not registered? Click&nbsp;<Link onClick={routeRegister}>here</Link>&nbsp;to
-              sign up!
+              Not registered? Click&nbsp;
+              <Link onClick={routeRegister}>here</Link>&nbsp;to sign up!
             </p>
           </div>
         </Box>
