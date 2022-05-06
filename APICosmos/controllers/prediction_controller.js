@@ -123,7 +123,7 @@ function findTopPosition(data) {
     // determining rows
 
     // if rangetop is greather than 0.3, move to the next line
-    if (rangeTop > 0.03) {
+    if (rangeTop > 0.12) {
       topElements[i].boundingBox["range"] = "nextRow";
       rowWidth = 0;
 
@@ -179,18 +179,6 @@ function findTopPosition(data) {
 
     rowLeft += resultLeft;
 
-    // if(inRange(width, 0)){
-    //   className += '1';
-    // }
-    // else if(inRange(width, 1)){
-    //   className += '2';
-    // }
-    // else if(inRange(width, 1)){
-    //   className += '2';
-    // }else {
-
-    // }
-
     // width = classNameWidth string + the result resultRight integer
     topElements[i].boundingBox["width"] = classNameWidth + resultWidth;
 
@@ -235,147 +223,16 @@ function findTopPosition(data) {
       temp1 = topElements[i];
     }
 
-    // c(rowWidth);
-
-    // if (topElements[i].boundingBox.range === "sameRow"  ){
-    //   topElements[i].boundingBox["left"] = "";
-    // }
-    // if (topElements[i].boundingBox.range === "firstElement") {
-    //   topElements[i].boundingBox["push"] = topElements[i].boundingBox.column;
-    // }
-    // c(topElements);
-
-    // c(topElements.code)
   }
-
-  // topElements.forEach((topElement, i) => {
-  //   if (topElement.boundingBox.range === "sameRow"){
-  //     let s = topElement.boundingBox.width
-  //     s = s.substring(s.indexOf('-')+1);
-  //     c(s)
-  //     // topElements[i - 1].boundingBox.
-  //   }
-  // })
 
   topElements.forEach((element) => {
     element["code"] = "";
   });
-  // topElements[i]['code'] = code
   data.predictions = topElements;
-
-  // c(codeArray)
-
-  // c(data.predictions)
-
-  // for (let i = 1; i < leftElements.length; i++) {
-  //   let rangeLeft = leftElements[i].boundingBox.top - leftElements[i - 1].boundingBox.top
-  //   c(`Range Left: for index ${i} with a difference of ${rangeLeft} for ${leftElements[i].tagName}`)
-  // }
-
-  // leftElements.forEach((element, index) => {
-  //   let i = topElements[element];
-  //   let findTop = topElements.find(
-  //     (value) => value.boundingBox === element.boundingBox
-  //   );
-  //   // c(element.tagName);
-  //   // c(`${element.boundingBox.left}`);
-  //   // c(findTop.boundingBox.top);
-  //   // c("");
-  //   // c("");
-  // });
-
-  // c('sorting left')
-  // sortedLeft.forEach((element, index) => {
-  //   c(element.boundingBox.left)
-  // })
-
-  // c("sortedLeft: ")
-  // c(sortedLeft)
-
-  // sortedTop.forEach((elementTop, index) => {
-  //   let i = sortedLeft.findIndex((elementLeft) => {
-  //     // c(elementTop.boundingBox.top)
-  //     // c(elementLeft.boundingBox.top)
-  //     return elementLeft.boundingBox.top === elementTop.boundingBox.top
-  //   });
-
-  //   // let top = sortedLeft.map(elementLeft => elementLeft.boundingBox.top);
-
-  //   // let i = top.indexOf(elementTop.boundingBox.top);
-
-  //   c(`Top: ${index} Left: ${i}`)
-
-  // });
-
-  // sortedTop.forEach((elementTop, index) => {
-  //   let i = sortedLeft.indexOf({
-  //     boundingBox: elementTop.boundingBox
-  //   })
-  //   c(`Top: ${index} Left: ${i}`)
-  // });
-
-  // var array = [];
-  // predictionArray.forEach( function(key, value) {
-  //   // c(value);
-  //     array.push(value);
-  // });
-  // array.sort(function(a, b) {
-  //   // c(a , b);
-  //     return a.boundingBox.top - b.boundingBox.top;
-  // });
-
-  // predictionArray.forEach(array, function(index, entry) {
-  //   display("Entry " + index + ": " +
-  //           entry);
-  // });
-
-  //   let arr = data.predictions;
-
-  //   function getTopN(arr, prop, n) {
-  //     // clone before sorting, to preserve the original array
-  //     var clone = arr;
-
-  //     // sort descending
-  //     clone.sort(function(x, y) {
-  //       // c(x);
-
-  //         if (x.boundingBox.prop == y.boundingBox.prop) return 0;
-  //         else if (parseInt(x.boundingBox.prop) > parseInt(y.boundingBox.prop)) return 1;
-  //         else return -1;
-  //     });
-
-  //     return clone.slice(0, n || 1);
-  // }
-
-  // var prop;
-
-  // var topScorers = getTopN(arr,  "left", 2);
-  // topScorers.forEach(function(item, index) {
-  //     c("#" + (index+1) + ": " + item.boundingBox.left + "  -  " + item.tagName);
-  // });
-
-  // function sortByProperty(property){
-  //   return function(a,b){
-  //      if(a.boundingBox[property] > b.boundingBox[property])
-  //         return 1;
-  //      else if(a.boundingBox[property] < b.boundingBox[property])
-  //         return -1;
-
-  //      return 0;
-  //   }
-
-  // }
-
-  // c(data.predictions);
-  // data.predictions.forEach(prediction => {
-
-  // var topPositions = [];
-  //  topPositions = prediction.boundingBox.left;
-
-  // });
 }
 
 const predict = async (req, res) => {
+  //downloading image form
   async function downloadCodeFromAzure() {
     const containerClient = blobServiceClient.getContainerClient(
       req.params.user
@@ -383,29 +240,11 @@ const predict = async (req, res) => {
 
     console.log(req.params.blobName);
     const blobClient = containerClient.getBlobClient(`${req.params.containerName}/ ${req.params.blobName}`);
-
-    // Get blob content from position 0 to the end
-    // In Node.js, get downloaded data by accessing downloadBlockBlobResponse.readableStreamBody
     const downloadBlockBlobResponse = await blobClient.download();
     const downloaded = await streamToBuffer(
       downloadBlockBlobResponse.readableStreamBody
     );
-    // console.log("Downloaded blob content" + downloaded);
 
-    // console.log("Downloaded blob content:", downloaded);
-
-    // fs.writeFile(`./Images/${req.params.blobName}`, downloaded, function (err) {
-    //   if (err) {
-    //     return console.error(err);
-    //   }
-    //   console.log("File saved successfully!");
-    //   fileSaved = true;
-    //   downloadedFile = downloaded;
-
-    //   return downloadedFile;
-    // });
-
-    // [Node.js only] A helper method used to read a Node.js readable stream into a Buffer
     async function streamToBuffer(readableStream) {
       return new Promise((resolve, reject) => {
         const chunks = [];
@@ -448,64 +287,34 @@ const predict = async (req, res) => {
           if (element) {
             Code.findOne(
               { tagId }
-
-              // (error, success) => {
-              //   if (error) {
-              //     res.status(500).json(err);
-              //     console.error;
-              //   }
-              // }
             )
               .clone()
               .then((data) => {
-                // c(data);
                 element.code = data.code;
                 var arrayItem = data.code;
                 predictionArray.push(arrayItem);
-              });
-
-            // await q.clone()
-
-            // res.status(201).json(data);
-            // return element
-            // c(element);
+              })
+              // .catch((err) => {
+              //   if (err.name === "ValidationError") {
+              //     res.status(422).json(err);
+              //   } else {
+              //     console.error(err);
+              //     res.status(500).json(err);
+              //   }
+              // })
+              
           }
-          // return q;
         };
 
         gettingCode(element);
-        // function (err, docs) {
-        // c(`${docs.code} at index ${index}`);
-
-        // return docs
-        // }
       });
-      // c(predictionArray);
       return predictionArray;
     });
 
-    // .catch((err) => {
-    //   if (err.name === "ValidationError") {
-    //     res.status(422).json(err);
-    //   } else {
-    //     console.error(err);
-    //     res.status(500).json(err);
-    //   }
-    // });
+   
   };
 
-  // function getCode(tagName) {
-  //   Code.findOne({ tagName }).then((tag) => {
-  //     // let arrayItem = tag;
-  //     // tagsArray.push(arrayItem);
-  //     c(tag)
-  //       return tag;
-  //   });
-  // }
-
   const sampleDataRoot = "Images";
-  // const  downloadedFile = downloadCodeFromAzure();
-  // const testFile = fs.readFileSync(`${sampleDataRoot}/${req.params.blobName}`);
   await predictor
     .detectImage(
       sampleProject.id,
@@ -515,39 +324,10 @@ const predict = async (req, res) => {
     .then((data) => {
       if (data) {
         data.predictions = data.predictions.filter(
-          (prediction) => prediction.probability >= 0.9
+          (prediction) => prediction.probability >= 0.6
         );
         findTopPosition(data);
-
-        // c(data);
-
         let savedPrediction = addPrediction(data);
-
-        // c(data);
-
-        // c(savedPrediction);
-
-        // const getCode = async(tagName, index) => {
-
-        //   codeArray = [];
-        //   try{
-        //     const code = await Code.findOne(({ tagName }), function (err, docs) {});
-        //     return code;
-        //   }catch (err) {
-        //     return 'error occured';
-        //   }
-        // }
-
-        // let arrayCode = [];
-
-        // data.predictions.forEach((prediction, index) => {
-        //   let code = getCode(prediction.tagName);
-        //   prediction['code'] = code;
-
-        //       var arrayItem = prediction;
-        // arrayCode.push(arrayItem);
-        //   c(arrayItem)
-        //   })
 
         res.status(200).json(data);
         console.log("done predicting");
@@ -559,24 +339,8 @@ const predict = async (req, res) => {
       console.error(err);
       res.status(500).json(err);
     });
-
-  // Show results
-  // c("Results:");
-  // let probabilityThreshold;
-  // results.predictions.forEach(predictedResult => {
-  // c(`\t ${predictedResult.tagName}: ${(predictedResult.probability * 100.0).toFixed(2)}% ${predictedResult.boundingBox.left},${predictedResult.boundingBox.top},${predictedResult.boundingBox.width},${predictedResult.boundingBox.height}`);
-  // c(`\t ${predictedResult.tagName}: ${(predictedResult.probability * 100.0).toFixed(2)}% `);
-  // probabilityThreshold = predictedResult.probability > 0.80;
-  // c(probabilityThreshold)
-  //     if (probabilityThreshold === true){
-  //     // c(`\t ${predictedResult.tagName}: ${(predictedResult.probability * 100.0).toFixed(2)}%  `);
-  //     // c(predictedResult);
-  // }
-  // res.status(201).json(results.predictions);
-  // })
 };
 
 module.exports = {
   predict,
-  // getCode
 };

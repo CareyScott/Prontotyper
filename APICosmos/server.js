@@ -9,7 +9,6 @@ const port = process.env.PORT || "3030";
 
 // importing the controllers
 const {
-  // getAllCode,
   getSingleCode,
   addCode,
   editCode,
@@ -19,8 +18,6 @@ const {
 } = require("./controllers/code_controller");
 
 const {
-  // getAllCode,
-  // getSingleCode,
   addPrediction,
  
 } = require("./controllers/prediction_controller");
@@ -60,9 +57,6 @@ const {
   getCode
 } = require("./controllers/project_controller");
 
-
-// const port = process.env.PORT;
-
 const app = express();
 app.use(cors());
 app.use(express.json());
@@ -100,14 +94,6 @@ app.post("/projects", addProject);
 app.put("/projects/:id", editProject);
 app.delete("/projects/:id", deleteProject);
 
-// code
-app.get("/code/:id/frameworks/:framework/projects/:container/user/:user/sketch/:blobName", downloadCode);
-
-app.get("/code/:framework", getSingleCode);
-// app.get("/projects/:id", loginRequired, getSingleProject);
-app.post("/code", addCode);
-// app.put("/code/:id", editCode);
-app.delete("/code/:id", deleteCode);
 
 // components
 app.get("/components", getAllComponents);
@@ -116,13 +102,29 @@ app.post("/components", addComponent);
 app.put("/components/:id", editComponent);
 app.delete("/components/:id", deleteComponent);
 
-//user DEV
-app.get("/users/", getAllUsers);
-app.get("/users/:id", getSingleUser);
+// code gen
+app.get("/code/:id/frameworks/:framework/projects/:container/user/:user/sketch/:blobName", downloadCode);
 
 //prediction
 app.get("/predict/:blobName/container/:containerName/user/:user", predict)
-app.get("/download/:blobName/container/:containerName", generateFile)
+// app.get("/download/:blobName/container/:containerName", generateFile)
+
+// users
+app.get("/users/", getAllUsers);
+app.get("/users/:id", getSingleUser);
+
+// DEV
+
+app.get("/code/:framework", getSingleCode);
+// app.get("/projects/:id", loginRequired, getSingleProject);
+app.post("/code", addCode);
+// app.put("/code/:id", editCode);
+app.delete("/code/:id", deleteCode);
+
+
+
+
+
 app.listen(port, () => {
   console.log(`Listening on port${port}`);
 });
