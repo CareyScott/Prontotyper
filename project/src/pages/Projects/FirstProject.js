@@ -49,7 +49,6 @@ const FirstProject = (props) => {
             Help{" "}
           </Button>
         </div>
-        
       </div>
 
       <img src={sketchhome} alt="Logo" className="home-img" />

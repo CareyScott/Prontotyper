@@ -397,9 +397,8 @@ ${frameworkHeader}
     }
   }
 
-  // development testing delete container  NON WORKING attempting to delete folder. Only deletes container 
+  // development testing delete container  NON WORKING attempting to delete folder. Only deletes container
 
-  
   // async function handleDelete() {
   //   // Delete container
   //   console.log("\nDeleting container...");
@@ -425,7 +424,6 @@ ${frameworkHeader}
   //         })
   //         .catch((err) => console.log(err));
   // }
-
 
   //render loading screen if hook isLoading is true. Once false, render show component
   if (isLoading === true) {

@@ -1,23 +1,15 @@
 // functionality not in use -- requires further development to rename storage container folder at the same time.
 
-
 import { useState, useEffect } from "react";
 import axios from "axios";
-import {
-  TextField,
-  Button,
-} from "@mui/material";
+import { TextField, Button } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
 import * as React from "react";
 import ComponentsTable from "../Components/ComponentsTable";
 
-
-
-
 const Edit = (props) => {
   let navigate = useNavigate();
-    let {id} = useParams();
-
+  let { id } = useParams();
 
   console.log(id);
 
@@ -66,15 +58,11 @@ const Edit = (props) => {
     let token = localStorage.getItem("token");
 
     axios
-      .put(
-        `https://pronto-api-rest.azurewebsites.net/projects/${id}`,
-        form,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      )
+      .put(`https://pronto-api-rest.azurewebsites.net/projects/${id}`, form, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((response) => {
         console.log(response.data);
         navigate(`/dashboard/`);
@@ -82,12 +70,9 @@ const Edit = (props) => {
       .catch((err) => console.log(err));
   };
 
-  
-
   return (
     <div>
       <h2>Edit Project</h2>
-
 
       <div className="form-group">
         <TextField
@@ -130,7 +115,7 @@ const Edit = (props) => {
         />
       </div> */}
 
-      <ComponentsTable/>
+      <ComponentsTable />
 
       <Button onClick={submitForm} variant="contained">
         Submit

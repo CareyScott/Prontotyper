@@ -33,11 +33,14 @@ export default function DeleteComponentModal(props) {
 
   useEffect(() => {
     axios
-      .get(`https://pronto-api-rest.azurewebsites.net/components/${props.component_id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
+      .get(
+        `https://pronto-api-rest.azurewebsites.net/components/${props.component_id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
       .then((response) => {
         // console.log(response.data);
         setComponents(response.data);
@@ -57,11 +60,14 @@ export default function DeleteComponentModal(props) {
     let token = localStorage.getItem("token");
 
     axios
-      .delete(`https://pronto-api-rest.azurewebsites.net/components/${props.component_id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
+      .delete(
+        `https://pronto-api-rest.azurewebsites.net/components/${props.component_id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
       .then((response) => {
         console.log(response.data);
       })

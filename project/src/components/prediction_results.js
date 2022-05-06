@@ -1,5 +1,4 @@
-
-// code used during testing + development -- testing for code Generation function 
+// code used during testing + development -- testing for code Generation function
 
 import React from "react";
 import "../positions.css";
@@ -21,7 +20,6 @@ const PredictionResults = (props, importFrom) => {
       <Helmet>{parse(props.frameworkScript)}</Helmet>
 
       {props.importFrom.predictions.map((prediction, i) => {
-
         {
           if (props.isLoading) {
             return <div className="">Loading...</div>;

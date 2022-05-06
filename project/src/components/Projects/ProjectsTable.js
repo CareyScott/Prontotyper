@@ -38,7 +38,6 @@
 //       });
 //   }, []);
 
-
 //   if (!projects) return null;
 
 //   return (
@@ -49,7 +48,7 @@
 //             <TableCell>Project Name</TableCell>
 //             <TableCell align="right"> # Of Components</TableCell>
 //             <TableCell align="right">Framework</TableCell>
-           
+
 //             <TableCell align="right">Date Created</TableCell>
 //             <TableCell align="right">Last Modified</TableCell>
 //             <TableCell align="center">Edit</TableCell>

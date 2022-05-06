@@ -1,6 +1,5 @@
 // form used for creating projects
 
-
 import { Container, Button, TextField } from "@mui/material";
 import * as React from "react";
 import { MultiStepForm, Step } from "react-multi-form";
@@ -96,14 +95,6 @@ export default function CreateProject() {
       {active !== 1 && (
         <Button onClick={() => setActive(active - 1)}>Previous</Button>
       )}
-      {/* {active !== 2 && (
-        <Button
-          onClick={() => setActive(active + 1)}
-          style={{ float: "right" }}
-        >
-          Next
-        </Button>
-      )} */}
       {active !== 2 && (
         <Button style={{ float: "right" }} onClick={submitForm}>
           Submit

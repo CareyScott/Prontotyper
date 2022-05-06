@@ -41,17 +41,16 @@ function Loading() {
 
   return (
     <>
-    <div className={classes.root}>
-     
-    <div className="col-11 line-1 loadingBuffer">Loading</div>
+      <div className={classes.root}>
+        <div className="col-11 line-1 loadingBuffer">Loading</div>
 
-      <LinearProgress
-        variant="buffer"
-        value={level}
-        valueBuffer={level + 10}
-        className={[classes.linearProgress, classes.margin]}
-      />
-    </div>
+        <LinearProgress
+          variant="buffer"
+          value={level}
+          valueBuffer={level + 10}
+          className={[classes.linearProgress, classes.margin]}
+        />
+      </div>
     </>
   );
 }
