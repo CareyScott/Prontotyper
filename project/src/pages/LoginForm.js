@@ -33,6 +33,10 @@ const Login = (props) => {
 
   let navigate = useNavigate();
 
+  const navigateHome = () => {
+    navigate(`/`, { replace: true });
+  };
+
   const routeDashboard = () => {
     let path = "/dashboard";
     navigate(path);
@@ -133,10 +137,10 @@ const Login = (props) => {
               Sign In
             </Button>
 
-            <Link to="/">
               <Button
                 color="secondary"
                 xs={6}
+                onClick={navigateHome}
                 sx={{
                   color: "#790FFF",
                   width: 200,
@@ -146,7 +150,6 @@ const Login = (props) => {
               >
                 Cancel
               </Button>
-            </Link>
             <hr />
 
             <p className="purple-text-login-small">

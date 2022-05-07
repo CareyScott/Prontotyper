@@ -42,7 +42,7 @@ const Navbar = (props) => {
         {!props.authenticated ? (
           <>
             <div className="container-main">
-              <div className="col-7">
+              <div className="col-10">
                 <Link to="/">
                   <img src={logo} alt="Logo" className="logo-nav" />
                 </Link>
@@ -82,13 +82,12 @@ const Navbar = (props) => {
                   </ListItem>
                 </Link>
               </div>
-              <div className="col-3"></div>
             </div>
           </>
         ) : (
           <>
             <div className="container-main">
-              <div className="col-6">
+              <div className="col-9">
                 <Link to="/">
                   <img src={logo} alt="Logo" className="logo-nav" />
                 </Link>

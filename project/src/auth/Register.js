@@ -17,6 +17,10 @@ export default function Register(props) {
     navigate(`/login`, { replace: true });
   };
 
+  const navigateHome = () => {
+    navigate(`/`, { replace: true });
+  };
+
   const handleForm = (e) => {
     setForm((prevState) => ({
       ...prevState,
@@ -138,8 +142,8 @@ export default function Register(props) {
               Sign Up
             </Button>
 
-            <Link to="/">
               <Button
+              onClick={navigateHome}
                 color="secondary"
                 xs={6}
                 sx={{
@@ -151,7 +155,6 @@ export default function Register(props) {
               >
                 Cancel
               </Button>
-            </Link>
             <hr />
 
             <p className="purple-text-login-small">

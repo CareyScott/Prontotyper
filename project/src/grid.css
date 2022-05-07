@@ -2,7 +2,7 @@
 
  .container-main {
     padding-top: 40px;
-    width: 1920px;
+    width: auto;
     margin: auto;
     display: grid;
     grid-template-columns: repeat(12, 1fr);

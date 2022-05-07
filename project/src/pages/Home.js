@@ -24,25 +24,27 @@ const Home = (props) => {
           </div>
           <div className="col-1 "></div>
           <div className="col-1 paragraph-gap">
-            <Link to="/login">
+            <Link to="/register">
               <Button
                 variant="contained"
                 color="primary"
                 xs={6}
                 sx={{ backgroundColor: "#790FFF", width: 200, height: 50 }}
               >
-                Try Now
+                Register
               </Button>
             </Link>
           </div>
           <div className="col-2 paragraph-gap">
-            <Button
-              color="secondary"
-              xs={6}
-              sx={{ color: "#790FFF", width: 200, height: 50 }}
-            >
-              Try Now
-            </Button>
+            <Link to="/login">
+              <Button
+                color="secondary"
+                xs={6}
+                sx={{ color: "#790FFF", width: 200, height: 50 }}
+              >
+                Login{" "}
+              </Button>
+            </Link>
           </div>
         </div>
 
