@@ -1,0 +1,40 @@
+{
+  "name": "apicosmos",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "server": "cross-env DEBUG=rest-api:* nodemon src/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@azure/cognitiveservices-customvision-prediction": "^5.1.2",
+    "@azure/cognitiveservices-customvision-training": "^5.2.0",
+    "@azure/functions": "^3.0.0",
+    "@azure/storage-blob": "^12.9.0",
+    "@types/parse-multipart": "^1.0.0",
+    "axios": "^0.26.1", 
+    "bcrypt": "^5.0.1",
+    "blob": "^0.1.0",
+    "codesandbox": "^2.2.3",
+    "cors": "^2.8.5",
+    "domparser": "^0.1.1",
+    "dotenv": "^16.0.0",
+    "express": "^4.17.3",
+    "express-fileupload": "^1.2.1",
+    "file-api": "^0.10.4",
+    "file-saver": "^2.0.5",
+    "http-status-enum": "^1.0.2",
+    "into-stream": "^7.0.0",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^6.2.2",
+    "node-blob": "0.0.2",
+    "parse-multipart": "^1.0.4",
+    "xmldom": "^0.6.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  }
+}
