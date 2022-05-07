@@ -96,7 +96,7 @@ const generateFile = async (prediction, code, blobName) => {
           </div>`
     } else {
       html += `
-          <div key={'same-${i}'} className={'flex  ${prediction.boundingBox.width} '} >
+          <div key={'same-${i}'} className={'flex  ${prediction.boundingBox.width} ${prediction.boundingBox.left} '} >
             ${checkTagName(prediction, code).code}
           </div>`
     }
