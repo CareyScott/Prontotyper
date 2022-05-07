@@ -6,5 +6,5 @@ Please find all project testing and production folders included in this repo.
 
 Production Folders: 
 
-1. APICosmos
-2. Project
+1. Backend: APICosmos
+2. React Frontend: Project
