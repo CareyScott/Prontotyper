@@ -18,8 +18,6 @@ Once the server is started,
 
 Use [http://localhost:3000]for any API Requests. 
 
-Import the file 'cosmosAPIInsomnia.json' to your Insomnia library to add all API requests to a new request library.
-
 The page will reload when you make changes.\ 
 
 
