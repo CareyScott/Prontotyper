@@ -10,7 +10,7 @@ Production Folders:
 2. React Frontend: Project
 
 
-Hosting Links:
+Hosted Links:
 
 1. Front-end: https://prontotyper.azurewebsites.net
 
