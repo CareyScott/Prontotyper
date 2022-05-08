@@ -8,3 +8,10 @@ Production Folders:
 
 1. Backend: APICosmos
 2. React Frontend: Project
+
+
+Hosting Links:
+
+1. Front-end: https://prontotyper.azurewebsites.net
+
+2. Back-end: https://pronto-api-rest.azurewebsites.net
