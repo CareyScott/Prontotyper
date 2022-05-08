@@ -260,9 +260,7 @@ const predict = async (req, res) => {
 
     return downloaded;
   }
-
-  // await downloadCodeFromAzure();
-
+  
   const domains = await trainer.getDomains();
   const objDetectDomain = domains.find(
     (domain) => domain.type === "ObjectDetection"
@@ -275,13 +273,9 @@ const predict = async (req, res) => {
   const addPrediction = async (data) => {
     let predictionData = data;
     PredictionSchema.create(predictionData).then((data) => {
-      // sortedTop.forEach((elementTop, index) => {
-
       predictionArray = [];
-
       data.predictions.forEach((element, index) => {
         let tagId = element.tagId;
-        // const q = () => Code.findOne();
 
         const gettingCode = (element) => {
           if (element) {
@@ -294,15 +288,6 @@ const predict = async (req, res) => {
                 var arrayItem = data.code;
                 predictionArray.push(arrayItem);
               })
-              // .catch((err) => {
-              //   if (err.name === "ValidationError") {
-              //     res.status(422).json(err);
-              //   } else {
-              //     console.error(err);
-              //     res.status(500).json(err);
-              //   }
-              // })
-              
           }
         };
 
