@@ -26,10 +26,10 @@ const ComponentsShow = (props) => {
   const [framework, setFramework] = useState(
     `${location.state.framework ? location.state.framework : "HTML"}`
   );
-  const [html, setHTML] = useState("");
+  // const [html, setHTML] = useState("");
   const [sandboxName, setSandboxName] = useState("");
-  const [prediction, setPrediction] = useState("");
-  const [project_id, setProjectID] = useState("");
+  // const [prediction, setPrediction] = useState("");
+  // const [project_id, setProjectID] = useState("");
 
   let { id } = useParams();
 
@@ -227,7 +227,7 @@ const ComponentsShow = (props) => {
       // setting hooks
       setBlobName(await resp.data.blob_name);
       setProject(await resp.data.project.project_name.toLowerCase());
-      setProjectID(await resp.data.project._id);
+      // setProjectID(await resp.data.project._id);
       setComponent(await resp.data);
 
       funcBlobName = await resp.data.blob_name;
@@ -250,7 +250,7 @@ const ComponentsShow = (props) => {
         }
       );
       funcPrediction = await resp.data.id;
-      setPrediction(await resp.data.id);
+      // setPrediction(await resp.data.id);
     } catch (err) {
       console.log(`Error: ${err}`);
     }
@@ -267,7 +267,7 @@ const ComponentsShow = (props) => {
           },
         }
       );
-      setHTML(await resp.data);
+      // setHTML(await resp.data);
       funcHtml = await resp.data;
       await openSandbox(funcHtml);
       // console.log(funcHtml)

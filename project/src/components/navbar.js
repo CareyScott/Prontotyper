@@ -1,8 +1,7 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
 import { Button } from "@mui/material";
-import { Typography, Grid } from "@mui/material";
+import { Typography } from "@mui/material";
 import { makeStyles } from "@material-ui/core/styles";
 import { ListItem } from "@material-ui/core";
 
@@ -25,7 +24,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Navbar = (props) => {
-  const [navbar, setNavbar] = useState(false);
   let navigate = useNavigate();
 
   const handleLogout = () => {

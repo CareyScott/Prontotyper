@@ -2,22 +2,22 @@ import * as React from "react";
 import { useState } from "react";
 import axios from "axios";
 import { TextField, Box, Button, Link } from "@mui/material";
-import { makeStyles } from "@material-ui/core/styles";
+// import { makeStyles } from "@material-ui/core/styles";
 import { useNavigate } from "react-router-dom";
 import logo from "../Images/Prontotyper.png";
 import "./../grid.css";
 import "./../styles.css";
 
-const useStyles = makeStyles((theme) => ({
-  drawerPaper: { width: "inherit" },
-  navList: {
-    textDecoration: "none",
-  },
-  navListButton: {
-    textDecoration: "none",
-  },
-  link: { textDecoration: "none", color: theme.palette.text.primary },
-}));
+// const useStyles = makeStyles((theme) => ({
+//   drawerPaper: { width: "inherit" },
+//   navList: {
+//     textDecoration: "none",
+//   },
+//   navListButton: {
+//     textDecoration: "none",
+//   },
+//   link: { textDecoration: "none", color: theme.palette.text.primary },
+// }));
 
 const Login = (props) => {
   const [form, setForm] = useState({});

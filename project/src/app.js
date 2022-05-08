@@ -1,5 +1,4 @@
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
 import { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
@@ -31,10 +30,10 @@ import Register from "./auth/Register";
 import "./styles.css";
 import "./grid.css";
 
-const useStyles = makeStyles((theme) => ({
-  drawerPaper: { width: "inherit" },
-  link: { textDecoration: "none", color: theme.palette.text.primary },
-}));
+// const useStyles = makeStyles((theme) => ({
+//   drawerPaper: { width: "inherit" },
+//   link: { textDecoration: "none", color: theme.palette.text.primary },
+// }));
 
 const App = () => {
   const [authenticated, setAuthenticated] = useState(false);
@@ -84,7 +83,6 @@ const App = () => {
     );
   }
 
-  const classes = useStyles();
   return (
     <Router classname="body">
       <Navbar onAuthenticated={onAuthenticated} authenticated={authenticated} />
