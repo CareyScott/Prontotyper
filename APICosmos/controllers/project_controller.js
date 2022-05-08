@@ -2,10 +2,13 @@ const res = require("express/lib/response");
 const Project = require("../models/project_schema");
 const User = require("../models/user_schema");
 
+// getitng all projects
 const getAllProjects = (req, res) => {
+  // mongoose model query
   Project.find()
     .then((data) => {
       if (data) {
+        // return response
         res.status(200).json(data);
       } else {
         res.status(404).json("No projects not found");
@@ -16,8 +19,12 @@ const getAllProjects = (req, res) => {
       res.status(500).json(err);
     });
 };
+
+// getitng single project by ID
 const getSingleProject = (req, res) => {
+  // mongoose model query
   Project.findById(req.params.id)
+    // populating project with all it's referenced components from mongoose schema
     .populate("components")
     .then((data) => {
       if (data) {
@@ -30,13 +37,16 @@ const getSingleProject = (req, res) => {
       console.error(err);
       res.status(500).json(err);
     });
-  };
+};
 
+// gadding a project
 const addProject = (req, res) => {
   let projectData = req.body;
+  // mongoose model query
   Project.create(projectData)
     .then((data) => {
       if (data) {
+        // updating the users project object ID array
         User.findByIdAndUpdate(
           {
             _id: data.user_id,
@@ -63,8 +73,10 @@ const addProject = (req, res) => {
     });
 };
 
+// updating project
 const editProject = (req, res) => {
   let projectData = req.body;
+  // mongoose model query
   Project.findByIdAndUpdate(req.params.id, projectData, {
     new: true,
   })
@@ -83,8 +95,10 @@ const editProject = (req, res) => {
     });
 };
 
+// deleting project
 const deleteProject = (req, res) => {
   let projectData = req.body;
+  // mongoose model query
   Project.findByIdAndDelete(req.params.id, {
     new: true,
   })

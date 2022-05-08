@@ -4,17 +4,24 @@ const User = require("../models/user_schema");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
+
+// registering the user
 const register = (req, res) => {
   let newUser = new User(req.body);
+  // hashing the users password
   newUser.password = bcrypt.hashSync(req.body.password, 10);
+// mongoose model query
   newUser.save((err, user) => {
     if (err) {
       return res.status(400).send({
         message: err,
       });
     } else {
+      // does not return the users email
       user.password = undefined;
+      // return with JWT token
       return res.json({
+        // sign token
         token: jwt.sign(
           {
             email: user.email,
@@ -31,11 +38,15 @@ const register = (req, res) => {
   });
 };
 
+// login user
 const login = (req, res) => {
+
+  // find user by email. mongoose query
   User.findOne({
     email: req.body.email,
   })
     .then((user) => {
+      // if the user is not found or pass does not match return error
       if (!user || !user.comparePassword(req.body.password)) {
         return res.status(401).json({
           message: "Authentication failed. Invalid user or password",
@@ -43,6 +54,7 @@ const login = (req, res) => {
       }
       // create token
       res.json({
+        // sign token
         token: jwt.sign(
           {
             email: user.email,
@@ -50,6 +62,7 @@ const login = (req, res) => {
             _id: user._id,
           },
 
+          // decrypt string
           process.env.DECRYPT_STRING
         ),
         userID: user._id
@@ -62,7 +75,7 @@ const login = (req, res) => {
 };
 
 
-
+// function to require a user to be logged in to use endpoints
 const loginRequired = (req, res, next) => {
   if (req.user) {
     next();
@@ -73,7 +86,8 @@ const loginRequired = (req, res, next) => {
   }
 };
 
-
+/////////// DEV /////////////
+// getting all users
 const getAllUsers = (req, res) => {
   User.find()
     .populate("projects")
@@ -89,6 +103,8 @@ const getAllUsers = (req, res) => {
       res.status(500).json(err);
     });
 };
+
+// getting a single user
 const getSingleUser = (req, res) => {
   User.findById(req.params.id)
     .populate("projects")

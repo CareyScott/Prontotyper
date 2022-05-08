@@ -2,7 +2,9 @@ const res = require("express/lib/response");
 const Component = require("../models/component_schema");
 const Project = require("../models/project_schema");
 
+// getting all components
 const getAllComponents = (req, res) => {
+  // mongoose modal call & query
   Component.find()
     .then((data) => {
       if (data) {
@@ -16,9 +18,13 @@ const getAllComponents = (req, res) => {
       res.status(500).json(err);
     });
 };
+
+// get component by id
 const getSingleComponent = (req, res) => {
+  // mongoose modal call & query
   Component.findById(req.params.id)
-  .populate("project")
+    // populates component recieved with the parent project object
+    .populate("project")
 
     .then((data) => {
       if (data) {
@@ -33,8 +39,10 @@ const getSingleComponent = (req, res) => {
     });
 };
 
+// create component
 const addComponent = (req, res) => {
   let componentData = req.body;
+  // mongoose modal call & query
   Component.create(componentData)
     .then((data) => {
       if (data) {
@@ -64,8 +72,11 @@ const addComponent = (req, res) => {
     });
 };
 
+// edit component
 const editComponent = (req, res) => {
   let componentData = req.body;
+  //find by id to update
+  // mongoose modal call & query
   Component.findByIdAndUpdate(req.params.id, componentData, {
     new: true,
   })
@@ -83,8 +94,9 @@ const editComponent = (req, res) => {
       }
     });
 };
-
+// deleting component
 const deleteComponent = (req, res) => {
+  // mongoose modal call & query
   Component.findByIdAndDelete(req.params.id, {
     new: true,
   })

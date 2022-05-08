@@ -7,19 +7,24 @@ const msRest = require("@azure/ms-rest-js");
 const { find } = require("../models/project_schema");
 const Code = require("../models/code_schema");
 const PredictionSchema = require("../models/prediction_schema");
-const { BlobServiceClient } = require("@azure/storage-blob");
 
+// importing Azure endpoints + plugins
+const { BlobServiceClient } = require("@azure/storage-blob");
 const trainingKey = "de15aea8800e4aacb1695ef40ab9d87a";
 const trainingEndpoint = "https://westus2.api.cognitive.microsoft.com/";
 const predictionKey = "de15aea8800e4aacb1695ef40ab9d87a";
 const predictionEndpoint = "https://westus2.api.cognitive.microsoft.com/";
-
+// should be added to ENV // storage string
 const blobSasUrl =
   "https://sketch2codestoresc.blob.core.windows.net/?sv=2020-08-04&ss=bfqt&srt=sco&sp=rwdlacupitfx&se=2022-09-01T15:55:24Z&st=2022-04-25T07:55:24Z&spr=https&sig=kT52sph2xMa4nwrsf0szfKehC6%2F%2FJsxKHxNfRgztWm4%3D";
 const blobServiceClient = new BlobServiceClient(blobSasUrl);
 
+// prediction properties // iteration
 const publishIterationName = "Iteration1";
+// c(TO CONSOLE)
 var c = console.log.bind(console);
+
+// training and prediction Key for prediction
 const credentials = new msRest.ApiKeyCredentials({
   inHeader: { "Training-key": trainingKey },
 });
@@ -35,10 +40,12 @@ const predictor = new PredictionApi.PredictionAPIClient(
   predictionEndpoint
 );
 
+// column widths + amount for positioning
 const COLS = 12;
 const COL_WIDTH = 0.0833333333333333;
 const COL_LEFT = 0.0833333333333333;
 
+// Checks the range of width of an element for col size
 function inRangeWidth(width, index) {
   if (width > COL_WIDTH * index && width < COL_WIDTH * (index + 1)) {
     return index + 1;
@@ -46,6 +53,7 @@ function inRangeWidth(width, index) {
   return false;
 }
 
+// Checks the range of pushleft of an element for col size
 function inRangeLeft(left, index) {
   if (left > COL_LEFT * index && left < COL_LEFT * (index + 1)) {
     return index + 1;
@@ -92,8 +100,11 @@ function findTopPosition(data) {
 
   let width = "";
   let left = "";
+
+  // classnames
   let classNameWidth = "width-";
   let classNameLeft = "left-";
+
   let rowWidth = 0;
 
   let rowLeft = 0;
@@ -194,6 +205,8 @@ function findTopPosition(data) {
       topElements[topElements.length].boundingBox["range"] = "lastElement";
     }
 
+    // for ensuring a row stays as 12 columns and no more
+    // subtracts the left value plus the col width of the last element from the current elements width
     if (topElements[i].boundingBox.range === "sameRow") {
       let s = topElements[i].boundingBox.width;
       let nextS = topElements[i - 1].boundingBox.pushLeft;
@@ -208,9 +221,11 @@ function findTopPosition(data) {
         let dif = rowWidth + sumOfS - COLS;
         sumOfS -= dif;
       }
+      // appending new push left
       topElements[i - 1].boundingBox.pushLeft = `left-${sumOfS}`;
     }
 
+    // testing temp for swapping values on the same row based on sortedLeft
     let temp1 = topElements[i - 1];
     let temp2 = topElements[i];
 
@@ -222,7 +237,6 @@ function findTopPosition(data) {
       temp2 = topElements[i - 1];
       temp1 = topElements[i];
     }
-
   }
 
   topElements.forEach((element) => {
@@ -232,14 +246,18 @@ function findTopPosition(data) {
 }
 
 const predict = async (req, res) => {
-  //downloading image form
+  //downloading image from azure storage
   async function downloadCodeFromAzure() {
+    // getitng container
     const containerClient = blobServiceClient.getContainerClient(
       req.params.user
     );
 
     console.log(req.params.blobName);
-    const blobClient = containerClient.getBlobClient(`${req.params.containerName}/ ${req.params.blobName}`);
+    // getting file location within container
+    const blobClient = containerClient.getBlobClient(
+      `${req.params.containerName}/ ${req.params.blobName}`
+    );
     const downloadBlockBlobResponse = await blobClient.download();
     const downloaded = await streamToBuffer(
       downloadBlockBlobResponse.readableStreamBody
@@ -258,18 +276,22 @@ const predict = async (req, res) => {
       });
     }
 
+    // returning downloaded file to prediction
     return downloaded;
   }
-  
+
+  // object detection properties
   const domains = await trainer.getDomains();
   const objDetectDomain = domains.find(
     (domain) => domain.type === "ObjectDetection"
   );
+  // getting object detection project // colours 2.0
   const sampleProject = await trainer.getProject(
     "1eab146a-0e50-449a-b2d2-d14c7664008c",
     { domainId: objDetectDomain.id }
   );
 
+  // uploading prediction to cosmos
   const addPrediction = async (data) => {
     let predictionData = data;
     PredictionSchema.create(predictionData).then((data) => {
@@ -277,17 +299,16 @@ const predict = async (req, res) => {
       data.predictions.forEach((element, index) => {
         let tagId = element.tagId;
 
+        // gets all code snippets
         const gettingCode = (element) => {
           if (element) {
-            Code.findOne(
-              { tagId }
-            )
+            Code.findOne({ tagId })
               .clone()
               .then((data) => {
                 element.code = data.code;
                 var arrayItem = data.code;
                 predictionArray.push(arrayItem);
-              })
+              });
           }
         };
 
@@ -295,25 +316,29 @@ const predict = async (req, res) => {
       });
       return predictionArray;
     });
-
-   
   };
 
   const sampleDataRoot = "Images";
+
+  // root function for prediciton
   await predictor
     .detectImage(
       sampleProject.id,
       publishIterationName,
+      // gets image from azure async
       await downloadCodeFromAzure()
     )
     .then((data) => {
       if (data) {
+        // filters predictions probability threshold
         data.predictions = data.predictions.filter(
           (prediction) => prediction.probability >= 0.6
         );
+        // runs positioning algorithm
         findTopPosition(data);
         let savedPrediction = addPrediction(data);
 
+        // return predicted array
         res.status(200).json(data);
         console.log("done predicting");
       } else {

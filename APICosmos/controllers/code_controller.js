@@ -25,21 +25,29 @@ const checkTagName = (prediction, code) => {
   return value;
 };
 
+// uploads the html template literal to Azure storage as .html file
 const uploadFiles = async (file, blobName, UserID) => {
+  // gets container
   const containerClient = blobServiceClient.getContainerClient(UserID);
 
+  // content setting
   let content = file;
+
+  //async try/ catch
   try {
     console.log("Uploading files...");
     const promises = [];
+    // if content, upload content with properties set by blobOptions
     if (content) {
       const blobOptions = {
         blobHTTPHeaders: { blobContentType: "text/html" },
       };
 
+      // setting location (folder) + name of blob + filetype
       const blockBlobClient = containerClient.getBlockBlobClient(
         `${containerName}/ ${blobName}.html`
       );
+
       const uploadBlobResponse = await blockBlobClient.upload(
         content,
         content.length,
@@ -50,6 +58,8 @@ const uploadFiles = async (file, blobName, UserID) => {
         // uploadBlobResponse.requestId
       );
     }
+
+    // resolves promise
     await Promise.all(promises);
     console.log("Done.");
   } catch (error) {
@@ -58,6 +68,7 @@ const uploadFiles = async (file, blobName, UserID) => {
   return htmlSent;
 };
 
+// template literal - code generation loop
 const generateFile = async (prediction, code, blobName) => {
   let html = "";
   prediction.map((prediction, i) => {
@@ -94,7 +105,7 @@ const generateFile = async (prediction, code, blobName) => {
 
   return html;
 };
-
+// function run to generate code
 const downloadCode = async (req, res) => {
   containerName = req.params.container;
   let id = req.params.id;
@@ -105,6 +116,7 @@ const downloadCode = async (req, res) => {
   let prediction;
   let file;
 
+  // gets the prediction by id from CosmosDB
   Prediction.findOne({ id })
     .then((data) => {
       if (data) {
@@ -116,9 +128,11 @@ const downloadCode = async (req, res) => {
       }
     })
     .then(() => {
+      // then get all code snippets with the containing the framework name requested
       Code.find({ framework })
         .then((data) => {
           if (data) {
+            // for use within checktagname function
             code = data;
           } else {
             res.status(404).json("No Code found");
@@ -126,7 +140,9 @@ const downloadCode = async (req, res) => {
           }
         })
         .then(async () => {
+          // generate the file
           file = await generateFile(prediction, await code, await blobName);
+          // once generated, upload the file to azure
           await uploadFiles(file, blobName, UserID, containerName);
 
           res.status(200).json(file);
@@ -143,7 +159,7 @@ const downloadCode = async (req, res) => {
     });
 };
 
-
+//////////////// DEV /////////////////
 const getSingleCode = (req, res) => {
   let framework = req.params.framework;
   Code.find({ framework })
@@ -160,6 +176,7 @@ const getSingleCode = (req, res) => {
     });
 };
 
+// DEV- adding code snippets to Cosmos
 const addCode = (req, res) => {
   let CodeData = req.body;
   Code.create(CodeData)
@@ -175,6 +192,7 @@ const addCode = (req, res) => {
       }
     });
 };
+// DEV- editing code snippets from Cosmos
 
 const editCode = (req, res) => {
   let CodeData = req.body;
@@ -195,6 +213,8 @@ const editCode = (req, res) => {
       }
     });
 };
+
+// DEV- deleting code snippets from Cosmos
 
 const deleteCode = (req, res) => {
   let CodeData = req.body;

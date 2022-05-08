@@ -61,6 +61,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// acquiring json token from headers for authentication
 app.use((req, res, next) => {
   if (
     req.headers &&
