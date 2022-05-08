@@ -1,4 +1,4 @@
-# Final Year Project
+# Final Year Project - Scott Carey 
 Prontotyper - Building working code to output HTML code using Artificial Intelligence
 
 
